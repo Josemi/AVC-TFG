@@ -2,6 +2,7 @@ package com.example.josemi.apace;
 
 
 import android.Manifest;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
             play = findViewById(R.id.play);
             stop = findViewById(R.id.stop);
