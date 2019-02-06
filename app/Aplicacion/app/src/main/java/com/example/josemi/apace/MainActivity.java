@@ -8,10 +8,8 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.SearchEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,123 +22,172 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-        private Button play,stop,record,generador;
-        private MediaRecorder audioRec;
-        private EditText outputFile;
-        private String ruta;
+        //Variables
+        private Button play,stop,record,generador; //Botonoes para reproducir, parar, grabar y generar un nombre
+        private MediaRecorder audioRec; //MediaRecorder que nos permite grabar
+        private EditText outputFile; //EditText donde se escribe el nombre del fichero
+        private String ruta; //String de la ruta a la carpeta donde se almacenarán los audios
+        private Boolean permisos; //Boolean para setear las opciones del MediaRecorder
 
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
+            permisos = false; //Permisos a falso
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
 
+            //Inicializamos los botonoes y el EditText
             play = findViewById(R.id.play);
             stop = findViewById(R.id.stop);
             record = findViewById(R.id.record);
             generador = findViewById(R.id.generador);
             outputFile = findViewById(R.id.ruta);
+
+            //Inicializamos la ruta a la carpeta donde se encuentran los audios
             ruta = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Apace";
             File dir = new File(ruta);
 
+
+            //Ponemos que no se puedan clickear los botones de stop y de play
             stop.setEnabled(false);
             play.setEnabled(false);
 
+            //Inicializamos el MediaRecorder
             audioRec = new MediaRecorder();
 
-            /*
-            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != -PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.RECORD_AUDIO},10);
-            }
-            while(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != -PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 10);
-            }*/
+            //Pedimos los permisos
+            askForPermissions();
 
-            if (askForPermissions()) {
-                audioRec.setAudioSource(MediaRecorder.AudioSource.MIC);
-                audioRec.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                audioRec.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            }
-
+            //Si la carpeta de la ruta no existe la creamos
             if(!dir.exists()){
                     dir.mkdir();
             }
+
+            //Listener del botón Record
             record.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                            String audio = ruta + "/" +outputFile.getText().toString() +".3gp";
-                            File aufile = new File(audio);
-                            if(aufile.exists()) {
-                                    Toast.makeText(getApplicationContext(), "El nombre del fichero ya está en uso", Toast.LENGTH_LONG).show();
-                            }else if(outputFile.getText().toString().equals("")){
-                                    Toast.makeText(getApplicationContext(), "Debe poner dirección de la ruta", Toast.LENGTH_LONG).show();
-                            }else {
-                                    try {
-                                            audioRec.setOutputFile(audio);
-                                            audioRec.prepare();
-                                            audioRec.start();
-                                    } catch (IOException e) {
-                                            e.printStackTrace();
-                                    }
-                                    record.setEnabled(false);
-                                    stop.setEnabled(true);
-                                    outputFile.setEnabled(false);
-                                    Toast.makeText(getApplicationContext(), "Grabación en curso", Toast.LENGTH_LONG).show();
-                            }
+                @Override
+                public void onClick(View v) {
+                    //Si es la primera vez que entramos ponemos los set de MediaRecorder
+                    if (!permisos){
+                        audioRec.setAudioSource(MediaRecorder.AudioSource.MIC);
+                        audioRec.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                        audioRec.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                        permisos = true;
                     }
-            });
 
-            stop.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v){
-                            audioRec.stop();
-                            audioRec.release();
-                            audioRec = new MediaRecorder();
-                            audioRec.setAudioSource(MediaRecorder.AudioSource.MIC);
-                            audioRec.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                            audioRec.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                            record.setEnabled(true);
-                            play.setEnabled(true);
-                            stop.setEnabled(false);
-                            outputFile.setEnabled(true);
-                            Toast.makeText(getApplicationContext(), "Audio grabado correctamente" , Toast.LENGTH_LONG).show();
-                    }
-            });
+                    //Ruta del nuevo audio
+                    String audio = ruta + "/" +outputFile.getText().toString() +".3gp";
+                    File aufile = new File(audio);
 
-            play.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v){
-                            MediaPlayer repAudio = new MediaPlayer();
+                    //Si ya existe un fichero con ese nombre no se comienza la grabación y se muestra un mensaje
+                    if(aufile.exists()) {
+                            Toast.makeText(getApplicationContext(), "El nombre del fichero ya está en uso", Toast.LENGTH_LONG).show();
+
+                    //Si la ruta está vacia se informa de que no se puede grabar un audio sin nombre y no se graba
+                    }else if(outputFile.getText().toString().equals("")){
+                            Toast.makeText(getApplicationContext(), "Debe poner dirección de la ruta", Toast.LENGTH_LONG).show();
+
+                    //Si no ocurren cualquiera de estas cosas se pasa a grabar
+                    }else {
                             try {
-                                    repAudio.setDataSource(ruta + "/" +outputFile.getText().toString() +".3gp");
-                                    repAudio.prepare();
-                                    repAudio.start();
-                                    Toast.makeText(getApplicationContext(),"Reproduciendo el último audio grabado", Toast.LENGTH_LONG).show();
-                            }catch(Exception e){
+                                    audioRec.setOutputFile(audio);
+                                    audioRec.prepare();
+                                    audioRec.start();
+                            } catch (IOException e) {
                                     e.printStackTrace();
                             }
+
+                            //Habilitamos el botón de play y de stop, e inhabilitamos el botón de grabar y el EditText del nombre
+                            record.setEnabled(false);
+                            stop.setEnabled(true);
+                            outputFile.setEnabled(false);
+
+                            //Mensaje de que se está grabando
+                            Toast.makeText(getApplicationContext(), "Grabación en curso", Toast.LENGTH_LONG).show();
                     }
+                }
             });
 
-            generador.setOnClickListener((new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v){
-                            Calendar hoy = Calendar.getInstance();
-                            Date dhoy = hoy.getTime();
-                            SimpleDateFormat ff = new SimpleDateFormat("hh-mm-ss_dd-MM-yyyy");
-                            String aux = ff.format(dhoy);
-                            outputFile.setText(aux);
+
+            //Listener del botón Stop
+            stop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v){
+                    //Paramos la grabación
+                    audioRec.stop();
+                    audioRec.release();
+
+                    //Reinicializamos el MediaRecorder ya que no se puede reutilizar
+                    audioRec = new MediaRecorder();
+                    audioRec.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    audioRec.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                    audioRec.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+                    //Habilitamos el botón record y play y el EditText del nombre,inhabilitamos el botón stop
+                    record.setEnabled(true);
+                    play.setEnabled(true);
+                    stop.setEnabled(false);
+                    outputFile.setEnabled(true);
+
+                    //Mensaje de que el audio se ha grabado correctamente
+                    Toast.makeText(getApplicationContext(), "Audio grabado correctamente" , Toast.LENGTH_LONG).show();
+                }
+            });
+
+            //Listener del botón play
+            play.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    //Creamos el MediaPlayer para reproducir el audio
+                    MediaPlayer repAudio = new MediaPlayer();
+                    try {
+                        //Reproducimos el audio de la ruta
+                        repAudio.setDataSource(ruta + "/" +outputFile.getText().toString() +".3gp");
+                        repAudio.prepare();
+                        repAudio.start();
+
+                        //Mensaje de que se está reproduciendo el audio
+                        Toast.makeText(getApplicationContext(),"Reproduciendo el último audio grabado", Toast.LENGTH_LONG).show();
+                    }catch(Exception e){
+                        e.printStackTrace();
                     }
-            }));
+                }
+            });
+
+            //Listener del botón para generar nombres
+            generador.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    //Obtenemos la fecha actual
+                    Calendar hoy = Calendar.getInstance();
+
+                    //Pasamos el Calendar a Date para poder darle formato
+                    Date dhoy = hoy.getTime();
+
+                    //Creamos el formato que queremos, en nuestro caso con horas minutos segundos
+                    SimpleDateFormat ff = new SimpleDateFormat("hh-mm-ss_dd-MM-yyyy");
+
+                    //Creamos el string que será el nombre generado
+                    String aux = ff.format(dhoy);
+
+                    //Ponemos el EditText con este String
+                    outputFile.setText(aux);
+                }
+            });
     }
 
-    private Boolean askForPermissions(){
-            String[] perm = {Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext(),perm[0]) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this.getApplicationContext(),perm[1]) != PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this, perm,1);
-                return true;
-            }
-            return true;
+    /*
+    * Método para pedir permisos para grabar audios y para escribir en el almacenamiento.
+    *
+     */
+    private void askForPermissions() {
+        //Permisos que queremos pedir
+        String[] perm = {Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        //Si alguno no está dado los pedimos
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),perm[0]) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this.getApplicationContext(),perm[1]) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(perm,1234);
+        }
     }
 }
