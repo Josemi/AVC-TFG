@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         private Button play,stop,record,generador; //Botonoes para reproducir, parar, grabar y generar un nombre
         private MediaRecorder audioRec; //MediaRecorder que nos permite grabar
         private EditText outputFile; //EditText donde se escribe el nombre del fichero
-        private String ruta; //String de la ruta a la carpeta donde se almacenarán los audios
+        private String ruta,formato; //String de la ruta a la carpeta donde se almacenarán los audios
         private Boolean permisos; //Boolean para setear las opciones del MediaRecorder
 
 
@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
             ruta = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Apace";
             File dir = new File(ruta);
 
+            //Formato
+            formato = ".mp4";
 
             //Ponemos que no se puedan clickear los botones de stop y de play
             stop.setEnabled(false);
@@ -70,14 +72,12 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     //Si es la primera vez que entramos ponemos los set de MediaRecorder
                     if (!permisos){
-                        audioRec.setAudioSource(MediaRecorder.AudioSource.MIC);
-                        audioRec.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                        audioRec.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                        setConfig(audioRec);
                         permisos = true;
                     }
 
                     //Ruta del nuevo audio
-                    String audio = ruta + "/" +outputFile.getText().toString() +".3gp";
+                    String audio = ruta + "/" +outputFile.getText().toString() + formato;
                     File aufile = new File(audio);
 
                     //Si ya existe un fichero con ese nombre no se comienza la grabación y se muestra un mensaje
@@ -120,9 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //Reinicializamos el MediaRecorder ya que no se puede reutilizar
                     audioRec = new MediaRecorder();
-                    audioRec.setAudioSource(MediaRecorder.AudioSource.MIC);
-                    audioRec.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                    audioRec.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                    setConfig(audioRec);
 
                     //Habilitamos el botón record y play y el EditText del nombre,inhabilitamos el botón stop
                     record.setEnabled(true);
@@ -143,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     MediaPlayer repAudio = new MediaPlayer();
                     try {
                         //Reproducimos el audio de la ruta
-                        repAudio.setDataSource(ruta + "/" +outputFile.getText().toString() +".3gp");
+                        repAudio.setDataSource(ruta + "/" +outputFile.getText().toString() + formato);
                         repAudio.prepare();
                         repAudio.start();
 
@@ -189,5 +187,13 @@ public class MainActivity extends AppCompatActivity {
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(),perm[0]) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this.getApplicationContext(),perm[1]) != PackageManager.PERMISSION_GRANTED){
             requestPermissions(perm,1234);
         }
+    }
+
+    private void setConfig(MediaRecorder audioRec){
+        audioRec.setAudioSource(MediaRecorder.AudioSource.MIC);
+        audioRec.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        audioRec.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        audioRec.setAudioEncodingBitRate(128000);
+        audioRec.setAudioSamplingRate(48000);
     }
 }
