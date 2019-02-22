@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AplicaciónGSAudios</string>
+
+    <string-array name="pac">
+        <item>Paciente1</item>
+        <item>Paciente2</item>
+        <item>Paciente3</item>
+    </string-array>
+</resources>
