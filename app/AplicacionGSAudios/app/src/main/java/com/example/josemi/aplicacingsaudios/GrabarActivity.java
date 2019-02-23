@@ -18,7 +18,6 @@ public class GrabarActivity extends AppCompatActivity {
     private Button play,stop,record, selec; //Botonoes para reproducir, parar, grabar y generar un nombre
     private MediaRecorder audioRec; //MediaRecorder que nos permite grabar
     private String ruta,formato,paciente,outputFile; //String de la ruta a la carpeta donde se almacenarán los audios
-    private Boolean permisos; //Boolean para setear las opciones del MediaRecorder
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

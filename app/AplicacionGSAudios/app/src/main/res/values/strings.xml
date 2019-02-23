@@ -6,4 +6,12 @@
         <item>Paciente2</item>
         <item>Paciente3</item>
     </string-array>
+
+    <string-array name="o4">
+        <item>Opción 1</item>
+        <item>Opción 2</item>
+        <item>Opción 3</item>
+        <item>Opción 4</item>
+        <item>Opción 5</item>
+    </string-array>
 </resources>
