@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
     private String paciente;
     private TextView texto;
     private Button selec;
+    private CheckBox opc1,opc2,opc3;
     private Spinner opc4;
 
     @Override
@@ -28,6 +30,9 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         texto.setText("Seleccione los apartados y opciones para el paciente: " + paciente);
 
         selec = findViewById(R.id.seleccionar);
+        opc1 = findViewById(R.id.opc1);
+        opc2 = findViewById(R.id.opc2);
+        opc3 = findViewById(R.id.opc3);
         opc4 = findViewById(R.id.opc4);
 
         opc4.setSelection(-1);
