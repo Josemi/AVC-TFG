@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".GrabarActivity" />
-        <activity android:name=".OpcionesActivity"></activity>
+        <activity android:name=".OpcionesActivity" />
+        <activity android:name=".EstadoActivity"></activity>
     </application>
 
 </manifest>

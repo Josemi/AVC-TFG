@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EstadoActivity">
+
+    <TextView
+        android:id="@+id/texto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="162dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/estados"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estados"
+        tools:layout_editor_absoluteX="31dp"
+        tools:layout_editor_absoluteY="42dp" />
+
+    <TextView
+        android:id="@+id/sino"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Si/No"
+        tools:layout_editor_absoluteX="257dp"
+        tools:layout_editor_absoluteY="42dp" />
+
+    <CheckBox
+        android:id="@+id/es1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estado 1"
+        tools:layout_editor_absoluteX="31dp"
+        tools:layout_editor_absoluteY="87dp" />
+
+    <CheckBox
+        android:id="@+id/es2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estado 2"
+        tools:layout_editor_absoluteX="31dp"
+        tools:layout_editor_absoluteY="147dp" />
+
+    <CheckBox
+        android:id="@+id/es3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estado 3"
+        tools:layout_editor_absoluteX="31dp"
+        tools:layout_editor_absoluteY="203dp" />
+
+    <CheckBox
+        android:id="@+id/es4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estado 4"
+        tools:layout_editor_absoluteX="31dp"
+        tools:layout_editor_absoluteY="268dp" />
+
+    <CheckBox
+        android:id="@+id/es5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estado 5"
+        tools:layout_editor_absoluteX="31dp"
+        tools:layout_editor_absoluteY="335dp" />
+
+    <CheckBox
+        android:id="@+id/si"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Si"
+        tools:layout_editor_absoluteX="257dp"
+        tools:layout_editor_absoluteY="85dp" />
+
+    <CheckBox
+        android:id="@+id/no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No"
+        tools:layout_editor_absoluteX="255dp"
+        tools:layout_editor_absoluteY="145dp" />
+
+    <Button
+        android:id="@+id/seleccionar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar"
+        tools:layout_editor_absoluteX="147dp"
+        tools:layout_editor_absoluteY="405dp" />
+
+</android.support.constraint.ConstraintLayout>
