@@ -23,14 +23,14 @@ public class EstadoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_estado);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
 
+        paciente = getIntent().getExtras().getString("paciente");
+
         texto = findViewById(R.id.texto);
         texto.setText("Seleccione el/los estados para el paciente: " + paciente);
 
         es1 = findViewById(R.id.es1);
         es2 = findViewById(R.id.es2);
         es3 = findViewById(R.id.es3);
-        es4 = findViewById(R.id.es4);
-        es5 = findViewById(R.id.es5);
         si = findViewById(R.id.si);
         no = findViewById(R.id.no);
 
@@ -40,6 +40,7 @@ public class EstadoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"Pulsado el Botón de Seleccionar",Toast.LENGTH_LONG).show();
+                finish();
             }
         });
     }

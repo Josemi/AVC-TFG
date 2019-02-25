@@ -26,6 +26,8 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         setContentView(R.layout.activity_opciones);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
 
+        paciente = getIntent().getExtras().getString("paciente");
+
         texto = findViewById(R.id.texto);
         texto.setText("Seleccione los apartados y opciones para el paciente: " + paciente);
 
@@ -47,6 +49,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"Pulsado el Botón de Seleccionar",Toast.LENGTH_LONG).show();
+                finish();
             }
         });
 

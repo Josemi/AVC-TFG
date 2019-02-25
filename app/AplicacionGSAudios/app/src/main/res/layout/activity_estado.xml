@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,88 +10,90 @@
         android:id="@+id/texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
         android:text="TextView"
-        tools:layout_editor_absoluteX="162dp"
-        tools:layout_editor_absoluteY="16dp" />
-
-    <TextView
-        android:id="@+id/estados"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Estados"
-        tools:layout_editor_absoluteX="31dp"
-        tools:layout_editor_absoluteY="42dp" />
-
-    <TextView
-        android:id="@+id/sino"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Si/No"
-        tools:layout_editor_absoluteX="257dp"
-        tools:layout_editor_absoluteY="42dp" />
-
-    <CheckBox
-        android:id="@+id/es1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Estado 1"
-        tools:layout_editor_absoluteX="31dp"
-        tools:layout_editor_absoluteY="87dp" />
-
-    <CheckBox
-        android:id="@+id/es2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Estado 2"
-        tools:layout_editor_absoluteX="31dp"
-        tools:layout_editor_absoluteY="147dp" />
-
-    <CheckBox
-        android:id="@+id/es3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Estado 3"
-        tools:layout_editor_absoluteX="31dp"
-        tools:layout_editor_absoluteY="203dp" />
-
-    <CheckBox
-        android:id="@+id/es4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Estado 4"
-        tools:layout_editor_absoluteX="31dp"
-        tools:layout_editor_absoluteY="268dp" />
-
-    <CheckBox
-        android:id="@+id/es5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Estado 5"
-        tools:layout_editor_absoluteX="31dp"
-        tools:layout_editor_absoluteY="335dp" />
-
-    <CheckBox
-        android:id="@+id/si"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Si"
-        tools:layout_editor_absoluteX="257dp"
-        tools:layout_editor_absoluteY="85dp" />
-
-    <CheckBox
-        android:id="@+id/no"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No"
-        tools:layout_editor_absoluteX="255dp"
-        tools:layout_editor_absoluteY="145dp" />
+        tools:layout_editor_absoluteX="163dp"
+        tools:layout_editor_absoluteY="25dp" />
 
     <Button
         android:id="@+id/seleccionar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Seleccionar"
-        tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="405dp" />
+        android:layout_marginTop="36dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="28dp"
+        android:text="Seleccionar" />
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/estado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="91dp"
+        android:layout_marginStart="46dp"
+        android:text="Estado" />
+
+    <TextView
+        android:id="@+id/sino"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="246dp"
+        android:layout_marginTop="91dp"
+        android:text="Si/No"/>
+
+    <CheckBox
+        android:id="@+id/es1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="151dp"
+        android:text="Estado 1" />
+
+    <CheckBox
+        android:id="@+id/si"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="246dp"
+        android:layout_marginTop="151dp"
+        android:text="Si"/>
+
+    <CheckBox
+        android:id="@+id/no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="246dp"
+        android:layout_marginTop="216dp"
+        android:text="No" />
+
+    <CheckBox
+        android:id="@+id/es2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="216dp"
+        android:text="Estado 2" />
+
+    <CheckBox
+        android:id="@+id/es3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="281dp"
+        android:text="Estado 3" />
+
+
+
+</RelativeLayout>

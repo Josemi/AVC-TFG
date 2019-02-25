@@ -1,6 +1,7 @@
 package com.example.josemi.aplicacingsaudios;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private Button grabar,opciones,estado,enviar;
     private Spinner sp;
+    private String paciente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"Pulsado Botón de Grabar",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this,GrabarActivity.class);
+                intent.putExtra("paciente", paciente);
+                startActivity(intent);
                 opciones.setEnabled(true);
             }
         });
@@ -54,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"Pulsado Botón de Opciones",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this,OpcionesActivity.class);
+                intent.putExtra("paciente", paciente);
+                startActivity(intent);
                 estado.setEnabled(true);
             }
         });
@@ -62,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"Pulsado Botón de Estado/s",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this,EstadoActivity.class);
+                intent.putExtra("paciente", paciente);
+                startActivity(intent);
                 enviar.setEnabled(true);
             }
         });
@@ -97,8 +108,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String p = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(),"El paciente seleccionado es: " + p,Toast.LENGTH_LONG).show();
+        paciente = parent.getItemAtPosition(position).toString();
+        Toast.makeText(parent.getContext(),"El paciente seleccionado es: " + paciente,Toast.LENGTH_LONG).show();
         grabar.setEnabled(true);
     }
 

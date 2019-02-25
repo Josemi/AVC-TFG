@@ -1,5 +1,6 @@
 package com.example.josemi.aplicacingsaudios;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
 import android.os.Environment;
@@ -25,6 +26,8 @@ public class GrabarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_grabar);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
 
+        paciente = getIntent().getExtras().getString("paciente");
+
         //Inicializamos los botonoes y el EditText
         play = findViewById(R.id.play);
         stop = findViewById(R.id.stop);
@@ -42,6 +45,7 @@ public class GrabarActivity extends AppCompatActivity {
         //Ponemos que no se puedan clickear los botones de stop y de play
         stop.setEnabled(false);
         play.setEnabled(false);
+        selec.setEnabled(false);
 
         //Inicializamos el MediaRecorder
         audioRec = new MediaRecorder();
@@ -63,6 +67,7 @@ public class GrabarActivity extends AppCompatActivity {
                 record.setEnabled(true);
                 play.setEnabled(true);
                 stop.setEnabled(false);
+                selec.setEnabled(true);
             }
         });
 
@@ -77,6 +82,7 @@ public class GrabarActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"Pulsado el Botón de Seleccionar",Toast.LENGTH_LONG).show();
+                finish();
             }
         });
     }
