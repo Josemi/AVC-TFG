@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 public class EstadoActivity extends AppCompatActivity {
 
-    private String paciente;
+    private String paciente,ruta,nf;
     private TextView texto;
     private CheckBox es1,es2,es3,es4,es5,si,no;
     private Button selec;
@@ -24,6 +24,8 @@ public class EstadoActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
 
         paciente = getIntent().getExtras().getString("paciente");
+        ruta = getIntent().getExtras().getString("ruta");
+        nf = getIntent().getExtras().getString("nombre");
 
         texto = findViewById(R.id.texto);
         texto.setText("Seleccione el/los estados para el paciente: " + paciente);

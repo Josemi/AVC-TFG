@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,11 +15,16 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Button grabar,opciones,estado,enviar;
     private Spinner sp;
-    private String paciente;
+    private String paciente,ruta,rutac,nf;
+    private File dir,dirc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
 
         askForPermissions();
+
+        ruta = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Apace";
+        dir = new File(ruta);
+        //Si la carpeta de la ruta no existe la creamos
+        if(!dir.exists()){
+            dir.mkdir();
+        }
 
         sp = findViewById(R.id.paciente);
         sp.setSelection(-1);
@@ -47,10 +60,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         grabar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Pulsado Botón de Grabar",Toast.LENGTH_LONG).show();
+                Date ahora = new Date();
+                SimpleDateFormat ff = new SimpleDateFormat("hh-mm-ss_dd-MM-yyyy");
+                nf = paciente + "_" + ff.format(ahora);
+                rutac = ruta + "/" + nf;
+                dirc = new File(rutac);
+                //Si la carpeta de la ruta no existe la creamos, no debería existir, pero por si acaso mejor ponerlo.
+                if(!dirc.exists()){
+                    dirc.mkdir();
+                }
+
                 Intent intent = new Intent(MainActivity.this,GrabarActivity.class);
                 intent.putExtra("paciente", paciente);
+                intent.putExtra("ruta",rutac);
+                intent.putExtra("nombre",nf);
                 startActivity(intent);
+
                 opciones.setEnabled(true);
             }
         });
@@ -58,9 +83,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         opciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Pulsado Botón de Opciones",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(MainActivity.this,OpcionesActivity.class);
                 intent.putExtra("paciente", paciente);
+                intent.putExtra("ruta",rutac);
+                intent.putExtra("nombre",nf);
                 startActivity(intent);
                 estado.setEnabled(true);
             }
@@ -69,9 +95,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         estado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Pulsado Botón de Estado/s",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(MainActivity.this,EstadoActivity.class);
                 intent.putExtra("paciente", paciente);
+                intent.putExtra("ruta",rutac);
+                intent.putExtra("nombre",nf);
                 startActivity(intent);
                 enviar.setEnabled(true);
             }

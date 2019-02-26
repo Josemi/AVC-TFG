@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 public class OpcionesActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
-    private String paciente;
+    private String paciente,ruta,nf;
     private TextView texto;
     private Button selec;
     private CheckBox opc1,opc2,opc3;
@@ -27,6 +27,8 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
 
         paciente = getIntent().getExtras().getString("paciente");
+        ruta = getIntent().getExtras().getString("ruta");
+        nf = getIntent().getExtras().getString("nombre");
 
         texto = findViewById(R.id.texto);
         texto.setText("Seleccione los apartados y opciones para el paciente: " + paciente);

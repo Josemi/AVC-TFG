@@ -18,7 +18,7 @@ public class GrabarActivity extends AppCompatActivity {
     //Variables
     private Button play,stop,record, selec; //Botonoes para reproducir, parar, grabar y generar un nombre
     private MediaRecorder audioRec; //MediaRecorder que nos permite grabar
-    private String ruta,formato,paciente,outputFile; //String de la ruta a la carpeta donde se almacenarán los audios
+    private String ruta,formato,paciente,outputFile,nf; //String de la ruta a la carpeta donde se almacenarán los audios
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +27,16 @@ public class GrabarActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
 
         paciente = getIntent().getExtras().getString("paciente");
+        ruta = getIntent().getExtras().getString("ruta");
+        nf = getIntent().getExtras().getString("nombre");
 
         //Inicializamos los botonoes y el EditText
         play = findViewById(R.id.play);
         stop = findViewById(R.id.stop);
         record = findViewById(R.id.record);
         selec = findViewById(R.id.seleccionar);
-        paciente = "Paco"; //En el enlace de ventanas hay que pasarlo como argumento
 
-        //Inicializamos la ruta a la carpeta donde se encuentran los audios
-        ruta = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Apace";
-        File dir = new File(ruta);
+        Toast.makeText(getApplicationContext(),ruta + " " + nf,Toast.LENGTH_LONG).show();
 
         //Formato
         formato = ".mp4";
