@@ -12,6 +12,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.opencsv.CSVWriter;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.LinkedList;
+import java.util.List;
+
+
 public class OpcionesActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private String paciente,ruta,nf;
@@ -19,12 +28,17 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
     private Button selec;
     private CheckBox opc1,opc2,opc3;
     private Spinner opc4;
+    private List<CheckBox> checks;
+    private List<Spinner> spinners;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opciones);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
+
+        checks = new LinkedList();
+        spinners = new LinkedList();
 
         paciente = getIntent().getExtras().getString("paciente");
         ruta = getIntent().getExtras().getString("ruta");
@@ -35,9 +49,13 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
 
         selec = findViewById(R.id.seleccionar);
         opc1 = findViewById(R.id.opc1);
+        checks.add(opc1);
         opc2 = findViewById(R.id.opc2);
+        checks.add(opc2);
         opc3 = findViewById(R.id.opc3);
+        checks.add(opc3);
         opc4 = findViewById(R.id.opc4);
+        spinners.add(opc4);
 
         opc4.setSelection(-1);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.o4,android.R.layout.simple_spinner_item);
@@ -51,10 +69,31 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"Pulsado el Botón de Seleccionar",Toast.LENGTH_LONG).show();
+                String csv = ruta + "/" + nf + "_Opciones" + ".csv";
+                List<String> salida = comprobar();
+                try {
+                    CSVWriter csvw = new CSVWriter(new FileWriter(csv));
+                    csvw.writeNext(salida.toArray(new String[salida.size()]));
+                    csvw.close();
+                }
+                catch (IOException ex){
+                    ex.printStackTrace();
+                }
                 finish();
             }
         });
 
+    }
+
+    public List<String> comprobar(){
+        List<String> salida = new LinkedList();
+        for(CheckBox c:checks){
+            salida.add(Boolean.toString(c.isActivated()));
+        }
+        for(Spinner s : spinners){
+            salida.add(s.getSelectedItem().toString());
+        }
+        return salida;
     }
 
     @Override
