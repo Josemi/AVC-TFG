@@ -39,8 +39,6 @@ public class GrabarActivity extends AppCompatActivity {
         record = findViewById(R.id.record);
         selec = findViewById(R.id.seleccionar);
 
-        Toast.makeText(getApplicationContext(),ruta + " " + nf,Toast.LENGTH_LONG).show();
-
         //Formato
         formato = ".mp4";
 
@@ -132,8 +130,10 @@ public class GrabarActivity extends AppCompatActivity {
         selec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(repAudio.isPlaying()){
-                    repAudio.stop();
+                if(repAudio!=null) {
+                    if (repAudio.isPlaying()) {
+                        repAudio.stop();
+                    }
                 }
                 Toast.makeText(getApplicationContext(),"Pulsado el Botón de Seleccionar",Toast.LENGTH_LONG).show();
                 finish();
