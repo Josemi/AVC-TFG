@@ -16,7 +16,6 @@ import com.opencsv.CSVWriter;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,10 +84,10 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
 
     }
 
-    public List<String> comprobar(){
+    private List<String> comprobar(){
         List<String> salida = new LinkedList();
         for(CheckBox c:checks){
-            salida.add(Boolean.toString(c.isActivated()));
+            salida.add(Boolean.toString(c.isChecked()));
         }
         for(Spinner s : spinners){
             salida.add(s.getSelectedItem().toString());
