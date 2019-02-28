@@ -14,21 +14,25 @@ import android.widget.Toast;
 
 import com.opencsv.CSVWriter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class OpcionesActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
-    private String paciente,ruta,nf;
+    private String paciente,ruta,nf,csv;
     private TextView texto;
     private Button selec;
     private CheckBox opc1,opc2,opc3;
     private Spinner opc4;
     private List<CheckBox> checks;
     private List<Spinner> spinners;
+    private File acsv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,16 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         opc4.setAdapter(adapter);
         opc4.setOnItemSelectedListener(this);
 
-        selec.setEnabled(false);
+
+        csv = ruta + "/" + nf + "_Opciones" + ".csv";
+        acsv = new File(csv);
+        if(acsv.exists()){
+            cargarCsv();
+            selec.setEnabled(true);
+            acsv.delete();
+        }else{
+            selec.setEnabled(false);
+        }
 
         selec.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,12 +111,35 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String p = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(),"La opción seleccionada es: " + p,Toast.LENGTH_LONG).show();
+        //Toast.makeText(parent.getContext(),"La opción seleccionada es: " + p,Toast.LENGTH_LONG).show();
         selec.setEnabled(true);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void cargarCsv(){
+        String [] valores = null;
+        try{
+            Scanner scanner = new Scanner(acsv);
+            String linea = scanner.nextLine();
+            valores = linea.split(",");
+            scanner.close();
+        } catch (FileNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+        int i = 0;
+        for (CheckBox c: checks){
+            c.setChecked(Boolean.parseBoolean(valores[i].replace("\"","")));
+            i++;
+        }
+        for(Spinner s: spinners){
+            ArrayAdapter<CharSequence> ad = (ArrayAdapter<CharSequence>) s.getAdapter();
+            s.setSelection(ad.getPosition(valores[i].replace("\"","")));
+            i++;
+        }
     }
 }

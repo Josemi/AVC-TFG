@@ -34,19 +34,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         askForPermissions();
 
-        ruta = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Apace";
-        dir = new File(ruta);
-        //Si la carpeta de la ruta no existe la creamos
-        if(!dir.exists()){
-            dir.mkdir();
-        }
-
         sp = findViewById(R.id.paciente);
         sp.setSelection(-1);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.pac,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(adapter);
         sp.setOnItemSelectedListener(this);
+        paciente = sp.getSelectedItem().toString();
+
+        ruta = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Apace";
+        dir = new File(ruta);
+        //Si la carpeta de la ruta no existe la creamos
+        if(!dir.exists()){
+            dir.mkdir();
+        }
 
         grabar = findViewById(R.id.grabar);
         grabar.setEnabled(false);
@@ -57,21 +58,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         enviar = findViewById(R.id.enviar);
         enviar.setEnabled(false);
 
+        crearCarpeta();
+
+
         grabar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Date ahora = new Date();
-                SimpleDateFormat ff = new SimpleDateFormat("hh-mm-ss_dd-MM-yyyy");
-                nf = paciente + "_" + ff.format(ahora);
-                rutac = ruta + "/" + nf;
-                dirc = new File(rutac);
-                //Si la carpeta de la ruta no existe la creamos, no debería existir, pero por si acaso mejor ponerlo.
-                if(!dirc.exists()){
-                    dirc.mkdir();
-                }
-
                 Intent intent = new Intent(MainActivity.this,GrabarActivity.class);
-                intent.putExtra("paciente", paciente);
                 intent.putExtra("ruta",rutac);
                 intent.putExtra("nombre",nf);
                 startActivity(intent);
@@ -147,6 +140,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void crearCarpeta(){
+        Date ahora = new Date();
+        SimpleDateFormat ff = new SimpleDateFormat("hh-mm-ss_dd-MM-yyyy");
+        nf = paciente + "_" + ff.format(ahora);
+        rutac = ruta + "/" + nf;
+        dirc = new File(rutac);
+        //Si la carpeta de la ruta no existe la creamos, no debería existir, pero por si acaso mejor ponerlo.
+        if(!dirc.exists()){
+            dirc.mkdir();
+        }
     }
 
 

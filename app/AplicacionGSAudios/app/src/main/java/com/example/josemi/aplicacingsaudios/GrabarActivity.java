@@ -20,8 +20,9 @@ public class GrabarActivity extends AppCompatActivity {
     //Variables
     private Button play,stop,record, selec; //Botonoes para reproducir, parar, grabar y generar un nombre
     private MediaRecorder audioRec; //MediaRecorder que nos permite grabar
-    private String ruta,formato,paciente,nf; //String de la ruta a la carpeta donde se almacenarán los audios
+    private String ruta,formato,nf,audio; //String de la ruta a la carpeta donde se almacenarán los audios
     private MediaPlayer repAudio;
+    private File aufile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,6 @@ public class GrabarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_grabar);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
 
-        paciente = getIntent().getExtras().getString("paciente");
         ruta = getIntent().getExtras().getString("ruta");
         nf = getIntent().getExtras().getString("nombre");
 
@@ -43,30 +43,32 @@ public class GrabarActivity extends AppCompatActivity {
         formato = ".mp4";
 
         //Ponemos que no se puedan clickear los botones de stop y de play
-        stop.setEnabled(false);
-        play.setEnabled(false);
-        selec.setEnabled(false);
+
 
         //Inicializamos el MediaRecorder
         audioRec = new MediaRecorder();
         setConfig(audioRec);
 
+        audio = ruta + "/" + nf + formato;
+        aufile = new File(audio);
+
+        if(aufile.exists()){
+            setVisibilidad(true,false,true,true);
+        }else{
+            setVisibilidad(true,false,false,false);
+        }
+
 
         record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stop.setEnabled(true);
-                record.setEnabled(false);
-                play.setEnabled(false);
+                setVisibilidad(false,true,false,false);
 
                 if(repAudio!=null) {
                     if (repAudio.isPlaying()) {
                         repAudio.stop();
                     }
                 }
-
-                String audio = ruta + "/" + nf + formato;
-                File aufile = new File(audio);
 
                 //Si ya existe, es decir, es la segunda vez que grabamos borramos la grabación anterior
                 if(aufile.exists()) {
@@ -90,10 +92,7 @@ public class GrabarActivity extends AppCompatActivity {
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                record.setEnabled(true);
-                play.setEnabled(true);
-                stop.setEnabled(false);
-                selec.setEnabled(true);
+                setVisibilidad(true,false,true,true);
 
                 //Paramos la grabación
                 audioRec.stop();
@@ -147,6 +146,13 @@ public class GrabarActivity extends AppCompatActivity {
         audioRec.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         audioRec.setAudioEncodingBitRate(128000);
         audioRec.setAudioSamplingRate(48000);
+    }
+
+    private void setVisibilidad(boolean rec,boolean st, boolean pl, boolean sel){
+        record.setEnabled(rec);
+        stop.setEnabled(st);
+        play.setEnabled(pl);
+        selec.setEnabled(sel);
     }
 
 }
