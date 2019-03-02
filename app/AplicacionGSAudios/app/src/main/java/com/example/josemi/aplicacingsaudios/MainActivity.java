@@ -1,6 +1,7 @@
 package com.example.josemi.aplicacingsaudios;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -16,6 +17,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,8 +26,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private Button grabar,opciones,estado,enviar;
     private Spinner sp;
-    private String paciente,ruta,rutac,nf;
-    private File dir,dirc;
+    private String paciente,ruta,rutac,nf,formato;
+    private File dir,dirc,audio,opc,est;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         crearCarpeta();
 
+        formato = ".mp4";
+
 
         grabar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,9 +72,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Intent intent = new Intent(MainActivity.this,GrabarActivity.class);
                 intent.putExtra("ruta",rutac);
                 intent.putExtra("nombre",nf);
-                startActivity(intent);
-
-                opciones.setEnabled(true);
+                intent.putExtra("formato",formato);
+                audio = new File(rutac+"/"+nf+formato);
+                startActivityForResult(intent,1);
             }
         });
 
@@ -80,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 intent.putExtra("paciente", paciente);
                 intent.putExtra("ruta",rutac);
                 intent.putExtra("nombre",nf);
-                startActivity(intent);
-                estado.setEnabled(true);
+                opc=new File(rutac + "/" + nf + "_Opciones" + ".csv");
+                startActivityForResult(intent,2);
             }
         });
 
@@ -92,8 +97,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 intent.putExtra("paciente", paciente);
                 intent.putExtra("ruta",rutac);
                 intent.putExtra("nombre",nf);
-                startActivity(intent);
-                enviar.setEnabled(true);
+                est=new File(rutac + "/" + nf + "_Estado" + ".csv");
+                startActivityForResult(intent,3);
             }
         });
 
@@ -151,6 +156,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Si la carpeta de la ruta no existe la creamos, no debería existir, pero por si acaso mejor ponerlo.
         if(!dirc.exists()){
             dirc.mkdir();
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (1) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    opciones.setEnabled(true);
+                }
+                break;
+            }
+            case (2): {
+                if (resultCode == Activity.RESULT_OK) {
+                    estado.setEnabled(true);
+                }
+                break;
+            }
+            case (3):{
+                if (resultCode == Activity.RESULT_OK) {
+                    enviar.setEnabled(true);
+                }
+                break;
+            }
         }
     }
 

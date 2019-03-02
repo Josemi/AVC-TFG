@@ -1,5 +1,6 @@
 package com.example.josemi.aplicacingsaudios;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
@@ -32,6 +33,7 @@ public class GrabarActivity extends AppCompatActivity {
 
         ruta = getIntent().getExtras().getString("ruta");
         nf = getIntent().getExtras().getString("nombre");
+        formato = getIntent().getExtras().getString("formato");
 
         //Inicializamos los botonoes y el EditText
         play = findViewById(R.id.play);
@@ -39,8 +41,7 @@ public class GrabarActivity extends AppCompatActivity {
         record = findViewById(R.id.record);
         selec = findViewById(R.id.seleccionar);
 
-        //Formato
-        formato = ".mp4";
+
 
         //Ponemos que no se puedan clickear los botones de stop y de play
 
@@ -135,6 +136,9 @@ public class GrabarActivity extends AppCompatActivity {
                     }
                 }
                 Toast.makeText(getApplicationContext(),"Pulsado el Botón de Seleccionar",Toast.LENGTH_LONG).show();
+
+                Intent resultIntent = new Intent();
+                setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }
         });

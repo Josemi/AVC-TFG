@@ -1,5 +1,7 @@
 package com.example.josemi.aplicacingsaudios;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -77,6 +79,8 @@ public class EstadoActivity extends AppCompatActivity {
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
+                    Intent resultIntent = new Intent();
+                    setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 }else{
                     Toast.makeText(getApplicationContext(),"No se puede dejar vacio, ni rellenar valores de ambas columnas, ni marcar \"si\" y \"no\" a la vez",Toast.LENGTH_LONG).show();

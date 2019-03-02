@@ -1,5 +1,7 @@
 package com.example.josemi.aplicacingsaudios;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -91,6 +93,8 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
                 catch (IOException ex){
                     ex.printStackTrace();
                 }
+                Intent resultIntent = new Intent();
+                setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }
         });
