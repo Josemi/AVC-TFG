@@ -17,10 +17,14 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -106,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"Pulsado Botón de Enviar",Toast.LENGTH_LONG).show();
+                comprimir();
+                crearCarpeta();
             }
         });
     }
@@ -183,5 +189,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    private void comprimir(){
+        String azip = rutac + ".zip";
+        File afile = new File(azip);
+        File [] archivos = {audio,opc,est};
+        try {
+            FileOutputStream fos = new FileOutputStream(afile);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+
+            for(int i=0; i < archivos.length;i++){
+                byte [] buffer = new byte[1024];
+                FileInputStream fis = new FileInputStream(archivos[i]);
+                zos.putNextEntry(new ZipEntry(archivos[i].getName()));
+                int l;
+                while ((l=fis.read(buffer)) > 0){
+                    zos.write(buffer,0,l);
+                }
+                zos.closeEntry();
+                fis.close();
+            }
+            zos.close();
+        }   catch (FileNotFoundException ex){
+            ex.printStackTrace();
+        }   catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
 
 }
