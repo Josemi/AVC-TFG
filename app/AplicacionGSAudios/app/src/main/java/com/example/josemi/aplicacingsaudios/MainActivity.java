@@ -1,5 +1,12 @@
+/**
+ * @author: José Miguel Ramírez Sanz
+ * @version: 1.0
+ */
+
+//Package
 package com.example.josemi.aplicacingsaudios;
 
+//Imports
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -26,29 +33,50 @@ import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * Clase MainActivity con la actividad de la pantalla principal.
+ */
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    //Botones para movernos a las pantallas y enviar el comprimido
     private Button grabar,opciones,estado,enviar;
+
+    //Spinner para seleccionar el paciente
     private Spinner sp;
+
+    //Strings para el paciente, las rutas, los nombres de los ficheros y el formato del audio
     private String paciente,ruta,rutac,nf,formato;
+
+    //Archivos de la carpeta principal, la creada, el archivo del audio y los dos csv
     private File dir,dirc,audio,opc,est;
 
+    /**
+     * Método que se ejecutará al crearse el Activity.
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Llamada al construvtor
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Hacemos que no se pueda girar la pantalla
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED); //Lock de la pantalla en vertical
 
+        //Llamada al método que pide los permisos de almacenamiento y de acceso al microfono
         askForPermissions();
 
+        //Inicialización del spinner del paciente
         sp = findViewById(R.id.paciente);
         sp.setSelection(-1);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.pac,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(adapter);
         sp.setOnItemSelectedListener(this);
+        //Guardamos el valor en el String paciente
         paciente = sp.getSelectedItem().toString();
 
+        //Ruta a la carpeta Apace desde donde trabajamos
         ruta = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Apace";
         dir = new File(ruta);
         //Si la carpeta de la ruta no existe la creamos
@@ -56,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             dir.mkdir();
         }
 
+        //Inicializamos los botones
         grabar = findViewById(R.id.grabar);
         grabar.setEnabled(false);
         opciones = findViewById(R.id.opciones);
@@ -65,52 +94,85 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         enviar = findViewById(R.id.enviar);
         enviar.setEnabled(false);
 
+        //Llamada al método para crear la carpeta y el nombre de los ficheros
         crearCarpeta();
 
+        //Formato del audio, se hace en esta pantalla para poder confirmar la existencia del fichero
         formato = ".mp4";
 
-
+        //Listener del botón grabar
         grabar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Creamos un intent para movernos de pantalla
                 Intent intent = new Intent(MainActivity.this,GrabarActivity.class);
-                intent.putExtra("ruta",rutac);
-                intent.putExtra("nombre",nf);
-                intent.putExtra("formato",formato);
+
+                //Parámetros que pasamos
+                intent.putExtra("ruta",rutac); //Ruta de la carpeta
+                intent.putExtra("nombre",nf); //Nombre del fichero
+                intent.putExtra("formato",formato); //Formato del fichero
+
+                //Inicializamos el File del audio
                 audio = new File(rutac+"/"+nf+formato);
+
+                //Comenzamos la nueva actividad con un code de 1, para poder saber si ha finalizado correctamente
                 startActivityForResult(intent,1);
             }
         });
 
+        //Listener del botón opciones
         opciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Creamos el intent
                 Intent intent = new Intent(MainActivity.this,OpcionesActivity.class);
-                intent.putExtra("paciente", paciente);
-                intent.putExtra("ruta",rutac);
-                intent.putExtra("nombre",nf);
+
+                //Parámetros que pasamos
+                intent.putExtra("paciente", paciente); //Nombre del paciente
+                intent.putExtra("ruta",rutac); //Ruta de la carpeta
+                intent.putExtra("nombre",nf); //Nombre del fichero
+
+                //Inicializamos el File con el csv de las opciones
                 opc=new File(rutac + "/" + nf + "_Opciones" + ".csv");
+
+                //Comenzamos la nueva actividad con un code de 2
                 startActivityForResult(intent,2);
             }
         });
 
+        //Listener del botón estado
         estado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Creamos el intent
                 Intent intent = new Intent(MainActivity.this,EstadoActivity.class);
-                intent.putExtra("paciente", paciente);
-                intent.putExtra("ruta",rutac);
-                intent.putExtra("nombre",nf);
+
+                //Parámetros que pasamos a la nueva actividad
+                intent.putExtra("paciente", paciente); //Nombre del paciente
+                intent.putExtra("ruta",rutac); //Ruta de la carpeta
+                intent.putExtra("nombre",nf); //Nombre del fichero
+
+                //Inicializamos el File del estado
                 est=new File(rutac + "/" + nf + "_Estado" + ".csv");
+
+                //Comenzamos la nueva actividad con code de 3
                 startActivityForResult(intent,3);
             }
         });
 
+
+        //Listener del botón enviar
         enviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Mensaje
                 Toast.makeText(getApplicationContext(),"Pulsado Botón de Enviar",Toast.LENGTH_LONG).show();
+
+                //Llamada al método para comprimir
                 comprimir();
+
+                //Llamada al método para crear una nueva carpeta
                 crearCarpeta();
             }
         });
@@ -132,56 +194,89 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /**
      * Método que se ejecuta cuando se selecciona un elemento en el Spinner.
-     * @param parent
-     * @param view
-     * @param position
-     * @param id
+     * @param parent Adaptador del spinner
+     * @param view Vista
+     * @param position Posición del spinner
+     * @param id Id del spinner
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        //Ponemos en el String paciente la opción seleccionada
         paciente = parent.getItemAtPosition(position).toString();
+
+        //Mensaje
         Toast.makeText(parent.getContext(),"El paciente seleccionado es: " + paciente,Toast.LENGTH_LONG).show();
+
+        //Ponemos el botón de grabar a disponible
         grabar.setEnabled(true);
     }
 
     /**
-     * Método que se ejecuta cuando no se selecciona un elemento en el Spinner.
-     * @param parent
+     * Método que se ejecuta cuando no se selecciona un elemento en el Spinner. No lo uso pero he de tenerlo al implementar la interfaz del adaptador
+     * @param parent Adaptador
      */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
 
+    /**
+     * Método que nos permite crear una nueva carpeta y dar nombre a los ficheros
+     */
     private void crearCarpeta(){
+
+        //Obtenemos la fecha actual
         Date ahora = new Date();
+
+        //Creamos el formato
         SimpleDateFormat ff = new SimpleDateFormat("hh-mm-ss_dd-MM-yyyy");
+
+        //Ponemos el nombre de los archivos
         nf = paciente + "_" + ff.format(ahora);
+
+        //Ruta de la nueva carpeta
         rutac = ruta + "/" + nf;
+
+        //Creamos el File
         dirc = new File(rutac);
+
         //Si la carpeta de la ruta no existe la creamos, no debería existir, pero por si acaso mejor ponerlo.
         if(!dirc.exists()){
             dirc.mkdir();
         }
     }
+
+    /**
+     * Método para comprobar si la finalización de los activities ha sido correcta.
+     *
+     * @param requestCode Código del intent
+     * @param resultCode Resultado de la actividad
+     * @param data Intent
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        //Switch de la procedencia
         switch(requestCode) {
             case (1) : {
+                //Si el resultado ha sido OK
                 if (resultCode == Activity.RESULT_OK) {
+                    //Opciones pasa a estar disponible
                     opciones.setEnabled(true);
                 }
                 break;
             }
             case (2): {
                 if (resultCode == Activity.RESULT_OK) {
+                    //Estado pasa a estar disponible
                     estado.setEnabled(true);
                 }
                 break;
             }
             case (3):{
                 if (resultCode == Activity.RESULT_OK) {
+                    //Enviar pasa a estar disponible
                     enviar.setEnabled(true);
                 }
                 break;
@@ -189,15 +284,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * Método para comprimir los archivos creados.
+     */
     private void comprimir(){
+        //Archivos y carpetas
         String azip = rutac + ".zip";
         File afile = new File(azip);
         File [] archivos = {audio,opc,est};
         try {
+            //Streams de los datos
             FileOutputStream fos = new FileOutputStream(afile);
             ZipOutputStream zos = new ZipOutputStream(fos);
 
+            //Por cada uno de los archivos
             for(int i=0; i < archivos.length;i++){
+                //Buffer
                 byte [] buffer = new byte[1024];
                 FileInputStream fis = new FileInputStream(archivos[i]);
                 zos.putNextEntry(new ZipEntry(archivos[i].getName()));
@@ -215,5 +317,4 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             ex.printStackTrace();
         }
     }
-
 }
