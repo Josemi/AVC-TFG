@@ -174,6 +174,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 //Llamada al método para crear una nueva carpeta
                 crearCarpeta();
+
+                //Actualizamos la visibilidad de los botones
+                grabar.setEnabled(true);
+                opciones.setEnabled(false);
+                estado.setEnabled(false);
+                enviar.setEnabled(false);
             }
         });
     }
