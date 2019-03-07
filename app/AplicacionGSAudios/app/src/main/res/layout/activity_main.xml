@@ -8,12 +8,12 @@
 
     <Spinner
         android:id="@+id/paciente"
-        android:layout_width="200dp"
-        android:layout_height="47dp"
+        android:layout_width="157dp"
+        android:layout_height="46dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="41dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="37dp"
+        android:layout_marginEnd="126dp"
         android:visibility="visible"
         tools:layout_editor_absoluteX="92dp"
         tools:layout_editor_absoluteY="33dp" />
@@ -50,8 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="-1dp"
+        android:layout_marginStart="75dp"
         android:layout_marginBottom="117dp"
         android:text="Enviar" />
 
@@ -61,8 +60,29 @@
         android:layout_height="38dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="41dp"
         android:text="Paciente" />
+
+    <Button
+        android:id="@+id/selec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:text="Sel."
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="30dp"
+        tools:layout_editor_absoluteX="150dp"
+        tools:layout_editor_absoluteY="33dp"/>
+
+    <Button
+        android:id="@+id/cancelar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Cancelar"
+        android:layout_marginStart="225dp"
+        android:layout_marginBottom="117dp"/>
 
 </RelativeLayout>

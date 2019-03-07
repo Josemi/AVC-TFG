@@ -39,7 +39,7 @@ import java.util.zip.ZipOutputStream;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     //Botones para movernos a las pantallas y enviar el comprimido
-    private Button grabar,opciones,estado,enviar;
+    private Button grabar,opciones,estado,enviar,sel,cancelar;
 
     //Spinner para seleccionar el paciente
     private Spinner sp;
@@ -93,9 +93,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         estado.setEnabled(false);
         enviar = findViewById(R.id.enviar);
         enviar.setEnabled(false);
-
-        //Llamada al método para crear la carpeta y el nombre de los ficheros
-        crearCarpeta();
+        sel = findViewById(R.id.selec);
+        sel.setEnabled(true);
+        cancelar = findViewById(R.id.cancelar);
+        cancelar.setEnabled(false);
 
         //Formato del audio, se hace en esta pantalla para poder confirmar la existencia del fichero
         formato = ".mp4";
@@ -172,14 +173,54 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //Llamada al método para comprimir
                 comprimir();
 
-                //Llamada al método para crear una nueva carpeta
-                crearCarpeta();
-
                 //Actualizamos la visibilidad de los botones
-                grabar.setEnabled(true);
+                sp.setEnabled(true);
+                sel.setEnabled(true);
+                grabar.setEnabled(false);
                 opciones.setEnabled(false);
                 estado.setEnabled(false);
                 enviar.setEnabled(false);
+                cancelar.setEnabled(false);
+            }
+        });
+
+        //Listener del botón seleccionar
+        sel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Hacemos que no se pueda cambiar de paciente
+                sp.setEnabled(false);
+                sel.setEnabled(false);
+
+                //Podemos grabar y cancelar
+                grabar.setEnabled(true);
+                cancelar.setEnabled(true);
+
+                //Creamos la carpeta
+                crearCarpeta();
+
+                //Imprimimos el paciente
+                Toast.makeText(getApplicationContext(),"El cliente con el que se va a grabar es: " + paciente + ", si desea cambiarlo pulse el botón Cancelar",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //Listener del botón cancelar
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Hacemos que se pueda cambiar de paciente
+                sp.setEnabled(true);
+                sel.setEnabled(true);
+
+                //Ponemos a inhabilitado el resto
+                grabar.setEnabled(false);
+                opciones.setEnabled(false);
+                estado.setEnabled(false);
+                enviar.setEnabled(false);
+                cancelar.setEnabled(false);
+
+                //Imprimimos el paciente
+                Toast.makeText(getApplicationContext(),"Cancelada la grabación",Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -209,12 +250,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         //Ponemos en el String paciente la opción seleccionada
         paciente = parent.getItemAtPosition(position).toString();
-
-        //Mensaje
-        Toast.makeText(parent.getContext(),"El paciente seleccionado es: " + paciente,Toast.LENGTH_LONG).show();
-
-        //Ponemos el botón de grabar a disponible
-        grabar.setEnabled(true);
     }
 
     /**
