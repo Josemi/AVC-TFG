@@ -9,13 +9,18 @@ package com.example.josemi.aplicacingsaudios;
 //Imports
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -50,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //Archivos de la carpeta principal, la creada, el archivo del audio y los dos csv
     private File dir,dirc,audio,opc,est,afile;
 
+    //Conexión
+    ConnectivityManager conexion;
+
     /**
      * Método que se ejecutará al crearse el Activity.
      * @param savedInstanceState Bundle
@@ -65,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //Llamada al método que pide los permisos de almacenamiento y de acceso al microfono
         askForPermissions();
+
+        //Conexión
+        conexion = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //Inicialización del spinner del paciente
         sp = findViewById(R.id.paciente);
@@ -167,21 +178,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         enviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Mensaje
-                Toast.makeText(getApplicationContext(),"Pulsado Botón de Enviar",Toast.LENGTH_LONG).show();
 
-                //Llamada al método para comprimir
-                comprimir();
+                //Si tenemos conexion comprimimos y enviamos
+                if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                    //Llamada al método para comprimir
+                    comprimir();
 
-                //Actualizamos la visibilidad de los botones
-                sp.setEnabled(true);
-                sel.setEnabled(true);
-                grabar.setEnabled(false);
-                opciones.setEnabled(false);
-                estado.setEnabled(false);
-                enviar.setEnabled(false);
-                cancelar.setEnabled(false);
+                    //Actualizamos la visibilidad de los botones
+                    sp.setEnabled(true);
+                    sel.setEnabled(true);
+                    grabar.setEnabled(false);
+                    opciones.setEnabled(false);
+                    estado.setEnabled(false);
+                    enviar.setEnabled(false);
+                    cancelar.setEnabled(false);
 
+                    //Enviamos por correo el comprimido
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        @SuppressWarnings("WrongThread")
+                        public Void doInBackground(Void... arg) {
+                            enviarComprimido();
+                            return null;
+                        }
+                    }.execute();
+
+                    //Mensaje
+                    Toast.makeText(getApplicationContext(),"Se ha enviado correctamente",Toast.LENGTH_LONG).show();
+
+                }else{
+                    Toast.makeText(getApplicationContext(),"No hay conexión a Internet",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -357,6 +384,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             ex.printStackTrace();
         }   catch (IOException ex){
             ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Método que nos permite enviar el comprimido por correo
+     */
+    private void enviarComprimido(){
+
+        try{
+            GMailSender sender = new GMailSender("comprimidosApace@gmail.com", "apaceubu");
+            sender.sendMail(nf,
+                    "",
+                    "comprimidosApace@gmail.com",
+                    "comprimidosApace@gmail.com",
+                   afile);
+        } catch (Exception e) {
+            Log.e("SendMail", e.getMessage(), e);
         }
     }
 }
