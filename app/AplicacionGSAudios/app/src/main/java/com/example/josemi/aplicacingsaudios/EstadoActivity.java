@@ -35,7 +35,7 @@ public class EstadoActivity extends AppCompatActivity {
     //Variables
     private String paciente,ruta,nf,csv; //Strings con el nombre del paciente, la ruta, el nombre del fichero y el nombre del csv
     private TextView texto; //TextView que se muestra en la parte superior de la pantalla
-    private CheckBox es1,es2,es3,si,no; //Checkbox con las opciones de los estamos
+    private CheckBox es1,es2,es3,es4,si,no; //Checkbox con las opciones de los estamos
     private Button selec; //Botón selec
     private List<CheckBox> checksEs,checksSN; //Lista de los distintos checkbox
     private File acsv; //Archivo
@@ -70,6 +70,8 @@ public class EstadoActivity extends AppCompatActivity {
         checksEs.add(es2);
         es3 = findViewById(R.id.es3);
         checksEs.add(es3);
+        es4= findViewById(R.id.es4);
+        checksEs.add(es4);
         si = findViewById(R.id.si);
         checksSN.add(si);
         no = findViewById(R.id.no);

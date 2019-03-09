@@ -55,7 +55,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="46dp"
         android:layout_marginTop="151dp"
-        android:text="Estado 1" />
+        android:text="Dolor" />
 
     <CheckBox
         android:id="@+id/si"
@@ -83,7 +83,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="46dp"
         android:layout_marginTop="216dp"
-        android:text="Estado 2" />
+        android:text="Enfado" />
 
     <CheckBox
         android:id="@+id/es3"
@@ -92,8 +92,16 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="46dp"
         android:layout_marginTop="281dp"
-        android:text="Estado 3" />
+        android:text="Tristeza" />
 
+    <CheckBox
+        android:id="@+id/es4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="346dp"
+        android:text="Hambre" />
 
 
 </RelativeLayout>

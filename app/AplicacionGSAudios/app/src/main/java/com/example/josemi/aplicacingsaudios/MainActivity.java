@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner sp;
 
     //Strings para el paciente, las rutas, los nombres de los ficheros y el formato del audio
-    private String paciente,ruta,rutac,nf,formato;
+    private String paciente,ruta,rutac,nf,formato,azip;
 
     //Archivos de la carpeta principal, la creada, el archivo del audio y los dos csv
-    private File dir,dirc,audio,opc,est;
+    private File dir,dirc,audio,opc,est,afile;
 
     /**
      * Método que se ejecutará al crearse el Activity.
@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 estado.setEnabled(false);
                 enviar.setEnabled(false);
                 cancelar.setEnabled(false);
+
             }
         });
 
@@ -330,8 +331,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void comprimir(){
         //Archivos y carpetas
-        String azip = rutac + ".zip";
-        File afile = new File(azip);
+        azip = rutac + ".zip";
+        afile = new File(azip);
         File [] archivos = {audio,opc,est};
         try {
             //Streams de los datos
