@@ -103,5 +103,14 @@
         android:layout_marginTop="346dp"
         android:text="Hambre" />
 
+    <CheckBox
+        android:id="@+id/es5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="411dp"
+        android:text="Normal" />
+
 
 </RelativeLayout>
