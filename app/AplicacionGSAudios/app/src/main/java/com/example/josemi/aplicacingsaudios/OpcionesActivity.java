@@ -41,8 +41,8 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
     private String paciente,ruta,nf,csv; //Strings con el nombre del paciente, la ruta, el nombre del fichero y el nombre del csv
     private TextView texto; //TextView que se muestra en la parte superior de la pantalla
     private Button selec; //Botón selec
-    private CheckBox opc1,opc2,opc3; //CheckBox con las distintas opciones
-    private Spinner opc4; //Spinner con una de las opciones
+    private CheckBox opc1,opc2,opc3,opc5,opc6,opc7,opc8; //CheckBox con las distintas opciones
+    private Spinner opc4,opc9; //Spinner con una de las opciones
     private List<CheckBox> checks; //Lista de todos los CheckBox
     private List<Spinner> spinners; //Lista de todos los Spinners
     private File acsv; //Archivo del csv
@@ -80,13 +80,29 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         checks.add(opc3);
         opc4 = findViewById(R.id.opc4);
         spinners.add(opc4);
+        opc5 = findViewById(R.id.opc5);
+        checks.add(opc5);
+        opc6 = findViewById(R.id.opc6);
+        checks.add(opc6);
+        opc7 = findViewById(R.id.opc7);
+        checks.add(opc7);
+        opc8 = findViewById(R.id.opc8);
+        checks.add(opc8);
+        opc9 = findViewById(R.id.opc9);
+        spinners.add(opc9);
 
-        //Inicialización del spinner
+        //Inicialización de los spinners
         opc4.setSelection(-1);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.o4,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         opc4.setAdapter(adapter);
         opc4.setOnItemSelectedListener(this);
+
+        opc9.setSelection(-1);
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,R.array.o9,android.R.layout.simple_spinner_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        opc9.setAdapter(adapter2);
+        opc9.setOnItemSelectedListener(this);
 
         //Ruta del fichero
         csv = ruta + "/" + nf + "_Opciones" + ".csv";

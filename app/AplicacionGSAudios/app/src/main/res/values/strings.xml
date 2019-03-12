@@ -5,13 +5,22 @@
         <item>Paciente1</item>
         <item>Paciente2</item>
         <item>Paciente3</item>
+        <item>JMiguel</item>
+        <item>Sergio</item>
+        <item>JFrancisco</item>
+        <item>César</item>
     </string-array>
 
     <string-array name="o4">
-        <item>Opción 1</item>
-        <item>Opción 2</item>
-        <item>Opción 3</item>
-        <item>Opción 4</item>
-        <item>Opción 5</item>
+        <item>A su hora habitual</item>
+        <item>Antes de lo habitual</item>
+        <item>Más tarde de lo habitual</item>
+    </string-array>
+
+    <string-array name="o9">
+        <item>Normal</item>
+        <item>Mucho</item>
+        <item>Poco</item>
+        <item>Nada</item>
     </string-array>
 </resources>
