@@ -96,7 +96,7 @@ public class EstadoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Mensaje
-                Toast.makeText(getApplicationContext(),"Pulsado el Botón de Seleccionar",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Estado/s guardado",Toast.LENGTH_LONG).show();
 
                 //Si es valido las opciones puestas
                 if(validar()) {

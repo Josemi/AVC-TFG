@@ -122,7 +122,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onClick(View v) {
                 //Mensaje de que hemos pulsado el botón
-                Toast.makeText(getApplicationContext(),"Pulsado el Botón de Seleccionar",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Opciones guardadas",Toast.LENGTH_LONG).show();
                 String csv = ruta + "/" + nf + "_Opciones" + ".csv";
 
                 //Recogemos los valores de los checkbox y spinners

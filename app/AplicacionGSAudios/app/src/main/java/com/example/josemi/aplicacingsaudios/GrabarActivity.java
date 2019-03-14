@@ -165,7 +165,7 @@ public class GrabarActivity extends AppCompatActivity {
                 }
 
                 //Menmsaje de que se ha pulsado el botón selec
-                Toast.makeText(getApplicationContext(),"Pulsado el Botón de Seleccionar",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Audio guardado",Toast.LENGTH_LONG).show();
 
                 //Creamos un nuevo intent para poder enviar el resultado de la pantalla
                 Intent resultIntent = new Intent();
