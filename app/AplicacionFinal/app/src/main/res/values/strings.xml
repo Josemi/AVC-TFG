@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">AVC</string>
+
+    <string-array name="pac">
+        <item>Carmen-Cabezas</item>
+        <item>Jaime-Ureste</item>
+        <item>Fernando-Santamaría</item>
+        <item>Thelma-Fernandez</item>
+        <item>Coraline-Pérez</item>
+        <item> Rebeca-Schulet</item>
+        <item>JMiguel</item>
+        <item>Sergio</item>
+        <item>JFrancisco</item>
+        <item>César</item>
+    </string-array>
+</resources>

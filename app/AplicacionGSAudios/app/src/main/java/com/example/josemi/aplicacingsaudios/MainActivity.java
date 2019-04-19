@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void askForPermissions() {
         //Permisos que queremos pedir
-        String[] perm = {Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] perm = {Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         //Si alguno no está dado los pedimos
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(),perm[0]) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this.getApplicationContext(),perm[1]) != PackageManager.PERMISSION_GRANTED){
