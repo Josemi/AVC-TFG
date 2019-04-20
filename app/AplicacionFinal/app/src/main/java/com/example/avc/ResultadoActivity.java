@@ -101,6 +101,10 @@ public class ResultadoActivity extends AppCompatActivity {
         canc = findViewById(R.id.bCance);
         crono = findViewById(R.id.crono);
 
+        //Inicializamos el primer estado de visibilidad.
+        boolean[] a = {true,false,false,false};
+        cambiarVisibilidad(a);
+
         //Inicializamos la variable con nuestra activity para los diálogos.
         yo = this;
 
@@ -150,10 +154,6 @@ public class ResultadoActivity extends AppCompatActivity {
         }
         texto = findViewById(R.id.text);
         texto.setText(aux);
-
-        //Inicializamos el primer estado de visibilidad.
-        boolean[] a = {true,false,false,false};
-        cambiarVisibilidad(a);
 
         grab = true;
 
@@ -283,7 +283,14 @@ public class ResultadoActivity extends AppCompatActivity {
 
                 //Si no hemos parado de grabar paramos.
                 if(audio!= null && grab==false) {
-                    audio.stop();
+                    try {
+                        audio.stop();
+                        audio.release();
+                    }catch(IllegalStateException ex){
+                        ex.printStackTrace();
+                    }catch(RuntimeException ex){
+                        ex.printStackTrace();
+                    }
                 }
 
                 //Result intent con resultado ok.
@@ -464,7 +471,14 @@ public class ResultadoActivity extends AppCompatActivity {
     public void onBackPressed(){
         //Si estamos grabamos paramos.
         if(audio!= null && grab==false) {
-            audio.stop();
+            try {
+                audio.stop();
+                audio.release();
+            }catch(IllegalStateException ex){
+                ex.printStackTrace();
+            }catch(RuntimeException ex){
+                ex.printStackTrace();
+            }
         }
 
         //Si estamos reproduciendo un audio paramos.
