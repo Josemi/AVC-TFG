@@ -274,6 +274,11 @@ public class ResultadoActivity extends AppCompatActivity {
                     rpr.prepare();
                     rpr.start();
 
+                    //Comprobamos el volumen multimedia del dispositivo.
+                    if(auman.getStreamVolume(AudioManager.STREAM_MUSIC)==0){
+                        Toast.makeText(getApplicationContext(),"El volumen multimedia está muteado, si quiere escuchar la grabación suba el volumen.",Toast.LENGTH_LONG).show();
+                    }
+
                     //Mensaje de que se está reproduciendo el audio
                     Toast.makeText(getApplicationContext(),"Reproduciendo el último audio grabado", Toast.LENGTH_LONG).show();
                 }catch(Exception e){

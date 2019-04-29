@@ -9,7 +9,9 @@
 package com.example.avc;
 
 //Imports.
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -63,6 +65,9 @@ public class RFinalActivity extends AppCompatActivity {
     //File con el audio.
     private File aufile;
 
+    //AudioManager para comprobar el volumen multimedia.
+    private AudioManager auman;
+
     /**
      * Método que se ejecuta al crear el activity.
      * @param savedInstanceState Bundle.
@@ -86,6 +91,9 @@ public class RFinalActivity extends AppCompatActivity {
 
         //Inicializamos el file del audio.
         aufile = new File(audio);
+
+        //Inicializamos el AudioManager.
+        auman = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         //Inicializamos la animación.
         final Animation animScale = AnimationUtils.loadAnimation(this,R.anim.anim_scale);
@@ -175,6 +183,11 @@ public class RFinalActivity extends AppCompatActivity {
                     rpr.setDataSource(audio);
                     rpr.prepare();
                     rpr.start();
+
+                    //Comprobamos el volumen multimedia del dispositivo.
+                    if(auman.getStreamVolume(AudioManager.STREAM_MUSIC)==0){
+                        Toast.makeText(getApplicationContext(),"El volumen multimedia está muteado, si quiere escuchar la grabación suba el volumen.",Toast.LENGTH_LONG).show();
+                    }
 
                     //Mensaje de que se está reproduciendo el audio
                     Toast.makeText(getApplicationContext(),"Reproduciendo el audio relacionado con el resultado.", Toast.LENGTH_LONG).show();
