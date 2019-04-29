@@ -10,8 +10,10 @@ package com.example.avc;
 
 //Imports.
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +44,9 @@ public class InterpretarActivity extends AppCompatActivity {
 
     //MediaPlayer que nos permite reproducir los diálogos.
     private MediaPlayer rpr;
+
+    //AudioManager para comprobar el volumen multimedia.
+    private AudioManager auman;
 
     /**
      * Método que se ejecuta en la creación del Activity.
@@ -75,6 +80,9 @@ public class InterpretarActivity extends AppCompatActivity {
 
         //Ponemos el texto.
         texto.setText("Tipo de interpretación para " + paciente);
+
+        //Inicializamos el AudioManager.
+        auman = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         //Inicializamos la animación.
         final Animation animScale = AnimationUtils.loadAnimation(this,R.anim.anim_scale);
@@ -127,11 +135,11 @@ public class InterpretarActivity extends AppCompatActivity {
                 //Creamos el diálogo.
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
-                infoBuilder.setTitle("Información botón Estado");
-                infoBuilder.setMessage("Botón que nos redirige a la pantalla para interpretar y entender un estado emocional.");
+                infoBuilder.setTitle("Información botón Qué me pasa");
+                infoBuilder.setMessage("Haz clic en “Qué me ocurre o Cómo estoy” y podrás entender qué es lo que quiero decir.");
 
                 //Reproducimos el audio indicado.
-                rpr = MediaPlayer.create(yo,R.raw.informacion);
+                rpr = MediaPlayer.create(yo,R.raw.quemepasa);
                 rpr.start();
 
                 //Listener del botón de aceptar del diálogo.
@@ -152,6 +160,11 @@ public class InterpretarActivity extends AppCompatActivity {
 
                 //Mostramos el diálogo.
                 infoBuilder.show();
+
+                //Comprobamos el volumen multimedia del dispositivo.
+                if(auman.getStreamVolume(AudioManager.STREAM_MUSIC)==0){
+                    Toast.makeText(getApplicationContext(),"El volumen multimedia está muteado, si quiere escuchar la explicación suba el volumen.",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -165,11 +178,11 @@ public class InterpretarActivity extends AppCompatActivity {
                 //Creamos el diálogo.
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
-                infoBuilder.setTitle("Información botón Respuesta");
-                infoBuilder.setMessage("Botón que nos redirige a la pantalla para interpretar y enteder una respuesta (SI/NO).");
+                infoBuilder.setTitle("Información botón Responder sí o no");
+                infoBuilder.setMessage("Haz Clic en  “Responder si o no” cuando quieras hacerme una pregunta que la respuesta sea sí o no.");
 
                 //Reproducimos el audio indicado.
-                rpr = MediaPlayer.create(yo,R.raw.informacion);
+                rpr = MediaPlayer.create(yo,R.raw.respondersiono);
                 rpr.start();
 
                 //Listener del botón aceptar del diálogo.
@@ -188,6 +201,11 @@ public class InterpretarActivity extends AppCompatActivity {
                 });
                 //Mostramos el diálogo.
                 infoBuilder.show();
+
+                //Comprobamos el volumen multimedia del dispositivo.
+                if(auman.getStreamVolume(AudioManager.STREAM_MUSIC)==0){
+                    Toast.makeText(getApplicationContext(),"El volumen multimedia está muteado, si quiere escuchar la explicación suba el volumen.",Toast.LENGTH_LONG).show();
+                }
             }
         });
 

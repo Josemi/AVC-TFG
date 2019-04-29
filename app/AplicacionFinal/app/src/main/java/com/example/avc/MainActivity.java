@@ -11,9 +11,11 @@ package com.example.avc;
 //Imports.
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
@@ -61,7 +63,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //Activity para el uso en los diálogos.
     private Activity yo;
 
+    //Bandera para saber cuando es la primera vez que entramos en la selección del spinner.
     private boolean flag;
+
+    //AudioManager para poder controlar cuando no hay volumen.
+    private AudioManager auman;
 
     /**
      * Método que se ejecutará al crearse el Activity.
@@ -96,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //Pedimos los permisos.
         askForPermissions();
+
+        //Inicializamos el AudioManager.
+        auman = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         //Comprobación y/o creación de la estructura de carpeta y selección en el spinner del paciente almacenado.
         inicio();
@@ -150,11 +159,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //Creamos el diálogo.
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
-                infoBuilder.setTitle("Información botón Entender");
-                infoBuilder.setMessage("Botón que nos permite ir a la pantalla de selección del tipo de interpretción  que se quiere  hacer (Estado o Respuesta).");
+                infoBuilder.setTitle("Información botón Qué quiero decir");
+                infoBuilder.setMessage("Haz clic en  “qué quiero decir” y podrás saber qué es lo que estoy intentando decirte con los sonidos que hago.");
 
                 //Reproducimos el audio correspondiente.
-                rpr = MediaPlayer.create(yo,R.raw.informacion);
+                rpr = MediaPlayer.create(yo,R.raw.quequierodecir);
                 rpr.start();
 
                 //Botón para cerrar el diálogo.
@@ -173,6 +182,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 });
                 //Mostramos el diálogo.
                 infoBuilder.show();
+
+                //Comprobamos el volumen multimedia del dispositivo.
+                if(auman.getStreamVolume(AudioManager.STREAM_MUSIC)==0){
+                    Toast.makeText(getApplicationContext(),"El volumen multimedia está muteado, si quiere escuchar la explicación suba el volumen.",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -186,11 +200,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //Creamos el diálogo.
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
-                infoBuilder.setTitle("Información botón Opciones");
-                infoBuilder.setMessage("Botón que nos permite ir a la pantalla de opciones, donde podremos seleccionar las opciones adicionales relacionadas con " + paciente+".");
+                infoBuilder.setTitle("Información botón Registro de Información");
+                infoBuilder.setMessage("Registro de Información es sólo para el/la cuidador/a, padre o madre de la persona.");
 
                 //Reproducimos el audio correspondiente.
-                rpr = MediaPlayer.create(yo,R.raw.informacion);
+                rpr = MediaPlayer.create(yo,R.raw.registroinfo);
                 rpr.start();
 
                 //listener del botón para cerrar el diálogo.
@@ -211,6 +225,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 //Mostramos el diálogo.
                 infoBuilder.show();
+
+                //Comprobamos el volumen multimedia del dispositivo.
+                if(auman.getStreamVolume(AudioManager.STREAM_MUSIC)==0){
+                    Toast.makeText(getApplicationContext(),"El volumen multimedia está muteado, si quiere escuchar la explicación suba el volumen.",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

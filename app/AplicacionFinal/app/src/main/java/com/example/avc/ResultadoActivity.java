@@ -10,8 +10,10 @@ package com.example.avc;
 
 //Imports.
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.SystemClock;
@@ -74,6 +76,9 @@ public class ResultadoActivity extends AppCompatActivity {
     //File del audio.
     private File aufile;
 
+    //AudioManager para comprobar el volumen multimedia.
+    private AudioManager auman;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -122,6 +127,9 @@ public class ResultadoActivity extends AppCompatActivity {
 
         //Formato.
         formato = ".mp4";
+
+        //Inicializamos el AudioManager.
+        auman = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         //Inicializamos el audio.
         audio = new MediaRecorder();
@@ -311,10 +319,15 @@ public class ResultadoActivity extends AppCompatActivity {
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
                 infoBuilder.setTitle("Información botón Grabar");
-                infoBuilder.setMessage("Acción: Comienza a grabar un audio, si ya había uno lo sobrescribe.\n\n Disponible: Siempre cuando no se esté grabando.");
+                infoBuilder.setMessage("Primero tienes que grabar para poder entender lo que quiero decir. \n" +
+                        "Haz clic en  “Grabar” para grabar el sonido que estoy haciendo. \n" +
+                        "No tiene que haber ruidos a mi alrededor.\n" +
+                        "Solo tienes que grabar el sonido que hago.\n" +
+                        "Cuando termines de grabar pulsa la casilla parar.\n" +
+                        "Si crees que se ha grabado mal, pulsa parar.");
 
                 //Reproducimos el audio indicado.
-                rpr = MediaPlayer.create(yo,R.raw.informacion);
+                rpr = MediaPlayer.create(yo,R.raw.grabar);
                 rpr.start();
 
                 //Listener del botón aceptar del diálogo.
@@ -333,6 +346,11 @@ public class ResultadoActivity extends AppCompatActivity {
                 });
                 //Mostramos el diálogo.
                 infoBuilder.show();
+
+                //Comprobamos el volumen multimedia del dispositivo.
+                if(auman.getStreamVolume(AudioManager.STREAM_MUSIC)==0){
+                    Toast.makeText(getApplicationContext(),"El volumen multimedia está muteado, si quiere escuchar la explicación suba el volumen.",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -347,10 +365,12 @@ public class ResultadoActivity extends AppCompatActivity {
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
                 infoBuilder.setTitle("Información botón Parar");
-                infoBuilder.setMessage("Acción: Para y almacena la grabación en curso.\n\n Disponible: Cuando se esté grabando un audio (Después de pulsar grabar).");
+                infoBuilder.setMessage("Haz clic en “Parar”cuando termines de grabar.\n" +
+                        "Pulsa la casilla “Parar” cuando creas que hay un error en lo que estás grabado.\n" +
+                        "Después pulsa la casilla “Escuchar”, para asegurarte que está bien grabado.");
 
                 //Reproducimos el audio indicado.
-                rpr = MediaPlayer.create(yo,R.raw.informacion);
+                rpr = MediaPlayer.create(yo,R.raw.parar);
                 rpr.start();
 
                 //Listener del botón acpetar del diálogo.
@@ -369,6 +389,11 @@ public class ResultadoActivity extends AppCompatActivity {
                 });
                 //Mostramos el diálogo.
                 infoBuilder.show();
+
+                //Comprobamos el volumen multimedia del dispositivo.
+                if(auman.getStreamVolume(AudioManager.STREAM_MUSIC)==0){
+                    Toast.makeText(getApplicationContext(),"El volumen multimedia está muteado, si quiere escuchar la explicación suba el volumen.",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -382,11 +407,13 @@ public class ResultadoActivity extends AppCompatActivity {
                 //Creamos el diálogo.
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
-                infoBuilder.setTitle("Información botón Reproducir");
-                infoBuilder.setMessage("Acción: Reproduce el último audio grabado.\n\n Disponible: Después de grabar  un audio.");
+                infoBuilder.setTitle("Información botón Escuchar");
+                infoBuilder.setMessage("Haz clic en “Escuchar”, para  oír lo que has grabado. \n" +
+                        "Si se ha grabado bien, haz clic en  “Entender” para saber lo que quiero decir. \n" +
+                        "Si no se ha grabado bien, haz clic en “Grabar” para grabarme de nuevo.");
 
                 //Reproducimos el audio.
-                rpr = MediaPlayer.create(yo,R.raw.informacion);
+                rpr = MediaPlayer.create(yo,R.raw.escuchar);
                 rpr.start();
 
                 //Listener del botón aceptar.
@@ -405,6 +432,11 @@ public class ResultadoActivity extends AppCompatActivity {
                 });
                 //Mostramos el diálogo.
                 infoBuilder.show();
+
+                //Comprobamos el volumen multimedia del dispositivo.
+                if(auman.getStreamVolume(AudioManager.STREAM_MUSIC)==0){
+                    Toast.makeText(getApplicationContext(),"El volumen multimedia está muteado, si quiere escuchar la explicación suba el volumen.",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
