@@ -45,8 +45,8 @@ import java.util.Scanner;
  */
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    //ImageButtons para entender, opciones, información del ImageButton entender y del ImageButton opciones.
-    private ImageButton ent,opc,infent,infopc;
+    //ImageButtons para entender, opciones, información del ImageButton entender, del ImageButton opciones y de la pantalla información.
+    private ImageButton ent,opc,infent,infopc, info;
 
     //Spinner para la selección del paciente.
     private Spinner spac;
@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         opc = findViewById(R.id.bOpc);
         infent = findViewById(R.id.bInfEnt);
         infopc = findViewById(R.id.bInfOpc);
+        info = findViewById(R.id.bInfAVC);
 
         //Pedimos los permisos.
         askForPermissions();
@@ -111,6 +112,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //Creamos la animación para los ImageButtons.
         final Animation animScale = AnimationUtils.loadAnimation(this,R.anim.anim_scale);
+
+        //Listener del ImageButton información
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
+                //Creamos el nuevo Intent.
+                Intent miIntent = new Intent(yo,InfoActivity.class);
+
+                //Empezamos el nuevo intent.
+                startActivity(miIntent);
+            }
+        });
 
         //Listener del ImageButton entender
         ent.setOnClickListener(new View.OnClickListener() {

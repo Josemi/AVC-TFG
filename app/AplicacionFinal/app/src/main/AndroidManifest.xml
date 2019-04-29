@@ -18,25 +18,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".InfoActivity"></activity>
         <activity
             android:name=".RFinalActivity"
-            android:configChanges="orientation|screenSize"
-            />
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".OpcionesActivity"
-            android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ResultadoActivity"
-            android:configChanges="orientation|screenSize"
-            />
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".InterpretarActivity"
-            android:configChanges="orientation|screenSize"
-            />
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize"
-            >
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
