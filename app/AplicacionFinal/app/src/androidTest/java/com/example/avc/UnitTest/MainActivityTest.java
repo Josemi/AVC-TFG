@@ -72,10 +72,9 @@ public class MainActivityTest {
 
     /**
      * Método que se ejecuta antes de cada uno de los test de la clase.
-     * @throws Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
 
         main = mActivityTestRule.getActivity();
 

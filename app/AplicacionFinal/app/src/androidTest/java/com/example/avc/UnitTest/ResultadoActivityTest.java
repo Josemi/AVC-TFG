@@ -56,10 +56,9 @@ public class ResultadoActivityTest {
 
     /**
      * Método que se ejecuta al principio de cada test.
-     * @throws Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
 
         res = mActivityTestRule.getActivity();
 

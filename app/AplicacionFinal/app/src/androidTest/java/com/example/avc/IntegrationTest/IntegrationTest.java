@@ -484,6 +484,54 @@ public class IntegrationTest {
     }
 
     /**
+     * Comprueba que nos hemos movido a la pntalla InfoActivity tras pulsar el ImageButton información de AVC en el menú principal.
+     */
+    @Test
+    public void testMovInfo() {
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withId(R.id.bInfAVC)));
+        appCompatImageButton.perform(click());
+
+        ViewInteraction imageButton = onView(
+                allOf(withId(R.id.binfoacep)));
+        imageButton.check(matches(isDisplayed()));
+    }
+
+    /**
+     * Test que comrpueba que volvemos al menú principal tras pulsar el botón aceptar en InfoActivity.
+     */
+    @Test
+    public void testInfoAcep() {
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withId(R.id.bInfAVC)));
+        appCompatImageButton.perform(click());
+
+        ViewInteraction appCompatImageButton2 = onView(
+                allOf(withId(R.id.binfoacep)));
+        appCompatImageButton2.perform(click());
+
+        ViewInteraction imageButton = onView(
+                allOf(withId(R.id.bEntender)));
+        imageButton.check(matches(isDisplayed()));
+    }
+
+    /**
+     * Método que comprueba que se vuelve al menú principal si se pulsa el botón atras del dispositivo si estamos en InfoActivity.
+     */
+    @Test
+    public void testInfoAtr() {
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withId(R.id.bInfAVC)));
+        appCompatImageButton.perform(click());
+
+        pressBack();
+
+        ViewInteraction imageButton = onView(
+                allOf(withId(R.id.bEntender)));
+        imageButton.check(matches(isDisplayed()));
+    }
+
+    /**
      * Método generado por espresso para la posión usada en la selección del spinner.
      * @param parentMatcher
      * @param position

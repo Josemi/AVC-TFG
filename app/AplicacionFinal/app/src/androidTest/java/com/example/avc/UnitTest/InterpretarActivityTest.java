@@ -52,7 +52,7 @@ public class InterpretarActivityTest {
      * @throws Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
 
         inter = mActivityTestRule.getActivity();
 

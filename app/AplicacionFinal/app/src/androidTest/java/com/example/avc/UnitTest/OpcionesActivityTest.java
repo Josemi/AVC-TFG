@@ -35,10 +35,9 @@ public class OpcionesActivityTest {
 
     /**
      * Método que se ejecuta al comienzo de cada test de la clase.
-     * @throws Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
 
         opc = mActivityTestRule.getActivity();
 

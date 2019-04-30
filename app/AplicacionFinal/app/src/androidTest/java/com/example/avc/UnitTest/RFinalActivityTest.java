@@ -66,10 +66,9 @@ public class RFinalActivityTest {
 
     /**
      * Método que se ejecuta antes de cada test.
-     * @throws Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
 
 
 
