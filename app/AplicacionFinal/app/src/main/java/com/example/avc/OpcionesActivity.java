@@ -18,18 +18,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Clase de la pantalla que nos permite ver y modificar las opciones adicionales relacionadas con un paciente.
  */
-public class OpcionesActivity extends AppCompatActivity {
+public class OpcionesActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     //ImageButton para guardar y cancelar.
     private ImageButton gua, canc;
@@ -37,8 +40,14 @@ public class OpcionesActivity extends AppCompatActivity {
     //Lista con los CheckBoxes de las opciones.
     private List<CheckBox> lch;
 
+    //Checkbox con las opciones.
+    private CheckBox c1,c2,c3,c4,c5,c6,c7;
+
     //Lsita con los Spinners de las opciones.
     private List<Spinner> lsp;
+
+    //SPinners con el resto de opciones.
+    private Spinner s1,s2;
 
     //String del paciente.
     private String paciente;
@@ -46,8 +55,8 @@ public class OpcionesActivity extends AppCompatActivity {
     //TextView con el texto de explicación de la pantalla.
     private TextView texto;
 
-    //boolean para saber si se ha modificado algún valor.
-    private boolean cambio=false;
+    //int para saber si se ha modificado algún valor, se inicia a 2 porque tenemos 2 spinners.
+    private int cambio=2;
 
     //Conexión
     private ConnectivityManager conexion;
@@ -68,6 +77,10 @@ public class OpcionesActivity extends AppCompatActivity {
         gua = findViewById(R.id.bGuardar);
         gua.setEnabled(false);
 
+        //Inicializamos las dos listas.
+        lch = new ArrayList<>(7);
+        lsp= new ArrayList<>(2);
+
         //Inicializamos el ImageButton de cancelar.
         canc = findViewById(R.id.bC);
 
@@ -81,6 +94,40 @@ public class OpcionesActivity extends AppCompatActivity {
         //Inicializamos y ponemos el texto
         texto = findViewById(R.id.tttexto);
         texto.setText("Opciones almacenadas para " + paciente);
+
+        //Inicializamos y metemos en la lista a los checkbox y spinners
+        c1 = findViewById(R.id.c1);
+        lch.add(c1);
+        c2 = findViewById(R.id.c2);
+        lch.add(c2);
+        c3 = findViewById(R.id.c3);
+        lch.add(c3);
+        c4 = findViewById(R.id.c4);
+        lch.add(c4);
+        c5 = findViewById(R.id.c5);
+        lch.add(c5);
+        c6 = findViewById(R.id.c6);
+        lch.add(c6);
+        c7 = findViewById(R.id.c7);
+        lch.add(c7);
+
+        s1 = findViewById(R.id.s1);
+        lsp.add(s1);
+        s2 = findViewById(R.id.s2);
+        lsp.add(s2);
+
+        //Inicialización de los spinners
+        s1.setSelection(-1);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.s1,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        s1.setAdapter(adapter);
+        s1.setOnItemSelectedListener(this);
+
+        s2.setSelection(-1);
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,R.array.s2,android.R.layout.simple_spinner_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        s2.setAdapter(adapter2);
+        s1.setOnItemSelectedListener(this);
 
         //Creamos la animación de los ImageButton.
         final Animation animScale = AnimationUtils.loadAnimation(this,R.anim.anim_scale);
@@ -101,7 +148,7 @@ public class OpcionesActivity extends AppCompatActivity {
                 v.startAnimation(animScale);
 
                 //Si el flag con el cambio de alguna de las opciones es true.
-                if(cambio){
+                if(cambio>2){
                     //Guardamos el csv en el servidor si sale bien acabamos el activity sino mensaje de error.
                     if(guardarCSV()){
                         Toast.makeText(getApplicationContext(), "Se han guardado correctamente los valores.", Toast.LENGTH_LONG).show();
@@ -112,6 +159,18 @@ public class OpcionesActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Listeners de los checkbox
+        for(int i = 0; i < lch.size(); i++) {
+            lch.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gua.setEnabled(true);
+                    gua.setBackgroundResource(R.drawable.boton);
+                    cambio++;
+                }
+            });
+        }
 
         //Listener del ImageButton cancelar
         canc.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +183,32 @@ public class OpcionesActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+    }
+
+    /**
+     * Método que se ejecuta al seleccionar un item de un spinner
+     * @param parent Adaptador
+     * @param view Vista
+     * @param position Posición seleccionada
+     * @param id Id del spinner
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(cambio>2) {
+            gua.setEnabled(true);
+            gua.setBackgroundResource(R.drawable.boton);
+        }else {
+            cambio++;
+        }
+    }
+
+    /**
+     * Método que se ejecuta cuando no se ha seleccionado un iten en un spinner
+     * @param parent Adaptador
+     */
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 

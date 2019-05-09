@@ -13,4 +13,17 @@
         <item>JFrancisco</item>
         <item>César</item>
     </string-array>
+
+    <string-array name="s1">
+        <item>A su hora habitual</item>
+        <item>Antes de lo habitual</item>
+        <item>Más tarde de lo habitual</item>
+    </string-array>
+
+    <string-array name="s2">
+        <item>Normal</item>
+        <item>Mucho</item>
+        <item>Poco</item>
+        <item>Nada</item>
+    </string-array>
 </resources>
