@@ -55,8 +55,8 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
     //TextView con el texto de explicación de la pantalla.
     private TextView texto;
 
-    //int para saber si se ha modificado algún valor, se inicia a 2 porque tenemos 2 spinners.
-    private int cambio=2;
+    //int para saber si se ha modificado algún valor.
+    private int cambio;
 
     //Conexión
     private ConnectivityManager conexion;
@@ -127,7 +127,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,R.array.s2,android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s2.setAdapter(adapter2);
-        s1.setOnItemSelectedListener(this);
+        s2.setOnItemSelectedListener(this);
 
         //Creamos la animación de los ImageButton.
         final Animation animScale = AnimationUtils.loadAnimation(this,R.anim.anim_scale);
@@ -148,7 +148,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
                 v.startAnimation(animScale);
 
                 //Si el flag con el cambio de alguna de las opciones es true.
-                if(cambio>2){
+                if(cambio>1){
                     //Guardamos el csv en el servidor si sale bien acabamos el activity sino mensaje de error.
                     if(guardarCSV()){
                         Toast.makeText(getApplicationContext(), "Se han guardado correctamente los valores.", Toast.LENGTH_LONG).show();
@@ -195,7 +195,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(cambio>2) {
+        if(cambio>1) {
             gua.setEnabled(true);
             gua.setBackgroundResource(R.drawable.boton);
         }else {
