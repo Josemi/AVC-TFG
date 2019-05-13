@@ -33,11 +33,19 @@ import android.widget.Toast;
 
 import com.opencsv.CSVWriter;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -69,6 +77,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //AudioManager para poder controlar cuando no hay volumen.
     private AudioManager auman;
 
+    //Lista con los pacientes recuperados del servidor.
+    private List<String> pacientes;
+
     /**
      * Método que se ejecutará al crearse el Activity.
      * @param savedInstanceState Bundle
@@ -81,12 +92,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Seleción del layout con el que se relaciona el activity.
         setContentView(R.layout.activity_main);
 
+        //Cargamos los pacientes desde el servidor.
+        pacientes = obtPacientes();
+
         //Inicializamos la variable Activity yo con nuestro MainActivity.
         yo = this;
 
         //Inicializamos el spinner.
         spac = findViewById(R.id.spaciente);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.pac,android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,pacientes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spac.setAdapter(adapter);
         spac.setOnItemSelectedListener(this);
@@ -107,8 +121,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Inicializamos el AudioManager.
         auman = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        //Comprobación y/o creación de la estructura de carpeta y selección en el spinner del paciente almacenado.
-        inicio();
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                //Si aun no se ha hecho el post se espera
+                while(pacientes == null){
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //Comprobación y/o creación de la estructura de carpeta y selección en el spinner del paciente almacenado.
+                inicio();
+            }
+        }).start();
 
         //Creamos la animación para los ImageButtons.
         final Animation animScale = AnimationUtils.loadAnimation(this,R.anim.anim_scale);
@@ -330,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
             }
-            ArrayAdapter<CharSequence> ad = (ArrayAdapter<CharSequence>) spac.getAdapter();
+            ArrayAdapter<String> ad = (ArrayAdapter<String>) spac.getAdapter();
             try { //Si al leer el valor 0 no es nada es que no existe el fichero (si hacía un dcpac.exists() del csv siempre existía aunque no existiese en la primera ejecución).
                 spac.setSelection(ad.getPosition(valor[0].replace("\"", ""))); //Debería solo haber un elemento en el csv que es el paciente.
             }catch(RuntimeException ex){
@@ -364,5 +393,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         catch (IOException ex){
             ex.printStackTrace();
         }
+    }
+
+    private List<String> obtPacientes(){
+        //Post post = new Post();
+        //Toast.makeText(getApplicationContext(),post.execute().toString(),Toast.LENGTH_LONG).show();
+        PosTask p = new PosTask(getApplicationContext(),"http://192.168.1.219:5000/Nombres");
+        p.execute();
+        List<String> res = null;
+        try {
+            res = p.get();
+        }catch(InterruptedException ex){
+            ex.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        for(int i=0;i<res.size();i++){
+            res.set(i,res.get(i).replaceAll("\"",""));
+            res.set(i,res.get(i).replaceAll(",",""));
+        }
+        res.remove(0);
+        res.remove(res.size()-1);
+        return res;
     }
 }
