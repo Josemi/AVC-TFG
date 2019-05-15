@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Clase con la pantalla donde se envía y recibe el audio y su resultado y se muestra este.
@@ -203,18 +204,37 @@ public class RFinalActivity extends AppCompatActivity {
      * Método que envía el audio, recibe y muestra el resultado.
      */
     private void resolver() {
-        //Ejemplo.
-        HashMap<String,Integer> res = new HashMap<>();
-        res.put("si",75);
-        res.put("no", 25);
+        PostClasifica p = new PostClasifica(getApplicationContext(),"http://192.168.1.219:5000/Clasifica",paciente,tipo,"1");
+        p.execute();
+        List<String> res = null;
+        try {
+            res = p.get();
+        }catch(InterruptedException ex){
+            ex.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        if(res.isEmpty()){
+            Toast.makeText(getApplicationContext(),"No se pudo conectar con el servidor",Toast.LENGTH_LONG).show();
+            finish();
+        }else {
+            res.remove(0);
+            res.remove(res.size() - 1);
+            for (int i = 0; i < res.size(); i++) {
+                res.set(i, res.get(i).replaceAll("\"", ""));
+                res.set(i, res.get(i).replaceAll(",", ""));
+                res.set(i, res.get(i).replaceAll(" ",""));
+            }
+        }
+        HashMap<String,String> resmap = listAMap(res);
 
         //Ponemos las imagenes y los textos correspondientes al resultado.
         int j =0;
-        for(String i: res.keySet()){
+        for(String i: resmap.keySet()){
             try {
                 Field idField = R.drawable.class.getDeclaredField(i);
                 lim.get(j).setImageResource(idField.getInt(idField));
-                lres.get(j).setText(res.get(i).toString() + "%");
+                lres.get(j).setText(resmap.get(i) + "%");
             }catch (Exception e) {
                 e.printStackTrace();
             }
@@ -226,5 +246,14 @@ public class RFinalActivity extends AppCompatActivity {
             lim.get(j).setVisibility(View.INVISIBLE);
             lres.get(j).setVisibility(View.INVISIBLE);
         }
+    }
+
+    private HashMap<String,String> listAMap(List<String> res){
+        HashMap<String,String> mapa = new HashMap<>();
+        for(String i: res){
+            String[] val = i.split(":");
+            mapa.put(val[0],val[1]);
+        }
+        return mapa;
     }
 }

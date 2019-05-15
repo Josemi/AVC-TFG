@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -79,6 +81,9 @@ public class ResultadoActivity extends AppCompatActivity {
     //AudioManager para comprobar el volumen multimedia.
     private AudioManager auman;
 
+    //Conexión
+    private ConnectivityManager conexion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -87,6 +92,9 @@ public class ResultadoActivity extends AppCompatActivity {
 
         //Set del layout.
         setContentView(R.layout.activity_resultado);
+
+        //Obtenemos la conexión del dispositivo Android para poder comprobar sus estado.
+        conexion = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //Creamos la lista de ImageButton.
         lb = new ArrayList<>(4);
@@ -452,18 +460,23 @@ public class ResultadoActivity extends AppCompatActivity {
                 //Realizamos la animación.
                 v.startAnimation(animScale);
 
-                //Creamos el nuevo intent y sus parámetros.
-                Intent miIntent = new Intent(yo,RFinalActivity.class);
+                //Comprobamos la conexión.
+                if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                    //Creamos el nuevo intent y sus parámetros.
+                    Intent miIntent = new Intent(yo, RFinalActivity.class);
 
-                //Paciente.
-                miIntent.putExtra("paciente",paciente);
-                //Tipo de interpretación.
-                miIntent.putExtra("tipo",tipo);
-                //String de la ruta al audio.
-                miIntent.putExtra("audio",aust);
-                //Iniciamos el activity.
-                startActivity(miIntent);
-                finish();
+                    //Paciente.
+                    miIntent.putExtra("paciente", paciente);
+                    //Tipo de interpretación.
+                    miIntent.putExtra("tipo", tipo);
+                    //String de la ruta al audio.
+                    miIntent.putExtra("audio", aust);
+                    //Iniciamos el activity.
+                    startActivity(miIntent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(),"Tiene que estar conectado a Internet.",Toast.LENGTH_LONG).show();
+                }
             }
         });
 

@@ -1,12 +1,8 @@
 package com.example.avc;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,56 +13,38 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PosTask extends AsyncTask<Void,Void, List<String>> {
+public class PostClasifica extends AsyncTask<Void,Void, List<String>> {
+
     private Context httpContext;
-    ProgressDialog progressDialog;
     public List<String> resultadoapi;
     public String linkrequestAPI="";
+    private String paciente;
+    private boolean tipo;
+    private String audio;
 
-    public PosTask(Context c,String link){
+    public PostClasifica(Context c,String link,String paciente,boolean tipo, String audio){
         resultadoapi = new LinkedList<>();
         this.httpContext = c;
         this.linkrequestAPI=link;
+        this.paciente=paciente;
+        this.tipo = tipo;
+        this.audio=audio;
     }
 
 
     @Override
     protected void onPreExecute(){
         super.onPreExecute();
-        //progressDialog = ProgressDialog.show(httpContext,"Procesando","espere");
     }
 
     @Override
     protected void onPostExecute(List<String> s){
         super.onPostExecute(s);
-        //progressDialog.dismiss();
         resultadoapi=s;
-        Toast.makeText(httpContext,"Conexión realizada",Toast.LENGTH_LONG).show();
-    }
-
-    public String getStringFromJSON(JSONObject params) throws Exception{
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        Iterator<String> itr= params.keys();
-        while(itr.hasNext()){
-            String key = itr.next();
-            Object val = params.get(key);
-
-            if(first){
-                first=false;
-            }else{
-                result.append("&");
-            }
-            result.append(URLEncoder.encode(key,"UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(val.toString(),"UTF-8"));
-        }
-        return result.toString();
     }
 
     @Override
@@ -79,21 +57,23 @@ public class PosTask extends AsyncTask<Void,Void, List<String>> {
 
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
 
-            //OutputStream os = urlConnection.getOutputStream();
-            //BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
-            //writer.flush();
-            //writer.close();
-            //os.close();
+            OutputStream dos = urlConnection.getOutputStream();
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(dos,"UTF-8"));
+            bw.write("paciente="+paciente+"&tipo="+tipo+"&audio="+audio);
+            bw.flush();
+            bw.close();
+            dos.close();
 
             int responsecode= urlConnection.getResponseCode();
             if(responsecode==HttpURLConnection.HTTP_OK){
-               BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-               String linea;
-               while((linea=in.readLine())!=null){
+                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                String linea;
+                while((linea=in.readLine())!=null){
                     result.add(linea);
-               }
-               in.close();
+                }
+                in.close();
             }else{
                 result = null;
             }

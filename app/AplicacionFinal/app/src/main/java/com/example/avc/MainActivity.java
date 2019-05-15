@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private MediaPlayer rpr;
 
     //Activity para el uso en los diálogos.
-    private Activity yo;
+    private MainActivity yo;
 
     //Bandera para saber cuando es la primera vez que entramos en la selección del spinner.
     private boolean flag;
@@ -98,16 +98,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Inicializamos la variable Activity yo con nuestro MainActivity.
         yo = this;
 
-        //Inicializamos el spinner.
-        spac = findViewById(R.id.spaciente);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,pacientes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spac.setAdapter(adapter);
-        spac.setOnItemSelectedListener(this);
-
-        //Inicializamos la variable del paciente con lo seleccionado en el spinner.
-        paciente = spac.getSelectedItem().toString();
-
         //Inicializamos los ImageButtons
         ent = findViewById(R.id.bEntender);
         opc = findViewById(R.id.bOpc);
@@ -134,6 +124,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         e.printStackTrace();
                     }
                 }
+                crearSpinner();
+
                 //Comprobación y/o creación de la estructura de carpeta y selección en el spinner del paciente almacenado.
                 inicio();
             }
@@ -365,7 +357,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }catch(RuntimeException ex){
                 spac.setSelection(ad.getPosition("JMiguel")); //Debería solo haber un elemento en el csv que es el paciente.
             }
-            paciente = spac.getSelectedItem().toString();
         }else{
             guardarPaciente();
         }
@@ -396,9 +387,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private List<String> obtPacientes(){
-        //Post post = new Post();
-        //Toast.makeText(getApplicationContext(),post.execute().toString(),Toast.LENGTH_LONG).show();
-        PosTask p = new PosTask(getApplicationContext(),"http://192.168.1.219:5000/Nombres");
+        PostNombres p = new PostNombres(getApplicationContext(),"http://192.168.1.219:5000/Nombres");
         p.execute();
         List<String> res = null;
         try {
@@ -408,12 +397,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        for(int i=0;i<res.size();i++){
-            res.set(i,res.get(i).replaceAll("\"",""));
-            res.set(i,res.get(i).replaceAll(",",""));
+        if(res.isEmpty()){
+            Toast.makeText(getApplicationContext(),"No se pudo conectar con el servidor",Toast.LENGTH_LONG).show();
+            finish();
+            return null;
+        }else {
+            res.remove(0);
+            res.remove(res.size() - 1);
+            for (int i = 0; i < res.size(); i++) {
+                res.set(i, res.get(i).replaceAll("\"", ""));
+                res.set(i, res.get(i).replaceAll(",", ""));
+                res.set(i, res.get(i).replaceAll(" ",""));
+            }
+            return res;
         }
-        res.remove(0);
-        res.remove(res.size()-1);
-        return res;
+    }
+
+    private void crearSpinner(){
+        //Inicializamos el spinner.
+        spac = findViewById(R.id.spaciente);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(yo,android.R.layout.simple_spinner_item,pacientes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spac.setAdapter(adapter);
+        spac.setOnItemSelectedListener(this);
+
+        //Inicializamos la variable del paciente con lo seleccionado en el spinner.
+        paciente = spac.getSelectedItem().toString();
     }
 }

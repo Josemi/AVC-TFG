@@ -33,24 +33,24 @@ def setOpcPac():
 	
 	l = list()
 
-	c1 = request.form["c1"]
+	c1 = request.form["v1"]
 	l.append(c1)
-	c2 = request.form["c2"]
+	c2 = request.form["v2"]
 	l.append(c2)
-	c3 = request.form["c3"]
+	c3 = request.form["v3"]
 	l.append(c3)
-	c4 = request.form["c4"]
+	c4 = request.form["v4"]
 	l.append(c4)
-	c5 = request.form["c5"]
+	c5 = request.form["v5"]
 	l.append(c5)
-	c6 = request.form["c6"]
+	c6 = request.form["v6"]
 	l.append(c6)
-	c7 = request.form["c7"]
+	c7 = request.form["v7"]
 	l.append(c7)
 
-	s1 = request.form["s1"]
+	s1 = request.form["v8"]
 	l.append(s1)
-	s2 = request.form["s2"]
+	s2 = request.form["v9"]
 	l.append(s2)
 
 	os.remove('Opciones/' + pac + '.csv')
@@ -64,8 +64,9 @@ def setOpcPac():
 @app.route("/Clasifica", methods=['POST'])
 def clasifica():
 	pac = request.form["paciente"]
+	tip = request.form["tipo"]
 	au = request.form["audio"]
-	return jsonify({"dolor":"75","enfado":"25"})
+	return jsonify(["dolor:75","enfado:25"])
 
 	return
 if __name__ == '__main__':

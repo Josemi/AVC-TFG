@@ -92,7 +92,7 @@ public class MainActivityTest {
         main.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ArrayAdapter<CharSequence> ad = (ArrayAdapter<CharSequence>) sp.getAdapter();
+                ArrayAdapter<String> ad = (ArrayAdapter<String>) sp.getAdapter();
                 sp.setSelection(ad.getPosition(paciente));
             }
         });

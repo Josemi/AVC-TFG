@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Clase de la pantalla que nos permite ver y modificar las opciones adicionales relacionadas con un paciente.
@@ -219,7 +220,32 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
     private boolean cargarCSV(){
         //Comprobamos la conexión.
         if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            return true;
+            PostObtOpciones p = new PostObtOpciones(getApplicationContext(),"http://192.168.1.219:5000/ObtOpciones",paciente);
+            p.execute();
+            List<String> res = null;
+            try {
+                res = p.get();
+            }catch(InterruptedException ex){
+                ex.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            if(res.isEmpty()){
+                Toast.makeText(getApplicationContext(),"No se pudo conectar con el servidor.",Toast.LENGTH_LONG).show();
+                finish();
+                return false;
+            }else {
+                res.remove(0);
+                res.remove(res.size() - 1);
+                for (int i = 0; i < res.size(); i++) {
+                    res.set(i, res.get(i).replaceAll("\"", ""));
+                    res.set(i, res.get(i).replaceAll(",", ""));
+                    res.set(i, res.get(i).replaceAll(" ",""));
+                }
+                cambiarOpciones(res);
+                Toast.makeText(getApplicationContext(),"Valores de " + paciente + " cargados con éxito.",Toast.LENGTH_LONG).show();
+                return true;
+            }
         }else{
             return false;
         }
@@ -232,11 +258,43 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
     private boolean guardarCSV(){
         //Comprobamos la conexión.
         if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            return true;
+            List<String> valores = new ArrayList<>(lsp.size()+lch.size());
+            for(int i = 0;i<lch.size();i++){
+                valores.add(Boolean.toString(lch.get(i).isChecked()));
+            }
+            for(int j=0;j<lsp.size();j++){
+                valores.add(lsp.get(j).getSelectedItem().toString());
+            }
+            PostGuaOpciones p = new PostGuaOpciones(getApplicationContext(),"http://192.168.1.219:5000/GuaOpciones",paciente,valores);
+            p.execute();
+            Boolean res = null;
+            try {
+                res = p.get();
+            }catch(InterruptedException ex){
+                ex.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            return res;
         }else{
             return false;
         }
     }
 
+    private void cambiarOpciones(List<String> opciones){
+        int i = 0;
+        for(;i<lch.size();i++){
+            if(opciones.get(i).equals("true")){
+                lch.get(i).setChecked(true);
+            }else{
+                lch.get(i).setChecked(false);
+            }
+        }
 
+        for(int j=0;j<lsp.size();j++){
+            ArrayAdapter<CharSequence> ad = (ArrayAdapter<CharSequence>) lsp.get(j).getAdapter();
+            lsp.get(j).setSelection(ad.getPosition(opciones.get(i)));
+            i++;
+        }
+    }
 }
