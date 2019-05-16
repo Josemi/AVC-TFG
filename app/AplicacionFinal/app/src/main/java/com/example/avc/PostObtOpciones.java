@@ -1,6 +1,14 @@
+/**
+ * AVC ~ Asistente Virtual para la Comunicación
+ *
+ * @author: José Miguel Ramírez Sanz
+ * @version: 1.0
+ */
+
+//Package.
 package com.example.avc;
 
-import android.content.Context;
+//Imports.
 import android.os.AsyncTask;
 
 import java.io.BufferedReader;
@@ -15,43 +23,69 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Clase para el post que obtiene las opciones de un paciente.
+ */
 public class PostObtOpciones extends AsyncTask<Void,Void, List<String>> {
-    private Context httpContext;
+    //Lista resultado.
     public List<String> resultadoapi;
+
+    //Link del servidor.
     public String linkrequestAPI="";
+
+    //Paciente seleccionado.
     private String paciente;
 
-    public PostObtOpciones(Context c,String link,String paciente){
+    /**
+     * Constructor de la clase del post.
+     * @param link link del servidor.
+     * @param paciente paciente seleccionado.
+     */
+    public PostObtOpciones(String link,String paciente){
         resultadoapi = new LinkedList<>();
-        this.httpContext = c;
         this.linkrequestAPI=link;
         this.paciente=paciente;
     }
 
-
+    /**
+     * Método que se ejecuta antes del execute.
+     */
     @Override
     protected void onPreExecute(){
         super.onPreExecute();
     }
 
+    /**
+     * Método que se ejecuta después del execute que devuelve el resultado.
+     * @param s lista con el resultado.
+     */
     @Override
     protected void onPostExecute(List<String> s){
         super.onPostExecute(s);
         resultadoapi=s;
     }
 
+    /**
+     * Método que se ejcuta en segundo plano y obtiene el resultado.
+     * @param voids
+     * @return lista con las opciones.
+     */
     @Override
     protected List<String> doInBackground(Void... voids) {
         List<String> result = new LinkedList<>();
         String wsURL=linkrequestAPI;
         try {
+            //Conexión.
             URL url = new URL(wsURL);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
+            //Settings de la conexión.
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
+            urlConnection.setConnectTimeout(5000);
 
+            //Parámetros.
             OutputStream dos = urlConnection.getOutputStream();
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(dos,"UTF-8"));
             bw.write("paciente="+paciente);
@@ -59,6 +93,7 @@ public class PostObtOpciones extends AsyncTask<Void,Void, List<String>> {
             bw.close();
             dos.close();
 
+            //Respuesta.
             int responsecode= urlConnection.getResponseCode();
             if(responsecode==HttpURLConnection.HTTP_OK){
                 BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));

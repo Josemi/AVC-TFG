@@ -9,6 +9,7 @@
 package com.example.avc;
 
 //Imports.
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -204,28 +205,39 @@ public class RFinalActivity extends AppCompatActivity {
      * Método que envía el audio, recibe y muestra el resultado.
      */
     private void resolver() {
-        PostClasifica p = new PostClasifica(getApplicationContext(),"http://192.168.1.219:5000/Clasifica",paciente,tipo,"1");
+        //Hacemos el post.
+        PostClasifica p = new PostClasifica(getApplicationContext(),"http://192.168.137.1:5000/Clasifica",paciente,tipo,"1");
         p.execute();
         List<String> res = null;
         try {
+            //Obtenemos el resultado.
             res = p.get();
         }catch(InterruptedException ex){
             ex.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        //Si está vacío, error del server se finaliza el Activity y se vuelve a ResultadoActivity con el audio ya cargado.
         if(res.isEmpty()){
             Toast.makeText(getApplicationContext(),"No se pudo conectar con el servidor",Toast.LENGTH_LONG).show();
             finish();
         }else {
+            //Creamos un nuevo intent para poder enviar el resultado de la pantalla
+            Intent resultIntent = new Intent();
+            //Ponemos como resultado OK
+            setResult(Activity.RESULT_OK, resultIntent);
             res.remove(0);
             res.remove(res.size() - 1);
+
+            //Tratamos la salida.
             for (int i = 0; i < res.size(); i++) {
                 res.set(i, res.get(i).replaceAll("\"", ""));
                 res.set(i, res.get(i).replaceAll(",", ""));
                 res.set(i, res.get(i).replaceAll(" ",""));
             }
         }
+
+        //Lo transformamos en un HashMap.
         HashMap<String,String> resmap = listAMap(res);
 
         //Ponemos las imagenes y los textos correspondientes al resultado.
@@ -248,6 +260,11 @@ public class RFinalActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Método para transformar la lista en HashMap.
+     * @param res Lista resultado.
+     * @return HashMap con el resultado.
+     */
     private HashMap<String,String> listAMap(List<String> res){
         HashMap<String,String> mapa = new HashMap<>();
         for(String i: res){

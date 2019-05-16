@@ -30,8 +30,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -84,6 +82,10 @@ public class ResultadoActivity extends AppCompatActivity {
     //Conexión
     private ConnectivityManager conexion;
 
+    /**
+     * Método que se ejecuta al iniciar la Activity.
+     * @param savedInstanceState Bundle.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -472,8 +474,7 @@ public class ResultadoActivity extends AppCompatActivity {
                     //String de la ruta al audio.
                     miIntent.putExtra("audio", aust);
                     //Iniciamos el activity.
-                    startActivity(miIntent);
-                    finish();
+                    startActivityForResult(miIntent,1);
                 }else{
                     Toast.makeText(getApplicationContext(),"Tiene que estar conectado a Internet.",Toast.LENGTH_LONG).show();
                 }
@@ -542,5 +543,29 @@ public class ResultadoActivity extends AppCompatActivity {
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
+    }
+
+    /**
+     * Método para comprobar si la finalización de los activities ha sido correcta.
+     *
+     * @param requestCode Código del intent
+     * @param resultCode Resultado de la actividad
+     * @param data Intent
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Switch de la procedencia
+        switch (requestCode) {
+            case (1): {
+                //Si el resultado ha sido OK
+                if (resultCode == Activity.RESULT_OK) {
+                    //Finalizamos la activity si el resultado ha sido correcto.
+                    finish();
+                }
+                break;
+            }
+        }
     }
 }

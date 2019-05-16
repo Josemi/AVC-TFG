@@ -134,9 +134,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         final Animation animScale = AnimationUtils.loadAnimation(this,R.anim.anim_scale);
 
         //Cargamos el csv desde el servidor y miramos si ha salido bien.
-        if(cargarCSV()){
-
-        }else{
+        if(!cargarServer()){
             Toast.makeText(getApplicationContext(), "Error al cargar los valores guardados.", Toast.LENGTH_LONG).show();
             finish();
         }
@@ -151,7 +149,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
                 //Si el flag con el cambio de alguna de las opciones es true.
                 if(cambio>1){
                     //Guardamos el csv en el servidor si sale bien acabamos el activity sino mensaje de error.
-                    if(guardarCSV()){
+                    if(guardarServer()){
                         Toast.makeText(getApplicationContext(), "Se han guardado correctamente los valores.", Toast.LENGTH_LONG).show();
                         finish();
                     }else{
@@ -217,23 +215,27 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
      * Carga el csv con las opciones guardadas para el paciente seleccionado en MainAcitivty.
      * @return true si se ha podido cargar.
      */
-    private boolean cargarCSV(){
+    private boolean cargarServer(){
         //Comprobamos la conexión.
         if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            PostObtOpciones p = new PostObtOpciones(getApplicationContext(),"http://192.168.1.219:5000/ObtOpciones",paciente);
+            //Hacemos el post
+            PostObtOpciones p = new PostObtOpciones(getApplicationContext(),"http://192.168.137.1:5000/ObtOpciones",paciente);
             p.execute();
             List<String> res = null;
             try {
+                //Obtenemos el resultado
                 res = p.get();
             }catch(InterruptedException ex){
                 ex.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            //Si está vacío es error del servidor, se finaliza el Activity y se vuelve al menú principal, se devuelve false.
             if(res.isEmpty()){
                 Toast.makeText(getApplicationContext(),"No se pudo conectar con el servidor.",Toast.LENGTH_LONG).show();
                 finish();
                 return false;
+            //Sino se trata el resultado y se cargan las opciones y se devuelve true.
             }else {
                 res.remove(0);
                 res.remove(res.size() - 1);
@@ -242,11 +244,14 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
                     res.set(i, res.get(i).replaceAll(",", ""));
                     res.set(i, res.get(i).replaceAll(" ",""));
                 }
+
+                //Cambiamos las opciones con los valores de la lista.
                 cambiarOpciones(res);
                 Toast.makeText(getApplicationContext(),"Valores de " + paciente + " cargados con éxito.",Toast.LENGTH_LONG).show();
                 return true;
             }
         }else{
+            //Si no hay conexión devolvemos false.
             return false;
         }
     }
@@ -255,34 +260,38 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
      * Guarda en el servidor el csv con las opciones.
      * @return
      */
-    private boolean guardarCSV(){
+    private boolean guardarServer(){
         //Comprobamos la conexión.
         if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            List<String> valores = new ArrayList<>(lsp.size()+lch.size());
-            for(int i = 0;i<lch.size();i++){
-                valores.add(Boolean.toString(lch.get(i).isChecked()));
-            }
-            for(int j=0;j<lsp.size();j++){
-                valores.add(lsp.get(j).getSelectedItem().toString());
-            }
-            PostGuaOpciones p = new PostGuaOpciones(getApplicationContext(),"http://192.168.1.219:5000/GuaOpciones",paciente,valores);
+            //Obtenemos las opciones a guardar.
+            List<String> valores = obtenerOpciones();
+
+            //Hacemos el post
+            PostGuaOpciones p = new PostGuaOpciones(getApplicationContext(),"http://192.168.137.1:5000/GuaOpciones",paciente,valores);
             p.execute();
             Boolean res = null;
             try {
+                //Obtenemos el resultado.
                 res = p.get();
             }catch(InterruptedException ex){
                 ex.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            //Retornamos el resultado, true si se ha guardado false si no se ha guardado.
             return res;
         }else{
             return false;
         }
     }
 
+    /**
+     * Método que nos permite cambiar las opciones de los checkboxs y los spinners.
+     * @param opciones lista con las opciones a cargar.
+     */
     private void cambiarOpciones(List<String> opciones){
         int i = 0;
+        //Cargamos los checkboxs.
         for(;i<lch.size();i++){
             if(opciones.get(i).equals("true")){
                 lch.get(i).setChecked(true);
@@ -290,11 +299,29 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
                 lch.get(i).setChecked(false);
             }
         }
-
+        //Cargamos los spinners.
         for(int j=0;j<lsp.size();j++){
             ArrayAdapter<CharSequence> ad = (ArrayAdapter<CharSequence>) lsp.get(j).getAdapter();
             lsp.get(j).setSelection(ad.getPosition(opciones.get(i)));
             i++;
         }
+    }
+
+    /**
+     * Método que obtiene las opciones de los checkboxs y los spinners.
+     * @return lista con los valoresd de las opciones.
+     */
+    private List<String> obtenerOpciones(){
+        //Lsita de las opciones.
+        List<String> valores = new ArrayList<>(lsp.size()+lch.size());
+        //Guardamos los valores de los checkboxs.
+        for(int i = 0;i<lch.size();i++){
+            valores.add(Boolean.toString(lch.get(i).isChecked()));
+        }
+        //Guardamos los valores de los spinners.
+        for(int j=0;j<lsp.size();j++){
+            valores.add(lsp.get(j).getSelectedItem().toString());
+        }
+        return valores;
     }
 }

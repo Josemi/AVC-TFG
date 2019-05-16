@@ -111,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Inicializamos el AudioManager.
         auman = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
+        /**
+         * Hilo para poder hacer el sleep cuando aun no se ha cargado los nombres de los pacientes, ya que sino da error el spinner.
+         */
         new Thread(new Runnable()
         {
             @Override
@@ -119,11 +122,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //Si aun no se ha hecho el post se espera
                 while(pacientes == null){
                     try {
+                        //Dormimos 5 segundos
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
+
+                //Creamos el spinner
                 crearSpinner();
 
                 //Comprobación y/o creación de la estructura de carpeta y selección en el spinner del paciente almacenado.
@@ -386,21 +392,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * Método que carga los pacientes desde el servidor por un post.
+     * @return Lista de los pacientes que se pueden seleccionar.
+     */
     private List<String> obtPacientes(){
-        PostNombres p = new PostNombres(getApplicationContext(),"http://192.168.1.219:5000/Nombres");
+        //Hacemos el post
+        PostNombres p = new PostNombres(getApplicationContext(),"http://192.168.137.1:5000/Nombres");
         p.execute();
         List<String> res = null;
         try {
+            //Obtenemos el resultado.
             res = p.get();
         }catch(InterruptedException ex){
             ex.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        //Si está vacío es que hay error en el server, se finaliza la app.
         if(res.isEmpty()){
             Toast.makeText(getApplicationContext(),"No se pudo conectar con el servidor",Toast.LENGTH_LONG).show();
             finish();
             return null;
+        //Sino recogemos los datos y los devolvemos.
         }else {
             res.remove(0);
             res.remove(res.size() - 1);
@@ -413,6 +427,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * Método para crear el spinner. Se hace un método porque sino no deja realizar estas operaciones en un hilo fuera del Activity.
+     */
     private void crearSpinner(){
         //Inicializamos el spinner.
         spac = findViewById(R.id.spaciente);
