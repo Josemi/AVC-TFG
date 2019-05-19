@@ -11,6 +11,7 @@ package com.example.avc;
 //Imports
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -43,19 +44,31 @@ public class PostClasifica extends AsyncTask<Void,Void, List<String>> {
     //Audio en base64.
     private String audio;
 
+    //Context para los toast.
+    private Context con;
+
+    //Número de respuesta.
+    private int responsecode;
+
+    //Token de seguridad.
+    private String token;
+
     /**
      * Constructor de la clase.
      * @param link link del servidor.
      * @param paciente paciente seleccionado.
      * @param tipo tipo de interpretación.
      * @param audio audio en base64.
+     * @param con context para los toast
      */
-    public PostClasifica(String link,String paciente,boolean tipo, String audio){
+    public PostClasifica(String link,String paciente,boolean tipo, String audio,Context con,String token){
         resultadoapi = new LinkedList<>();
         this.linkrequestAPI=link;
         this.paciente=paciente;
         this.tipo = tipo;
         this.audio=audio;
+        this.con=con;
+        this.token=token;
     }
 
     /**
@@ -74,6 +87,13 @@ public class PostClasifica extends AsyncTask<Void,Void, List<String>> {
     protected void onPostExecute(List<String> s){
         super.onPostExecute(s);
         resultadoapi=s;
+        if(responsecode==HttpURLConnection.HTTP_FORBIDDEN) {
+            Toast.makeText(con, "ERROR Er2:\nToken de seguridad incorrecto, contacte con el Administrador.", Toast.LENGTH_LONG).show();
+        }else if(responsecode==HttpURLConnection.HTTP_INTERNAL_ERROR){
+            Toast.makeText(con, "ERROR Er8:\nEl fichero de clasificación de " + paciente + " no está, avise al Administrador.", Toast.LENGTH_LONG).show();
+        }else if(responsecode!=HttpURLConnection.HTTP_OK){
+            Toast.makeText(con, "ERROR Er1:\nNo se pudo conectar con el servidor.", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -99,13 +119,13 @@ public class PostClasifica extends AsyncTask<Void,Void, List<String>> {
             //Parámetros
             OutputStream dos = urlConnection.getOutputStream();
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(dos,"UTF-8"));
-            bw.write("paciente="+paciente+"&tipo="+tipo+"&audio="+audio);
+            bw.write("paciente="+paciente+"&tipo="+tipo+"&audio="+audio+"&token="+token);
             bw.flush();
             bw.close();
             dos.close();
 
             //Respuesta
-            int responsecode= urlConnection.getResponseCode();
+            responsecode= urlConnection.getResponseCode();
             if(responsecode==HttpURLConnection.HTTP_OK){
                 BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String linea;

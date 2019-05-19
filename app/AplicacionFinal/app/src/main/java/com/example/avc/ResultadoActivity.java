@@ -49,8 +49,8 @@ public class ResultadoActivity extends AppCompatActivity {
     //ImageButton de grabar, parar, reproducir, información sobre grabar/parar/reproducir, interpretar y cancelar.
     private ImageButton grb,stp,play,infgrb,infstp,infplay,inter,canc;
 
-    //String del paciente, la ruta, el formato del audio, ruta del audio y fecha actual.
-    private String paciente,ruta,formato,aust,fecha;
+    //String del paciente, la ruta, el formato del audio, ruta del audio y fecha actual, link del servidor,token de seguridad.
+    private String paciente,ruta,formato,aust,fecha,link,token;
 
     //TextView con el texto informativo de la pantalla.
     private TextView texto;
@@ -134,6 +134,10 @@ public class ResultadoActivity extends AppCompatActivity {
         ruta = miIntent.getStringExtra("ruta");
         //Tipo, true = estado y false = pregunta.
         tipo = miIntent.getBooleanExtra("tipo",true);
+        //Link del servidor
+        link = miIntent.getStringExtra("link");
+        //Token de seguridad.
+        token= miIntent.getStringExtra("token");
 
         //Formato.
         formato = ".mp4";
@@ -473,6 +477,11 @@ public class ResultadoActivity extends AppCompatActivity {
                     miIntent.putExtra("tipo", tipo);
                     //String de la ruta al audio.
                     miIntent.putExtra("audio", aust);
+                    //String con el link del servidor.
+                    miIntent.putExtra("link",link);
+                    //Token de seguridad.
+                    miIntent.putExtra("token",token);
+
                     //Iniciamos el activity.
                     startActivityForResult(miIntent,1);
                 }else{

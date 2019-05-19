@@ -9,11 +9,18 @@
 package com.example.avc;
 
 //Imports
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
+
+import org.apache.http.client.methods.HttpPost;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,18 +32,30 @@ import java.util.List;
  */
 public class PostNombres extends AsyncTask<Void,Void, List<String>> {
     //Lista de pacientes.
-    public List<String> resultadoapi;
+    private List<String> resultadoapi;
 
     //Link del servidor.
-    public String linkrequestAPI="";
+    private String linkrequestAPI="";
+
+    //Clave de seguridad.
+    private String token;
+
+    //Contexto para los toast.
+    private Context con;
+
+    //Código de respuesta.
+    private int responsecode;
 
     /**
      * Constructor de la clase.
      * @param link link del servidor.
+     * @param con context para los toast
      */
-    public PostNombres(String link){
+    public PostNombres(String link,String token,Context con){
         resultadoapi = new LinkedList<>();
         this.linkrequestAPI=link;
+        this.token = token;
+        this.con = con;
     }
 
     /**
@@ -55,6 +74,13 @@ public class PostNombres extends AsyncTask<Void,Void, List<String>> {
     protected void onPostExecute(List<String> s){
         super.onPostExecute(s);
         resultadoapi=s;
+        if(responsecode==HttpURLConnection.HTTP_FORBIDDEN) {
+            Toast.makeText(con, "ERROR Er2:\nToken de seguridad incorrecto, contacte con el Administrador.", Toast.LENGTH_LONG).show();
+        }else if(responsecode==HttpURLConnection.HTTP_INTERNAL_ERROR){
+            Toast.makeText(con, "ERROR Er4:\nEl fichero con la lista de nombres no está en el servidor, contacte con el Administrador.", Toast.LENGTH_LONG).show();
+        }else if(responsecode!=HttpURLConnection.HTTP_OK){
+            Toast.makeText(con, "ERROR Er1:\nNo se pudo conectar con el servidor.", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -74,14 +100,26 @@ public class PostNombres extends AsyncTask<Void,Void, List<String>> {
             //Settings de la conexión
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
             urlConnection.setConnectTimeout(5000);
 
+            //Parámetros.
+            OutputStream dos = urlConnection.getOutputStream();
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(dos,"UTF-8"));
+            bw.write("token="+token);
+            bw.flush();
+            bw.close();
+            dos.close();
+
             //Respuesta
-            int responsecode= urlConnection.getResponseCode();
+            responsecode= urlConnection.getResponseCode();
             if(responsecode==HttpURLConnection.HTTP_OK){
                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                String linea;
                while((linea=in.readLine())!=null){
+                   if(linea=="None"){
+                       return null;
+                   }
                     result.add(linea);
                }
                in.close();

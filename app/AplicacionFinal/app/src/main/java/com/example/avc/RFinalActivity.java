@@ -16,6 +16,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -27,6 +28,9 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,8 +59,8 @@ public class RFinalActivity extends AppCompatActivity {
     //Lista de TextView.
     private List<TextView> lres;
 
-    //Strinf del paciente y la ruta del audio.
-    private String paciente,audio;
+    //Strinf del paciente y la ruta del audio, link al servidor,token de seguridad.
+    private String paciente,audio,link,token;
 
     //Boolean con el tipo de interpretación true = estado, false = pregunta.
     private boolean tipo;
@@ -90,6 +94,10 @@ public class RFinalActivity extends AppCompatActivity {
         tipo = miIntent.getBooleanExtra("ruta",true);
         //Ruta del audio.
         audio = miIntent.getStringExtra("audio");
+        //Link al servidor
+        link = miIntent.getStringExtra("link");
+        //Token de seguridad.
+        token = miIntent.getStringExtra("token");
 
         //Inicializamos el file del audio.
         aufile = new File(audio);
@@ -205,8 +213,20 @@ public class RFinalActivity extends AppCompatActivity {
      * Método que envía el audio, recibe y muestra el resultado.
      */
     private void resolver() {
+        String baudio=null;
+        try {
+            byte[] b = new byte[(int) aufile.length()];
+            FileInputStream fis = new FileInputStream(aufile);
+            fis.read(b);
+            baudio = Base64.encodeToString(b, Base64.DEFAULT);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         //Hacemos el post.
-        PostClasifica p = new PostClasifica(getApplicationContext(),"http://192.168.137.1:5000/Clasifica",paciente,tipo,"1");
+        PostClasifica p = new PostClasifica(link+"/Clasifica",paciente,tipo,baudio,this,token);
         p.execute();
         List<String> res = null;
         try {
@@ -217,46 +237,50 @@ public class RFinalActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        //Si está vacío, error del server se finaliza el Activity y se vuelve a ResultadoActivity con el audio ya cargado.
-        if(res.isEmpty()){
-            Toast.makeText(getApplicationContext(),"No se pudo conectar con el servidor",Toast.LENGTH_LONG).show();
+        if(res!=null){
+            //Si está vacío, error del server se finaliza el Activity y se vuelve a ResultadoActivity con el audio ya cargado.
+            if(res.isEmpty()){
+                Toast.makeText(getApplicationContext(),"ERROR Er9:\nResultado devuelto por el servidor vacío.",Toast.LENGTH_LONG).show();
+                finish();
+            }else {
+                //Creamos un nuevo intent para poder enviar el resultado de la pantalla
+                Intent resultIntent = new Intent();
+                //Ponemos como resultado OK
+                setResult(Activity.RESULT_OK, resultIntent);
+                res.remove(0);
+                res.remove(res.size() - 1);
+
+                //Tratamos la salida.
+                for (int i = 0; i < res.size(); i++) {
+                    res.set(i, res.get(i).replaceAll("\"", ""));
+                    res.set(i, res.get(i).replaceAll(",", ""));
+                    res.set(i, res.get(i).replaceAll(" ", ""));
+                }
+
+                //Lo transformamos en un HashMap.
+                HashMap<String, String> resmap = listAMap(res);
+
+                //Ponemos las imagenes y los textos correspondientes al resultado.
+                int j = 0;
+                for (String i : resmap.keySet()) {
+                    try {
+                        Field idField = R.drawable.class.getDeclaredField(i);
+                        lim.get(j).setImageResource(idField.getInt(idField));
+                        lres.get(j).setText(resmap.get(i) + "%");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    j++;
+                }
+
+                //El resto ponemos invisibles.
+                for (; j < lim.size(); j++) {
+                    lim.get(j).setVisibility(View.INVISIBLE);
+                    lres.get(j).setVisibility(View.INVISIBLE);
+                }
+            }
+        }else{
             finish();
-        }else {
-            //Creamos un nuevo intent para poder enviar el resultado de la pantalla
-            Intent resultIntent = new Intent();
-            //Ponemos como resultado OK
-            setResult(Activity.RESULT_OK, resultIntent);
-            res.remove(0);
-            res.remove(res.size() - 1);
-
-            //Tratamos la salida.
-            for (int i = 0; i < res.size(); i++) {
-                res.set(i, res.get(i).replaceAll("\"", ""));
-                res.set(i, res.get(i).replaceAll(",", ""));
-                res.set(i, res.get(i).replaceAll(" ",""));
-            }
-        }
-
-        //Lo transformamos en un HashMap.
-        HashMap<String,String> resmap = listAMap(res);
-
-        //Ponemos las imagenes y los textos correspondientes al resultado.
-        int j =0;
-        for(String i: resmap.keySet()){
-            try {
-                Field idField = R.drawable.class.getDeclaredField(i);
-                lim.get(j).setImageResource(idField.getInt(idField));
-                lres.get(j).setText(resmap.get(i) + "%");
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-            j++;
-        }
-
-        //El resto ponemos invisibles.
-        for(;j<lim.size();j++){
-            lim.get(j).setVisibility(View.INVISIBLE);
-            lres.get(j).setVisibility(View.INVISIBLE);
         }
     }
 

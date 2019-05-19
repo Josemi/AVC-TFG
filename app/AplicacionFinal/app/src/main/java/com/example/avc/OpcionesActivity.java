@@ -50,8 +50,8 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
     //SPinners con el resto de opciones.
     private Spinner s1,s2;
 
-    //String del paciente.
-    private String paciente;
+    //String del paciente, link del servidor,token de seguridad.
+    private String paciente,link,token;
 
     //TextView con el texto de explicación de la pantalla.
     private TextView texto;
@@ -88,6 +88,8 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         //Recogemos el Intent y sus parámetros.
         Intent miIntent = getIntent();
         paciente = miIntent.getStringExtra("paciente");
+        link = miIntent.getStringExtra("link");
+        token = miIntent.getStringExtra("token");
 
         //Obtenemos la conexión del dispositivo Android para poder comprobar sus estado.
         conexion = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -135,7 +137,6 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
 
         //Cargamos el csv desde el servidor y miramos si ha salido bien.
         if(!cargarServer()){
-            Toast.makeText(getApplicationContext(), "Error al cargar los valores guardados.", Toast.LENGTH_LONG).show();
             finish();
         }
 
@@ -152,8 +153,6 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
                     if(guardarServer()){
                         Toast.makeText(getApplicationContext(), "Se han guardado correctamente los valores.", Toast.LENGTH_LONG).show();
                         finish();
-                    }else{
-                        Toast.makeText(getApplicationContext(), "Error al guardar los valores en el servidor.", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -219,7 +218,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         //Comprobamos la conexión.
         if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
             //Hacemos el post
-            PostObtOpciones p = new PostObtOpciones(getApplicationContext(),"http://192.168.137.1:5000/ObtOpciones",paciente);
+            PostObtOpciones p = new PostObtOpciones(link + "/ObtOpciones",paciente,this,token);
             p.execute();
             List<String> res = null;
             try {
@@ -230,28 +229,33 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            //Si está vacío es error del servidor, se finaliza el Activity y se vuelve al menú principal, se devuelve false.
-            if(res.isEmpty()){
-                Toast.makeText(getApplicationContext(),"No se pudo conectar con el servidor.",Toast.LENGTH_LONG).show();
-                finish();
-                return false;
-            //Sino se trata el resultado y se cargan las opciones y se devuelve true.
-            }else {
-                res.remove(0);
-                res.remove(res.size() - 1);
-                for (int i = 0; i < res.size(); i++) {
-                    res.set(i, res.get(i).replaceAll("\"", ""));
-                    res.set(i, res.get(i).replaceAll(",", ""));
-                    res.set(i, res.get(i).replaceAll(" ",""));
+            if(res!=null){
+                //Si está vacío es error del servidor, se finaliza el Activity y se vuelve al menú principal, se devuelve false.
+                if(res.isEmpty()){
+                    Toast.makeText(getApplicationContext(),"ERROR Er7:\nFichero con las opciones del paciente " + paciente + "vacío, contacte con el Administrador.",Toast.LENGTH_LONG).show();
+                    finish();
+                    return false;
+                //Sino se trata el resultado y se cargan las opciones y se devuelve true.
+                }else {
+                    res.remove(0);
+                    res.remove(res.size() - 1);
+                    for (int i = 0; i < res.size(); i++) {
+                        res.set(i, res.get(i).replaceAll("\"", ""));
+                        res.set(i, res.get(i).replaceAll(",", ""));
+                        res.set(i, res.get(i).replaceAll(" ", ""));
+                    }
                 }
 
                 //Cambiamos las opciones con los valores de la lista.
                 cambiarOpciones(res);
                 Toast.makeText(getApplicationContext(),"Valores de " + paciente + " cargados con éxito.",Toast.LENGTH_LONG).show();
                 return true;
+            }else{
+                return false;
             }
         }else{
             //Si no hay conexión devolvemos false.
+            Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
             return false;
         }
     }
@@ -267,7 +271,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
             List<String> valores = obtenerOpciones();
 
             //Hacemos el post
-            PostGuaOpciones p = new PostGuaOpciones(getApplicationContext(),"http://192.168.137.1:5000/GuaOpciones",paciente,valores);
+            PostGuaOpciones p = new PostGuaOpciones(link + "/GuaOpciones",paciente,valores,this,token);
             p.execute();
             Boolean res = null;
             try {
@@ -281,6 +285,8 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
             //Retornamos el resultado, true si se ha guardado false si no se ha guardado.
             return res;
         }else{
+            //Si no hay conexión devolvemos false.
+            Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
             return false;
         }
     }

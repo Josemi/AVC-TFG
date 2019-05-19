@@ -33,8 +33,8 @@ public class InterpretarActivity extends AppCompatActivity {
     //ImageButton de estado, pregunta, información del estado, información de pregunta y cancelar.
     private ImageButton est,pre,infest,infpre,canc;
 
-    //String con el identificador del paciente y de la ruta absoluta a la carpeta de trabajo.
-    private String paciente,ruta;
+    //String con el identificador del paciente y de la ruta absoluta a la carpeta de trabajo, link del servidor,token de seguridad.
+    private String paciente,ruta,link,token;
 
     //Texto de explicación.
     private TextView texto;
@@ -77,6 +77,8 @@ public class InterpretarActivity extends AppCompatActivity {
         Intent miIntent = getIntent();
         paciente = miIntent.getStringExtra("paciente");
         ruta = miIntent.getStringExtra("ruta");
+        link = miIntent.getStringExtra("link");
+        token=miIntent.getStringExtra("token");
 
         //Ponemos el texto.
         texto.setText("Tipo de interpretación para " + paciente);
@@ -100,6 +102,8 @@ public class InterpretarActivity extends AppCompatActivity {
                 miIntent.putExtra("paciente",paciente);
                 miIntent.putExtra("ruta",ruta);
                 miIntent.putExtra("tipo",true);
+                miIntent.putExtra("link",link);
+                miIntent.putExtra("token",token);
 
                 //Comenzamos el activity con Result para saber como acaba la activity.
                 startActivityForResult(miIntent,1);

@@ -17,6 +17,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -59,8 +61,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //Spinner para la selección del paciente.
     private Spinner spac;
 
-    //String del paciente, de la ruta hasta la carpeta principal, ruta de la carpeta de configuración y del fichero de selección de paciente.
-    private String paciente,ruta,config,cpac;
+    //String del paciente, de la ruta hasta la carpeta principal, ruta de la carpeta de configuración y del fichero de selección de paciente, link del servidor, token de seguridad.
+    private String paciente,ruta,config,cpac,link,token;
 
     //File para la carpeta Apace principal, para la carpeta de configuración y para el fichero de selección del paciente.
     private File dir,dconfig,dcpac;
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //Lista con los pacientes recuperados del servidor.
     private List<String> pacientes;
 
+    //Estado de la conexión a Internet.
+    private ConnectivityManager conexion;
     /**
      * Método que se ejecutará al crearse el Activity.
      * @param savedInstanceState Bundle
@@ -92,8 +96,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Seleción del layout con el que se relaciona el activity.
         setContentView(R.layout.activity_main);
 
-        //Cargamos los pacientes desde el servidor.
-        pacientes = obtPacientes();
+        //Pedimos los permisos.
+        askForPermissions();
+
+        //Inicializamos el estado de la conexión.
+        conexion = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        //Inicializamos String con el link del servidor y el token de seguridad.
+        link = "http://192.168.137.1:5000";
+        token = "pmr0:dY|`BP~~nu#)}@7a6:Zg8>QKTR1zq.>4%1:8~dWe#*AayTDxQm82jUU!vU";
 
         //Inicializamos la variable Activity yo con nuestro MainActivity.
         yo = this;
@@ -105,11 +116,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         infopc = findViewById(R.id.bInfOpc);
         info = findViewById(R.id.bInfAVC);
 
-        //Pedimos los permisos.
-        askForPermissions();
-
         //Inicializamos el AudioManager.
         auman = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        //Cargamos los pacientes desde el servidor.
+        pacientes = obtPacientes();
 
         /**
          * Hilo para poder hacer el sleep cuando aun no se ha cargado los nombres de los pacientes, ya que sino da error el spinner.
@@ -168,6 +179,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //Parámetros del intent.
                 miIntent.putExtra("paciente",paciente); //Paciente
                 miIntent.putExtra("ruta",ruta); //Ruta
+                miIntent.putExtra("link",link); //Link del servidor
+                miIntent.putExtra("token",token); //Token de seguridad
 
                 //Empezamos el nuevo intent.
                 startActivity(miIntent);
@@ -186,6 +199,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 //Parámetros del intent.
                 miIntent.putExtra("paciente",paciente);
+                miIntent.putExtra("link",link);
+                miIntent.putExtra("token",token);
 
                 //Comenzamos el nuevo intent.
                 startActivity(miIntent);
@@ -397,33 +412,45 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @return Lista de los pacientes que se pueden seleccionar.
      */
     private List<String> obtPacientes(){
-        //Hacemos el post
-        PostNombres p = new PostNombres(getApplicationContext(),"http://192.168.137.1:5000/Nombres");
-        p.execute();
-        List<String> res = null;
-        try {
-            //Obtenemos el resultado.
-            res = p.get();
-        }catch(InterruptedException ex){
-            ex.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        //Si está vacío es que hay error en el server, se finaliza la app.
-        if(res.isEmpty()){
-            Toast.makeText(getApplicationContext(),"No se pudo conectar con el servidor",Toast.LENGTH_LONG).show();
+        //Comprobamos el estado de la conexión.
+        if(!(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED) && !(conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)) {
+            Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
             finish();
             return null;
-        //Sino recogemos los datos y los devolvemos.
         }else {
-            res.remove(0);
-            res.remove(res.size() - 1);
-            for (int i = 0; i < res.size(); i++) {
-                res.set(i, res.get(i).replaceAll("\"", ""));
-                res.set(i, res.get(i).replaceAll(",", ""));
-                res.set(i, res.get(i).replaceAll(" ",""));
+            //Hacemos el post
+            PostNombres p = new PostNombres(link + "/Nombres", token, this);
+            p.execute();
+            List<String> res = null;
+            try {
+                //Obtenemos el resultado.
+                res = p.get();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
-            return res;
+            //Si está vacío es que hay error en el server, se finaliza la app.
+            if (res != null) {
+                if (res.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "ERROR Er3:\nError en la lista de pacientes, comuníqueselo al Administrador.", Toast.LENGTH_LONG).show();
+                    finish();
+                    return null;
+                    //Sino recogemos los datos y los devolvemos.
+                } else {
+                    res.remove(0);
+                    res.remove(res.size() - 1);
+                    for (int i = 0; i < res.size(); i++) {
+                        res.set(i, res.get(i).replaceAll("\"", ""));
+                        res.set(i, res.get(i).replaceAll(",", ""));
+                        res.set(i, res.get(i).replaceAll(" ", ""));
+                    }
+                    return res;
+                }
+            } else {
+                finish();
+                return null;
+            }
         }
     }
 

@@ -9,7 +9,9 @@
 package com.example.avc;
 
 //Imports.
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -36,15 +38,27 @@ public class PostObtOpciones extends AsyncTask<Void,Void, List<String>> {
     //Paciente seleccionado.
     private String paciente;
 
+    //Contexto para hacer los toast.
+    private Context con;
+
+    //Código resultado.
+    private int responsecode;
+
+    //Token de seguridad.
+    private String token;
+
     /**
      * Constructor de la clase del post.
      * @param link link del servidor.
      * @param paciente paciente seleccionado.
+     * @param con context para los toast
      */
-    public PostObtOpciones(String link,String paciente){
+    public PostObtOpciones(String link,String paciente,Context con,String token){
         resultadoapi = new LinkedList<>();
         this.linkrequestAPI=link;
         this.paciente=paciente;
+        this.token = token;
+        this.con = con;
     }
 
     /**
@@ -63,6 +77,13 @@ public class PostObtOpciones extends AsyncTask<Void,Void, List<String>> {
     protected void onPostExecute(List<String> s){
         super.onPostExecute(s);
         resultadoapi=s;
+        if(responsecode==HttpURLConnection.HTTP_FORBIDDEN) {
+            Toast.makeText(con, "ERROR Er2:\nToken de seguridad incorrecto, contacte con el Administrador.", Toast.LENGTH_LONG).show();
+        }else if(responsecode==HttpURLConnection.HTTP_INTERNAL_ERROR){
+            Toast.makeText(con, "ERROR Er5:\nEl fichero de opciones de " + paciente + " no está, avise al Administrador.", Toast.LENGTH_LONG).show();
+        }else if(responsecode!=HttpURLConnection.HTTP_OK){
+            Toast.makeText(con, "ERROR Er1:\nNo se pudo conectar con el servidor.", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -88,13 +109,13 @@ public class PostObtOpciones extends AsyncTask<Void,Void, List<String>> {
             //Parámetros.
             OutputStream dos = urlConnection.getOutputStream();
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(dos,"UTF-8"));
-            bw.write("paciente="+paciente);
+            bw.write("paciente="+paciente+"&token="+token);
             bw.flush();
             bw.close();
             dos.close();
 
             //Respuesta.
-            int responsecode= urlConnection.getResponseCode();
+            responsecode= urlConnection.getResponseCode();
             if(responsecode==HttpURLConnection.HTTP_OK){
                 BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String linea;
