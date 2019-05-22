@@ -60,6 +60,7 @@ public class PostClasifica extends AsyncTask<Void,Void, List<String>> {
      * @param tipo tipo de interpretación.
      * @param audio audio en base64.
      * @param con context para los toast
+     * @param token token de seguridad.
      */
     public PostClasifica(String link,String paciente,boolean tipo, String audio,Context con,String token){
         resultadoapi = new LinkedList<>();
@@ -119,7 +120,7 @@ public class PostClasifica extends AsyncTask<Void,Void, List<String>> {
             //Parámetros
             OutputStream dos = urlConnection.getOutputStream();
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(dos,"UTF-8"));
-            bw.write("paciente="+paciente+"&tipo="+tipo+"&audio="+audio+"&token="+token);
+            bw.write("paciente="+paciente+"&tipo="+Boolean.toString(tipo)+"&audio="+audio+"&token="+token);
             bw.flush();
             bw.close();
             dos.close();

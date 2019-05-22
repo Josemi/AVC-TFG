@@ -49,6 +49,7 @@ public class PostNombres extends AsyncTask<Void,Void, List<String>> {
     /**
      * Constructor de la clase.
      * @param link link del servidor.
+     * @param token token de seguridad.
      * @param con context para los toast
      */
     public PostNombres(String link,String token,Context con){

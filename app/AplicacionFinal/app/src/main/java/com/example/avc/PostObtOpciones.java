@@ -52,6 +52,7 @@ public class PostObtOpciones extends AsyncTask<Void,Void, List<String>> {
      * @param link link del servidor.
      * @param paciente paciente seleccionado.
      * @param con context para los toast
+     * @param token token de seguridad.
      */
     public PostObtOpciones(String link,String paciente,Context con,String token){
         resultadoapi = new LinkedList<>();

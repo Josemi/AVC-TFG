@@ -3,11 +3,21 @@ import csv
 from flask import jsonify
 from flask import request
 import os
+import base64
+import cv2
+import datetime
 
 app = Flask(__name__)
 
+TOKEN = "pmr0:dY|`BP~~nu#)}@7a6:Zg8>QKTR1zq.>4%1:8~dWe#*AayTDxQm82jUU!vU"
+
 @app.route("/Nombres", methods=['POST'])
 def getNombres():
+	tok = request.form["token"]
+	if tok != TOKEN:
+		return jsonify(),403
+	if not (os.path.exists('pacientes.csv')):
+		return jsonify(),500
 	n= list()
 	with open('pacientes.csv', 'r') as nombres:
 		csvr = csv.reader(nombres)
@@ -19,6 +29,12 @@ def getNombres():
 @app.route("/ObtOpciones", methods=['POST'])
 def getOpcPac():
 	pac = request.form["paciente"]
+	tok = request.form["token"]
+	if tok != TOKEN:
+		return jsonify(),403
+	pp = 'Opciones\\'+pac+'.csv'
+	if not (os.path.exists(pp)):
+		return jsonify(),500
 	n= list()
 	with open('Opciones/' + pac + '.csv', 'r') as opc:
 		csvr = csv.reader(opc)
@@ -30,7 +46,12 @@ def getOpcPac():
 @app.route("/GuaOpciones", methods=['POST'])
 def setOpcPac():
 	pac = request.form["paciente"]
-	
+	tok = request.form["token"]
+	if tok != TOKEN:
+		return jsonify(),403
+	pp = 'Opciones\\'+pac+'.csv'
+	if not (os.path.exists(pp)):
+		return jsonify(),500
 	l = list()
 
 	c1 = request.form["v1"]
@@ -66,8 +87,21 @@ def clasifica():
 	pac = request.form["paciente"]
 	tip = request.form["tipo"]
 	au = request.form["audio"]
-	return jsonify(["dolor:75","enfado:25"])
+	tok = request.form["token"]
+	if tok != TOKEN:
+		return jsonify(),403
+	#POR IMPLEMENTAR LA COMPROBACIÓN DEL FICHERO DE MODELO
+	tp = os.path.dirname(os.path.realpath(__file__))
+	ahora = datetime.datetime.now()
+	autemp = tp+ '\\Temp\\' + str(ahora.day) + '-' + str(ahora.month) + ';' + str(ahora.hour) + '-' + str(ahora.minute) + '-' + str(ahora.second) +'.mp4'
+	while os.path.exists(autemp):
+		autemp = v + autemp
+	decau = base64.b64decode(au, ' /')
+	with open(autemp,'wb') as fau:
+		fau.write(decau)
 
-	return
+	#os.remove(autemp)
+	return jsonify(["tristeza:75","enfado:25"])
+
 if __name__ == '__main__':
 	app.run(debug=True, host="0.0.0.0")

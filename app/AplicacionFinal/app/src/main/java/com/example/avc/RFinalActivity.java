@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,8 +33,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -91,7 +88,7 @@ public class RFinalActivity extends AppCompatActivity {
         //Paciente.
         paciente = miIntent.getStringExtra("paciente");
         //Tipo.
-        tipo = miIntent.getBooleanExtra("ruta",true);
+        tipo = miIntent.getExtras().getBoolean("tipo");
         //Ruta del audio.
         audio = miIntent.getStringExtra("audio");
         //Link al servidor
@@ -214,11 +211,12 @@ public class RFinalActivity extends AppCompatActivity {
      */
     private void resolver() {
         String baudio=null;
+
         try {
             byte[] b = new byte[(int) aufile.length()];
             FileInputStream fis = new FileInputStream(aufile);
             fis.read(b);
-            baudio = Base64.encodeToString(b, Base64.DEFAULT);
+            baudio = Base64.encodeToString(b, Base64.NO_WRAP);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -54,6 +54,7 @@ public class PostGuaOpciones extends AsyncTask<Void,Void, Boolean>{
      * @param paciente paciente seleccionado.
      * @param valores valores a guardar.
      * @param con context para los toast
+     * @param token token de seguridad.
      */
     public PostGuaOpciones(String link,String paciente,List<String> valores,Context con,String token){
         resultadoapi = new Boolean(false);

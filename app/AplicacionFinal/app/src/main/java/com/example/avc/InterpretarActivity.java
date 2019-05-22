@@ -123,6 +123,8 @@ public class InterpretarActivity extends AppCompatActivity {
                 miIntent.putExtra("paciente",paciente);
                 miIntent.putExtra("ruta",ruta);
                 miIntent.putExtra("tipo",false);
+                miIntent.putExtra("link",link);
+                miIntent.putExtra("token",token);
 
                 //Comenzamos el activity con Result para saber como acaba la activity.
                 startActivityForResult(miIntent,1);

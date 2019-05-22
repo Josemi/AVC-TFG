@@ -485,7 +485,7 @@ public class ResultadoActivity extends AppCompatActivity {
                     //Iniciamos el activity.
                     startActivityForResult(miIntent,1);
                 }else{
-                    Toast.makeText(getApplicationContext(),"Tiene que estar conectado a Internet.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
                 }
             }
         });
