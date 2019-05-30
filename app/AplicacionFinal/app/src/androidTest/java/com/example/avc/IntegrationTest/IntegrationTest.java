@@ -99,7 +99,7 @@ public class IntegrationTest {
                 .inAdapterView(childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
-                .atPosition(8);
+                .atPosition(2);
         appCompatCheckedTextView.perform(click());
 
         ViewInteraction appCompatImageButton = onView(
@@ -142,7 +142,7 @@ public class IntegrationTest {
                 .inAdapterView(childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
-                .atPosition(8);
+                .atPosition(2);
         appCompatCheckedTextView.perform(click());
 
         ViewInteraction appCompatImageButton = onView(
@@ -167,7 +167,7 @@ public class IntegrationTest {
                 .inAdapterView(childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
-                .atPosition(9);
+                .atPosition(3);
         appCompatCheckedTextView.perform(click());
 
         ViewInteraction appCompatImageButton = onView(
@@ -180,7 +180,7 @@ public class IntegrationTest {
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.text)));
-        textView.check(matches(withText("Grabe a César para poder interpretar su estado.")));
+        textView.check(matches(withText("Grabe a Cesar para poder interpretar su estado.")));
     }
 
     /**
@@ -196,7 +196,7 @@ public class IntegrationTest {
                 .inAdapterView(childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
-                .atPosition(9);
+                .atPosition(3);
         appCompatCheckedTextView.perform(click());
 
         ViewInteraction appCompatImageButton = onView(
@@ -209,7 +209,7 @@ public class IntegrationTest {
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.text)));
-        textView.check(matches(withText("Grabe a César para poder interpretar su respuesta.")));
+        textView.check(matches(withText("Grabe a Cesar para poder interpretar su respuesta.")));
     }
 
     /**
@@ -351,7 +351,7 @@ public class IntegrationTest {
                 .inAdapterView(childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
-                .atPosition(7);
+                .atPosition(1);
         appCompatCheckedTextView.perform(click());
 
         ViewInteraction appCompatImageButton = onView(
@@ -398,7 +398,7 @@ public class IntegrationTest {
                 .inAdapterView(childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
-                .atPosition(7);
+                .atPosition(1);
         appCompatCheckedTextView.perform(click());
 
         ViewInteraction appCompatImageButton = onView(
@@ -445,7 +445,7 @@ public class IntegrationTest {
                 .inAdapterView(childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
-                .atPosition(7);
+                .atPosition(1);
         appCompatCheckedTextView.perform(click());
 
         ViewInteraction appCompatImageButton = onView(

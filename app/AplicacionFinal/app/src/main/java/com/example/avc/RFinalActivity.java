@@ -255,6 +255,26 @@ public class RFinalActivity extends AppCompatActivity {
                     res.set(i, res.get(i).replaceAll(" ", ""));
                 }
 
+                //Recogemos el valor con más porcentaje, que es el primero en la lista.
+                String may = res.get(0).split(":")[0];
+
+                //Si estamos reproduciendo paramos.
+                if(rpr!=null) {
+                    if (rpr.isPlaying()) {
+                        rpr.stop();
+                    }
+                }
+
+                //Reproducimos el audio del estado-respuesta con mayor porcentaje.
+                try {
+                    Field idField = R.raw.class.getDeclaredField(may);
+                    //Reproducimos el audio indicado.
+                    rpr = MediaPlayer.create(this,idField.getInt(idField));
+                    rpr.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 //Lo transformamos en un HashMap.
                 HashMap<String, String> resmap = listAMap(res);
 

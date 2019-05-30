@@ -95,6 +95,9 @@ public class RFinalActivityTest {
         assertEquals(inte.getVisibility(), View.VISIBLE);
     }
 
+    /**
+     * Test que comprueba la visibilidad del ImageButton Escuchar
+     */
     @Test
     public void testVisEsc(){
         ImageButton inte = res.findViewById(R.id.brepro);
@@ -102,6 +105,9 @@ public class RFinalActivityTest {
         assertEquals(inte.getVisibility(), View.VISIBLE);
     }
 
+    /**
+     * Test que comprueba que el botón aceptar está disponible
+     */
     @Test
     public void testEnAcp(){
         ImageButton inte = res.findViewById(R.id.bAcept);
@@ -109,6 +115,9 @@ public class RFinalActivityTest {
         assertTrue(inte.isEnabled());
     }
 
+    /**
+     * Test que comprueba que el botón escuchar está disponible
+     */
     @Test
     public void testEnEsc(){
         ImageButton inte = res.findViewById(R.id.brepro);
@@ -116,36 +125,10 @@ public class RFinalActivityTest {
         assertTrue(inte.isEnabled());
     }
 
-    @Test
-    public void testResultado(){
-        ImageView i1 = res.findViewById(R.id.im1);
-        ImageView i2 = res.findViewById(R.id.im2);
-        ImageView i3 = res.findViewById(R.id.im3);
-        ImageView i4 = res.findViewById(R.id.im4);
-        ImageView i5 = res.findViewById(R.id.im5);
-
-        TextView r1 = res.findViewById(R.id.r1);
-        TextView r2 = res.findViewById(R.id.r2);
-        TextView r3 = res.findViewById(R.id.r3);
-        TextView r4 = res.findViewById(R.id.r4);
-        TextView r5 = res.findViewById(R.id.r5);
-
-        assertEquals(i1.getVisibility(), View.VISIBLE);
-        assertEquals(i2.getVisibility(), View.VISIBLE);
-        assertEquals(r1.getVisibility(), View.VISIBLE);
-        assertEquals(r2.getVisibility(), View.VISIBLE);
-
-        assertEquals(i3.getVisibility(), View.INVISIBLE);
-        assertEquals(i4.getVisibility(), View.INVISIBLE);
-        assertEquals(i5.getVisibility(), View.INVISIBLE);
-
-        assertEquals(r3.getVisibility(), View.INVISIBLE);
-        assertEquals(r4.getVisibility(), View.INVISIBLE);
-        assertEquals(r5.getVisibility(), View.INVISIBLE);
-    }
-
-
-
+    /**
+     * Método que se ejecuta al final de cada test, cierra la aplicación.
+     * @throws Exception
+     */
     @After
     public void tearDown() throws Exception {
 
