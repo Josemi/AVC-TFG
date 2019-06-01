@@ -216,7 +216,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
      */
     private boolean cargarServer(){
         //Comprobamos la conexión.
-        if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+        if(conexion.getActiveNetworkInfo().isConnected()){
             //Hacemos el post
             PostObtOpciones p = new PostObtOpciones(link + "/ObtOpciones",paciente,this,token);
             p.execute();
@@ -266,7 +266,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
      */
     private boolean guardarServer(){
         //Comprobamos la conexión.
-        if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+        if(conexion.getActiveNetworkInfo().isConnected()){
             //Obtenemos las opciones a guardar.
             List<String> valores = obtenerOpciones();
 

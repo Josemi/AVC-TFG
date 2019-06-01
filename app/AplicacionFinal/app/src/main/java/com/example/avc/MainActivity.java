@@ -96,11 +96,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Seleción del layout con el que se relaciona el activity.
         setContentView(R.layout.activity_main);
 
-        //Pedimos los permisos.
-        askForPermissions();
-
         //Inicializamos el estado de la conexión.
         conexion = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        //Pedimos los permisos.
+        askForPermissions();
 
         //Inicializamos String con el link del servidor y el token de seguridad.
         link = "http://192.168.137.1:5000";
@@ -413,7 +413,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private List<String> obtPacientes(){
         //Comprobamos el estado de la conexión.
-        if(!(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED) && !(conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)) {
+         if(!conexion.getActiveNetworkInfo().isConnected()){
             Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
             finish();
             return null;

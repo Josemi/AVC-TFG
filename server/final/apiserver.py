@@ -95,7 +95,7 @@ def clasifica():
 	ahora = datetime.datetime.now()
 	autemp = tp+ '\\Temp\\' + str(ahora.day) + '-' + str(ahora.month) + ';' + str(ahora.hour) + '-' + str(ahora.minute) + '-' + str(ahora.second) +'.mp4'
 	while os.path.exists(autemp):
-		autemp = v + autemp
+		autemp = 'v' + autemp
 	decau = base64.b64decode(au, ' /')
 	with open(autemp,'wb') as fau:
 		fau.write(decau)

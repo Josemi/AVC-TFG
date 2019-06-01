@@ -429,7 +429,7 @@ public class IntegrationTest {
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.ttexto)));
-        textView.check(matches(withText("Resultado de la grabación de Sergio sobre su estado.")));
+        textView.check(matches(withText("Resultado de la grabación de Sergio sobre su respuesta.")));
     }
 
     /**

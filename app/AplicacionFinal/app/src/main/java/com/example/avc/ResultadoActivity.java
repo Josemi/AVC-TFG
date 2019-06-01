@@ -282,6 +282,13 @@ public class ResultadoActivity extends AppCompatActivity {
                 //Realizamos la animación.
                 v.startAnimation(animScale);
                 try {
+
+                    //Si el reproductor no es nulo y está reproduciendo lo paremos
+                    if(rpr!=null) {
+                        if (rpr.isPlaying()) {
+                            rpr.stop();
+                        }
+                    }
                     //Reproducimos el audio de la ruta
                     rpr = new MediaPlayer();
                     rpr.setDataSource(ruta + "/" + paciente + "_" + fecha + formato);
@@ -467,7 +474,7 @@ public class ResultadoActivity extends AppCompatActivity {
                 v.startAnimation(animScale);
 
                 //Comprobamos la conexión.
-                if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                if(conexion.getActiveNetworkInfo().isConnected()){
                     //Creamos el nuevo intent y sus parámetros.
                     Intent miIntent = new Intent(yo, RFinalActivity.class);
 
