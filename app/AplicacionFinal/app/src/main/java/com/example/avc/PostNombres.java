@@ -13,8 +13,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import org.apache.http.client.methods.HttpPost;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;

@@ -10,7 +10,6 @@ package com.example.avc;
 
 //Imports
 import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.widget.Toast;
 

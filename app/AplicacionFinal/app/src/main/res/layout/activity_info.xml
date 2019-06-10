@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.55" />
+        app:layout_constraintGuide_percent="0.63" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline50"
@@ -84,6 +84,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline48"
         app:layout_constraintStart_toStartOf="@+id/guideline41"
         app:layout_constraintTop_toTopOf="@+id/guideline47" />

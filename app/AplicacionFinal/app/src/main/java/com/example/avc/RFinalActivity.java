@@ -33,8 +33,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Clase con la pantalla donde se envía y recibe el audio y su resultado y se muestra este.
@@ -237,7 +239,7 @@ public class RFinalActivity extends AppCompatActivity {
         }
         if(res!=null){
             //Si está vacío, error del server se finaliza el Activity y se vuelve a ResultadoActivity con el audio ya cargado.
-            if(res.isEmpty()){
+            if(res.isEmpty() || res.size()<=1){
                 Toast.makeText(getApplicationContext(),"ERROR Er9:\nResultado devuelto por el servidor vacío.",Toast.LENGTH_LONG).show();
                 finish();
             }else {
@@ -275,16 +277,16 @@ public class RFinalActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                //Lo transformamos en un HashMap.
-                HashMap<String, String> resmap = listAMap(res);
+                //Lo transformamos en un dos listas.
+                List<List<String>>  lista = listALists(res);
 
                 //Ponemos las imagenes y los textos correspondientes al resultado.
                 int j = 0;
-                for (String i : resmap.keySet()) {
+                for (String i : lista.get(0)) {
                     try {
                         Field idField = R.drawable.class.getDeclaredField(i);
                         lim.get(j).setImageResource(idField.getInt(idField));
-                        lres.get(j).setText(resmap.get(i) + "%");
+                        lres.get(j).setText(lista.get(1).get(j) + "%");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -303,16 +305,19 @@ public class RFinalActivity extends AppCompatActivity {
     }
 
     /**
-     * Método para transformar la lista en HashMap.
+     * Método para transformar la lista en dos listas, una con los estados o respuestas y otra con los porcentajes.
      * @param res Lista resultado.
      * @return HashMap con el resultado.
      */
-    private HashMap<String,String> listAMap(List<String> res){
-        HashMap<String,String> mapa = new HashMap<>();
+    private List<List<String>> listALists(List<String> res){
+        List<List<String>> lista = new ArrayList<>(2);
+        lista.add(new LinkedList<String>());
+        lista.add(new LinkedList<String>());
         for(String i: res){
             String[] val = i.split(":");
-            mapa.put(val[0],val[1]);
+            lista.get(0).add(val[0]);
+            lista.get(1).add(val[1]);
         }
-        return mapa;
+        return lista;
     }
 }

@@ -10,7 +10,6 @@ package com.example.avc;
 
 //Imports.
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +17,6 @@ import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -35,16 +33,10 @@ import android.widget.Toast;
 
 import com.opencsv.CSVWriter;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
