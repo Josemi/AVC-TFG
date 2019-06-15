@@ -47,7 +47,7 @@ public class InfoActivity extends AppCompatActivity {
         t = findViewById(R.id.tprv);
 
         t.setText(Html.fromHtml("<b>Universidad de Burgos:</b><br>- Dr. César Represa Pérez.<br>- Dr. José Francisco Díez Pastor.<br>- Sergio Chico Carrancio.<br>- José Miguel Ramírez Sanz.<br><b>APACE Burgos:</b>" +
-                "<br>- Rut Prieto Bayón.<br>- Rocío Cerrejón Martín.<br>- Victoria Gancedo Almansa.<br>- Roberto Pérez Porras.<br><b>Universidad de Salamanca:</b><br>- Isabel Porras Navalon.<br>- Nati Rodríguez Marcos." +
+                "<br>- Rut Prieto Bayón.<br>- Rocío Cerrejón Martín.<br>- Victoria Gancedo Almansa.<br>- Roberto Pérez Porras.<br><b>Universidad de Salamanca:</b><br>- Pilar Porras Navalon.<br>- Nati Rodríguez Marcos." +
                 "<br>- David Fernández Rodríguez."));
 
         //Listener del ImageButton entender

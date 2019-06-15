@@ -1,0 +1,142 @@
+\capitulo{3}{Conceptos teóricos}
+
+En este apartado voy a comentar los distintos conceptos teóricos del proyecto, que van desde la parálisis cerebral hasta conceptos como \textit{Random Forest}.
+
+\section{Parálisis Cerebral}
+Como ya he comentado, la parálisis cerebral es un discapacidad en el sistema motor y en la postura de la persona. Además, esta discapacidad suele ir acompañada de otras discapacidades en el sistema nervioso que producen limitaciones en los sentidos y en la capacidad cognitiva de la persona.
+
+El origen de esta discapacidad se debe a varios factores, mayoritariamente relacionados con el desarrollo del feto. Además, el grado de afección de la parálisis cerebral es distinto en cada caso, teniendo personas levemente afectadas que solo sufren de una discapacidad motora, hasta personas gravemente afectadas con grandes discapacidades motoras, cognitiva, sensoriales...
+
+\section{Datos}
+El conjunto de datos con los que trabajamos para obtener la información necesaria para poder obtener los métodos que nos permitan la clasificación de estos están compuestos por la señal de audio de la grabación del sonido de la persona con parálisis cerebral y de unas opciones adicionales que hemos obtenido en colaboración con Apace.
+\subsection{Señal de audio}
+Señal analógica, señal generada por un fenómeno electromagnético la cual se puede representar a través de una función continua cuyos parámetros son la amplitud y el periodo \cite{analogica}, que puede almacenar una señal sonora, perturbación mecánica (vibraciones) en la presión del aire \cite{pierce1995senales}. Una señal de audio nos permite almacenar, reproducir, modificar y por su puesto transmitir esa señal sonora que se ha almacenado en una señal analógica.
+\subsubsection{Formato}
+Dentro de una señal de audio, y en general para cualquier tipo de dato que se almacena de forma digital, el formato es el estándar con el cual el dato se codifica, se codifica y se lee.
+
+Dentro de los formatos que existen en las señales de audios o formatos contenedores de audios podemos diferenciarlos entre los que tienen perdida de información o \textit{Lossy} y los que no la tienen o \textit{Loseless}. Los formatos que tienen pérdida suelen ser formatos más ligeros en los cuales los ficheros ocupan menos y son más fáciles de procesar, en cambio como su nombre indica tienen pérdidas de información~\cite{wiki:formatoaudio}. 
+\subsubsection{Encoder}
+El encoder o códec son elos métodos por los cuales podemos codificar y decodificar los datos de audios almacenados en el formato seleccionado. Para cada códec disponemos una serie de formatos en los cuales se puede codificar y decodificar, por lo que en si, la combinación códec-formato es la que puede ser \textit{Lossy} o \textit{Loseless}~\cite{wiki:codec}.
+
+La mayoría de códecs son  \textit{Lossy}, es decir, pierden información en la codificación que luego no se puede recuperar en la decodificación, alguno de los códecs de audios más usados son los que se pueden observar en la tabla~\ref{tabla:codecaudio}.
+\tablaSmall{Códecs de audio}{l c c}{codecaudio}
+{ \multicolumn{1}{l}{\textbf{Códecs}} & \textbf{\textit{Lossy}} & \textbf{\textit{Loseless}} \\}{ 
+	AAC-LC & X &\\
+	AAC-ELD & X &\\
+	HE-AAC & X &\\
+	AMR-NB & X &\\
+	AMR-WB & X &\\
+	PCM(Pulse Code Modulations) & & X\\
+	FLAC & & X\\
+} 
+\subsubsection{Bitrate}
+Es la unidad de datos que se recogen por unidad de tiempo, los datos recogidos se miden en bits, mientras que el tiempo se mide en segundos
+Cuando trabajamos con sistemas de recogida de datos, en nuestro caso grabaciones de audios, el bitrate de esta recogida es un valor muy importante, ya que determina la cantidad de datos que vamos a obtener, esta medida puede ser muy interesante a la par de necesaria, ya que, junto con el formato y el códec, va a determinar cuanto ocupan los archivos que obtenemos además de la calidad de estos.
+\subsubsection{Sampling Rate}
+El Sampling Rate o frecuencia de muestreo es la tasa que marca la cantidad de muestras que se hacen por unidad de tiempo, es decir, de nuestra función continua que es la señal analógica que recoge la señal sonora, la señal de audio, pasamos a valores discretos. La unidad con la que se mide es, como en todas las frecuencias, $s^{-1}$ o \textit{Hz}~\cite{wiki:sampling}.
+\subsubsection{Espectrograma}
+Es una representación gráfica de las señales de audio, es decir, una representación de las frecuencias de la señal sonora almacenada en la señal analógica que compone la señal de audio~\cite{wiki:espec}.
+
+Como ya comenté, las señales de audio se caracterizan por su periodo y amplitud, como se puede ver en la representación de la onda en la figura~\ref{fig:onda}. En cambio el espectrograma de este se muestra en la figura~\ref{fig:espec} en una escala lineal, y en una escala logarítmica en la figura~\ref{fig:especlog}.
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{onda}
+	\caption{Representación de la onda}
+	\label{fig:onda}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{especlineal}
+	\caption{Espectrograma en escala lineal}
+	\label{fig:espec}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{especlog}
+	\caption{Espectrograma en escala logarítmica}
+	\label{fig:especlog}
+\end{figure}
+\subsubsection{Frecuencias de Mel}
+Es una escala que surgió con el objetivo es la obtención de una escala orientada al sistemas auditivo del ser humano, lo que se llama una escala psicoacústica, con el fin de poder extraer características de la señal de audio para poder obtener información. Podemos ver el ejemplo del mismo audio en la figura~\ref{fig:mel}
+
+Esta es la fórmula de las frecuencias en escala de Mel y las frecuencias en escala lineal (f)\cite{wiki:mel,villa2012automatic}: \[ Mel(f) = 2595 * \log_{10}(1+\frac{f}{700})\]
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{mel}
+	\caption{Espectrograma en escala de Mel}
+	\label{fig:mel}
+\end{figure}
+\subsubsection{Base64}
+Método que nos permite codificar cualquier tipo de dato y/o archivo en texto ASCII y decodificarlo. Este tipo de codificación no es la más eficiente que existe, pero si que nos puede servir si queremos mandar nuestros ficheros en modo texto, como pasa en este proyecto, donde tenemos que enviar el audio grabado al servidor a través de un método post donde las variables se pasan en la URL.
+\subsubsection{Extracción de características}
+Proceso por el cual podemos obtener información a partir de datos. Este proceso se suele llevar a cabo en el preprocesado de información de entrada de los métodos de clasificación de minería de datos, ya que datos como pueden ser imágenes, o en nuestro caso audios, no las podemos pasar tal cual al clasificador, porque no sería capaz de interpretar la entrada, y si por un casual pudiese, esta tendría una gran dimensionalidad.
+\subsection{Opciones adicionales}
+Al comienzo del proyecto se comentó con Apace que quizás los audios no serían suficientes para poder realizar una clasificación exacta de las emociones, ya que la clasificación de una respuesta binaria si que se tomaba posible de clasificar solo con el audio. Es por ello que para este problema nos planteamos el uso de unas opciones adicionales que pudiesen dar más información al clasificador.
+
+Apace nos mandó una primera versión de estas opciones adicionales, que obtuvieron pasando un formulario a las familias de la asociación y a profesionales en la materia, en las que teníamos un conjunto de opciones por cada una de las emociones que queríamos clasificar, que se pueden ver en la imágenes~\ref{fig:opcdolor}, ~\ref{fig:opcenfado}, ~\ref{fig:opctristeza} y ~\ref{fig:opchambre}. Como se puede observar son demasiadas opciones, tantas que darían demasiadas dimensionalidades a los datos de entrada del clasificador, lo que haría muy complicado el entrenamiento y la clasificación posterior. Es por ello que decidimos tratar de resumir estas opciones, estas opciones han sido las que han llegado al final del proyecto y se pueden ver en la tabla~\ref{tabla:opcfinal}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{dolor}
+	\caption{Opciones adicionales proporcionadas por Apace de la emoción dolor}
+	\label{fig:opcdolor}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{enfado}
+	\caption{Opciones adicionales proporcionadas por Apace de la emoción enfado}
+	\label{fig:opcenfado}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{tristeza}
+	\caption{Opciones adicionales proporcionadas por Apace de la emoción tristeza}
+	\label{fig:opctristeza}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{hambre}
+	\caption{Opciones adicionales proporcionadas por Apace de la emoción hambre}
+	\label{fig:opchambre}
+\end{figure}
+
+\tablaSmall{Opciones adicionales finales}{l c}{opcfinal}
+{ \multicolumn{1}{l}{\textbf{Opción}} & \textbf{Posibles valores} \\}{ 
+	Actualmente está enfermo & Sí/No\\
+	Sufre dolor crónico & Sí/No\\
+	Ha sido operado recientemente & Sí/No\\
+	Ha dormido/descansado mal & Sí/No\\
+	Ha estado/está en una mala postura & Sí/No\\
+	El entorno que lo rodea no es agradable & Sí/No\\
+	Las personas que lo rodean no son conocidas & Sí/No\\
+	Ha comido & Antes/A su hora/Tarde\\
+	Ha comido & Mucho/Normal/Poco/Nada\\
+} 
+\section{Minería de Datos, Bagging y Random Forest}
+La minería de datos tiene diversas definiciones válidas, pero todas ellas coinciden en que es un proceso en el cual a partir de grandes cantidades de datos a los que se aplican técnicas de inteligencia artificial o de análisis de datos, podemos obtener patrones, relaciones o en definitiva, información, con la que podemos clasificar o dividir en grupos nuevos datos.
+
+La minería de datos entra dentro del apartado de aprendizaje automática, entendiendo como aprendizaje cuando en un sistema cambiamos el comportamiento de alguna parte o del conjunto y obtenemos una mejora en el rendimiento.
+
+La extracción de información de la minería de datos se basa en la hipótesis de \textit{Aprendizaje Inductivo}, que es "\textit{Cualquier modelo que aproxime bien una función objetivo sobre un conjunto de ejemplos de entrenamiento suficientemente grande también aproximará bien la función objetivo en ejemplos no observados}", es decir, los patrones encontrados en los datos de entrenamiento de nuestros modelos de minería de datos, con un número suficientemente grande de datos, servirá para nuevos datos del mismo tipo~\cite{mdintro}.
+
+Los métodos de minería de datos tienen distintas finalidades entre las que se destaca:
+\begin{itemize}
+	\item Predicción:
+	\begin{itemize}
+		\item Clasificación de datos categóricos.
+		\item Regrasión de datos numéricos.
+	\end{itemize}
+	\item Análisis de asociaciones entre los atributos que definen los datos.
+	\item Clustering, o agrupación de los datos en distintos grupos.
+	\item Detección de anomalías.
+	\item Sistema de recomendaciones.
+\end{itemize}
+
+Además, dentro de la minería de datos existen diferentes métodos para llegar a las finalidades anteriormente comentadas, estos tipos de algoritmos van desde métodos basados en árboles, hasta métodos más estadísticos como los modelos de clasificación bayesiana que usan la suposición de \textit{naïve}, en la cual se supone que los atributos de los datos no tienen ninguna relación~\cite{mdrf}.
+
+Dentro de los algoritmos de minería de datos hay una serie de técnicas que nos permiten combinar varios modelos clasificadores para obtener un único modelo, \textit{ensembles}, que aunque son más complejos de representar, pueden obtener mejores resultados. La combinación de modelos puede o no ser del mismo tipo de clasificador, es decir, hay técnicas que nos permiten usar por ejemplo métodos bayesianos con árboles y otros que solo nos permiten un mismo tipo de clasificador. Una de las técnicas más usada de combinación de métodos es \textit{Bagging}, esta consiste en la combinación mediante media en problemas de regresión y mediante votación en problemas de clasificación, de los resultados obtenidos por el mismo método. El algoritmo lo que hace es a partir de varios grupos de datos o muestras del mismo problema obtenemos para cada muestra un modelo entrenado con los datos de esa muestra. El método final lo que hace es combinar los resultados, como ya se ha dicho por media o votación, de los distintos modelos de las distintas muestras.
+
+Uno de los métodos de Bagging más usados, ya que es un método sencillo que nos puede dar una primera visión del problema ante el que estamos, es \textit{Random Forest}, en el cual combinamos las predicciones de distintos árboles de decisión, que usa como estimador del error el \textit{out of bag}, que consiste en intentar predecir con cada modelo los datos de las muestras con los que no se ha entrenado ese modelo~\cite{mdrf}.

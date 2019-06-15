@@ -1,3 +1,4 @@
+#Clase para sacar las características.
 import numpy as np
 import pydub
 import librosa
