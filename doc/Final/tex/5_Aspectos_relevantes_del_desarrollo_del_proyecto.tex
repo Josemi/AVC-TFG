@@ -1,7 +1,287 @@
 \capitulo{5}{Aspectos relevantes del desarrollo del proyecto}
 
-Este apartado pretende recoger los aspectos más interesantes del desarrollo del proyecto, comentados por los autores del mismo.
-Debe incluir desde la exposición del ciclo de vida utilizado, hasta los detalles de mayor relevancia de las fases de análisis, diseño e implementación.
-Se busca que no sea una mera operación de copiar y pegar diagramas y extractos del código fuente, sino que realmente se justifiquen los caminos de solución que se han tomado, especialmente aquellos que no sean triviales.
-Puede ser el lugar más adecuado para documentar los aspectos más interesantes del diseño y de la implementación, con un mayor hincapié en aspectos tales como el tipo de arquitectura elegido, los índices de las tablas de la base de datos, normalización y desnormalización, distribución en ficheros3, reglas de negocio dentro de las bases de datos (EDVHV GH GDWRV DFWLYDV), aspectos de desarrollo relacionados con el WWW...
-Este apartado, debe convertirse en el resumen de la experiencia práctica del proyecto, y por sí mismo justifica que la memoria se convierta en un documento útil, fuente de referencia para los autores, los tutores y futuros alumnos.
+En este apartado voy a comentar, en forma de resumen temporal, las partes más importantes en el desarrollo del proyecto, desde decisiones importantes de diseño, hasta problemas que me han llevado mucho tiempo resolver. He considero que lo mejor para este apartado es dividir los aspectos relevantes en secciones.
+
+\section{Comienzo con APACE e investigación}
+APACE Burgos presentó el proyecto AVC a los premios de Fundación Vodafone para buscar financiación para poder realizar el proyecto. Este premio se lo concedieron y fue entonces cuando se pusieron en contacto con la Universidad de Burgos para poder desarrollar el proyecto. Es en ese momento en el que me comunican la posibilidad de hacer este proyecto como Trabajo Fin de Grado.
+
+Tuvimos una serie de reuniones con APACE donde nos expusieron el problema, que es la falta de herramientas de comunicación para personas con parálisis cerebral gravemente afectadas y la consiguiente exclusión tanto social como laboral, y discutimos sobre las posibles soluciones que tendría el problema, hasta que llegamos a la solución conceptual que define el proyecto hoy en día, una aplicación intuitiva y accesible que nos permite interpretar sonidos de personas con parálisis cerebral.
+
+En las primeras semanas empecé a estudiar como se hacía una aplicación Android, a la par que comenzaba la parte de investigación para ayudar a mi compañero en el proyecto, Sergio Chico Carrancio. Los artículos de investigación que estudié estaban relacionados con el problema al que nos enfrentábamos, extracción de características de audios y clasificación de sonidos. Entre los artículos que leí destacan el uso de distintos métodos de preprocesado del audio para, por ejemplo, eliminar los silencios, como se puede ver en el artículo sobre reconocimiento de sonidos de animales~\cite{yeo2011animal}. Después del preprocesado del audio se pasa a la extracción de características a partir de este, muchos de los métodos más usados para la extracción de características en audios usan la escala de Mel, explicada en el apartado ~\ref{mel}. Y por último, tras obtener las características de los audios procesados ya tenemos la entrada para nuestros métodos de clasificación, es en estos donde podemos ver más variación ya que podemos tener métodos sencillos como puedes ser un KNN o métodos más complejos como pueden ser las Redes Neuronales~\cite{pandeya2018domestic}.
+
+\section{Prototipo aplicación y estudio sobre el audio}
+Como mi parte en este proyecto no era la investigación, sino el desarrollo de las aplicaciones y el servidor, deje la parte de investigación para empezar a desarrollar la primera aplicación. En este primer prototipo me basé en una tutorial que enseñaba como usar \textit{MediaRecorder}, una clase que he utilizado hasta el final para grabar audios con los dispositivos Android.
+
+La finalidad de esta primera aplicación, cuya pantalla inicial se ven en la figura ~\ref{fig:prototipo}, en un principio, era para realizar la recogida de datos necesarios para realizar la investigación de la que se ocupaba el investigador Sergio Chico, y eran las personas encargadas de grabar los audios los que tenían que apuntar a mano y enviarnos a través de correo el conjunto de datos, es decir, el audio junto a ciertas opciones adicionales que luego se comentan en el siguiente apartado. Pero tras varias reuniones con APACE se llego a la conclusión que iba a ser muy costoso para las personas encargadas (familiares y cuidadores) generar datos y apuntar a mano, así que se planteó  una segunda aplicación para la recogida de datos, pasando esta primera aplicación a ser una aplicación prototipo. Cabe destacar dentro de esta aplicación dos funcionalidad que añadí, la primera que era la generación automática del nombre que tiene el fichero de audio de la salida, y la segunda funcionalidad es la petición de permisos de acceso al almacenamiento del dispositivo y de grabación de audios. Esta funcionalidad y el código que la implementa se ha usado en las 3 aplicaciones del proyecto y me costó mucho tiempo conseguir que funcionasen, ya que la ejecución de la aplicación se paraba y cerraba por no tener los permisos concedidos, lo solucione gracias a añadir los permisos en el \textit{AndroidManifest.xml} y a la siguiente función que pide los permisos.
+
+\begin{lstlisting}[language={Java}]
+private void askForPermissions() {
+	String[] perm = {Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+	
+	if(ContextCompat.checkSelfPermission(this.getApplicationContext(),perm[0]) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this.getApplicationContext(),perm[1]) != PackageManager.PERMISSION_GRANTED){
+		requestPermissions(perm,1234);
+	}
+}	
+\end{lstlisting}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{prototipo}
+	\caption{Aplicación prototipo.}
+	\label{fig:prototipo}
+\end{figure}
+
+A la vez que desarrollaba el prototipo estaba investigando acerca de qué formato y qué códec de audio iba mejor para la configuración del \textit{MediaRecorder}, es aquí donde realizamos el estudio del audio. Aquí nos encontramos con el problema de que en Android y en concreto con \textit{MediaRecorder} no podíamos codificar, es decir, grabar en cualquier formato, por ejemplo, vimos que \textit{mp3} con \textit{MediaRecorder} en Android solo permite descodificar. Tras realizar el estudio para encontrar un formato sin pérdida, no conseguimos obtener un formato que tenga un códec sin pérdida, así que intentamos obtener el mejor formato con la mayor calidad posible. Es por ello que elegimos el códec \textit{AAC-LC}, formato \textit{mp4}, con un bitrate de 128kbps y un sampling rate de 48kHz~\cite{mediarecorder}.
+
+\section{Obtención de las opciones adicionales}
+Al comienzo del proyecto se comentó con APACE que quizás los audios no serían suficientes para poder realizar una clasificación exacta de las emociones, ya que la clasificación de una respuesta binaria si que se tomaba posible de clasificar solo con el audio. Es por ello que para este problema nos planteamos el uso de unas opciones adicionales que pudiesen dar más información al clasificador.
+
+APACE nos mandó una primera versión de estas opciones adicionales, que obtuvieron pasando un formulario a las familias de la asociación y a profesionales en la materia, en las que teníamos un conjunto de opciones por cada una de las emociones que queríamos clasificar, que se pueden ver en la imágenes~\ref{fig:opcdolor}, ~\ref{fig:opcenfado}, ~\ref{fig:opctristeza} y ~\ref{fig:opchambre}. Como se puede observar son demasiadas opciones, tantas que darían demasiadas dimensionalidades a los datos de entrada del clasificador, lo que haría muy complicado el entrenamiento y la clasificación posterior. Es por ello que decidimos tratar de resumir estas opciones, estas opciones han sido las que han llegado al final del proyecto y se pueden ver en la tabla~\ref{tabla:opcfinal}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{dolor}
+	\caption{Opciones adicionales proporcionadas por APACE de la emoción dolor.}
+	\label{fig:opcdolor}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{enfado}
+	\caption{Opciones adicionales proporcionadas por APACE de la emoción enfado.}
+	\label{fig:opcenfado}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{tristeza}
+	\caption{Opciones adicionales proporcionadas por APACE de la emoción tristeza.}
+	\label{fig:opctristeza}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{hambre}
+	\caption{Opciones adicionales proporcionadas por APACE de la emoción hambre.}
+	\label{fig:opchambre}
+\end{figure}
+
+\tablaSmall{Opciones adicionales finales}{l c}{opcfinal}
+{ \multicolumn{1}{l}{\textbf{Opción}} & \textbf{Posibles valores} \\}{ 
+	Actualmente está enfermo & Sí/No\\
+	Sufre dolor crónico & Sí/No\\
+	Ha sido operado recientemente & Sí/No\\
+	Ha dormido/descansado mal & Sí/No\\
+	Ha estado/está en una mala postura & Sí/No\\
+	El entorno que lo rodea no es agradable & Sí/No\\
+	Las personas que lo rodean no son conocidas & Sí/No\\
+	Ha comido & Antes/A su hora/Tarde\\
+	Ha comido & Mucho/Normal/Poco/Nada\\
+} 
+
+\section{Desarrollo de la aplicación de recogida de datos}
+Como ya he comentado, en una reunión con APACE nos comentaron el cambio que querían hacer en la aplicación prototipo para la recogida de datos, y es que querían que la selección de las opciones adicionales y de la emoción o respuesta relacionada se pudiese hacer desde la aplicación. Con este cambio tuve que empezar a crear la segunda aplicación a partir de la aplicación prototipo. Desde APACE se nos comentó que esta aplicación debía ser lo más sencillo posible de usar, ya que algunas familias que podían recoger datos no tienen mucho dominio de las tecnologías. Esta aplicación fue bastante más complicada de hacer, ya que era la primera vez que iba a trabajar y tener en cuenta la navegabilidad entre pantallas de la aplicación. Además, la aplicación tenía que ser lo más lineal posible, por lo que primero me puse a diseñar una interfaz, la cual se puede ver en la figura~\ref{fig:interrd}.
+
+Una vez diseñada la interfaz pasé a aprender a navegar por las pantallas de una aplicación Android y a desarrollar la aplicación. Del desarrollo de esta aplicación cabe destacar:
+\begin{itemize}
+	\item Navegabilidad intuitiva gracias al uso de los ActivityResult, que permiten terminar un Activity con un resultado según esta haya acabado de forma correcto o incorrecta. Esta funcionalidad la he usado para poder habilitar los botones, ya que se pidió que la aplicación fuese simple y lineal.
+	\item En la pantalla de selección de la emoción o respuesta relacionada con los datos generados no se permite, ni dejarla vacía, ni elegir una opción de la columna de emociones y otra de la columna respuesta.
+	\item Uso de ficheros csv para la almacenar y enviar tanto las opciones adicionales como la emoción o respuesta asociado, usando la librería OpenCSV~\cite{opencsv}.
+	\item Persistencia y carga de los datos en todas las pantallas gracias a una creación de carpetas bien definidas y al uso de una estructura de datos bien definida, lo que nos permite volver a entrar a una de las pantallas y tener los datos que se habían generado. Esto ocurre tanto en la pantalla de grabación del audio, como en las pantallas de selección de opciones y de selección de emoción o respuesta.
+	\item Generación de comprimidos con el archivo del audio y los archivos csv, para poder enviarlos con mayor facilidad.
+	\item Envío por correo del comprimido para poder recogerlo y estudiarlo. 
+\end{itemize}
+
+Este último punto hubo que discutirlo con los tutores, porque nuestras opciones para enviar el comprimido eran o hacerlo directamente con un servidor, o usar un correo electrónico. Al final, decidimos usar el correo electrónico ya que no teníamos tiempo de desplegar un servidor, y la aplicación tenía que estar lo antes posible en marcha para que se empezase cuanto antes a generar datos con los que el investigador colaborador, Sergio Chico, pudiese hacer el estudio.
+
+La interfaz final de la aplicación se puede ver en la figura~\ref{fig:interfinalrd}.
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{interfaz}
+	\caption{Diseño interfaz aplicación recogida de datos.}
+	\label{fig:interrd}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{interfinalrd}
+	\caption{Interfaz aplicación recogida de datos.}
+	\label{fig:interfinalrd}
+\end{figure}
+
+\section{Obtención de sonidos prototipo}
+Tras finalizar la aplicación para la generación de datos, y sus presentaciones en APACE que posteriormente comentaré, nos encontramos con un problema que ya veíamos venir desde prácticamente el comienzo del proyecto, y es la falta de datos. Obviamente no podíamos forzar a los pacientes a hacer sonidos, y menos cuando las emociones con las que nos pidió APACE trabajar son negativas (dolor, hambre, tristeza y enfado).
+
+En una reunión comentamos las posibles opciones que teníamos, y estas eran o esparar a que antes de la entrega tuviésemos suficientes datos como para al menos tener un clasificador para una persona, o intentar imitar los sonidos para poder generar algunos datos con los que el investigador colaborador, Sergio Chico, pudiese empezar a trabajar. Con el fin de poder tener una aplicación prototipo final que nos permitiese clasificar audios decidí generar de forma artificial los audios con los que entrenar al clasificador.
+
+Esta probablemente sea una de las tareas que más me ha costado en todo el proyecto, ya que tenía que seguir unos pasos, para que los datos que generase tuviesen el mayor sentido posible, estos pasos para cada una de las emociones y sí/no eran:
+\begin{itemize}
+	\item Descargar algunos ejemplos que ya hubiesen enviado, para tener algo en lo que basarme.
+	\item Grabar un audio propio intentando ceñirme lo máximo posible a los audios descargados anteriormente.
+	\item En las emociones, estudiar las opciones adicionales para saber cuales se suelen repetir más con una emoción.
+	\item Grabar al rededor de unos 20 audios por cada emoción y sí/no, teniendo que en cada uno escucharlo, valorar si es o no válido y poner las opciones adicionales correspondientes.
+\end{itemize}
+\section{Desarrollo de la aplicación de interpretación - AVC}
+Una vez que ya contábamos con suficientes datos como para que el investigador colaborador, Sergio Chico, empezase a estudiar las mejores formas de extraer las características del audio y poder clasificarlo, yo empecé a desarrollar la aplicación final, la aplicación más importante en el proyecto, ya que es la que se más se usará, y la que dará esa mejora en la vida de las personas con parálisis cerebral que buscamos.
+
+Lo primero que realicé fue el diseño de la interfaz junto con un equipo especializado de APACE, diseñé al rededor de 6 interfaces iniciales, en las cuales se destaca el uso desde el principio de botones de información para dar mayor accesibilidad a la aplicación, y a las cuales este equipo me fue indicando cambios y mejoras hasta llegar al diseño final, que aparece en la figura~\ref{fig:dinteravc}. Cabe destacar una cambio muy importante que me comentaron desde APACE, y es que las opciones adicionales no se cumplimentasen cada vez que queremos hacer una interpretación, sino que estas se almacenaran en el servidor y solo se modificasen cuando sea necesario.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{disintavc}
+	\caption{Diseño interfaz aplicación AVC.}
+	\label{fig:dinteravc}
+\end{figure}
+
+Esta es la aplicación más importante y compleja del proyecto, es por ello que es a la que sin duda he dedicado más tiempo. En el desarrollo de esta primera versión sin conexión al servidor cabe destacar los siguientes apartados:
+\begin{itemize}
+	\item \textbf{Creación de una estructura de ficheros:} Necesario para poder controlar los distintos ficheros con los que trabaja la aplicación, siendo la raíz de esta estructura donde se almacena el audio grabado. En la carpeta \textit{/config} tenemos el fichero \textit{csv} donde se almacena al paciente por defecto.
+	\item \textbf{Comprobación y restauración de la estructura de ficheros}: Para que al iniciarse la aplicación lo primero que se compruebe sea que la estructura de ficheros existe, y si falta alguna carpeta y/o fichero los genera.
+	\item \textbf{Implementación de la selección del paciente por defecto:} Que al abrir de nuevo la aplicación aparezca en el \textit{spinner} del paciente el último paciente seleccionado antes de cerrar la aplicación. Esto se ha conseguido gracias al conocimiento sobre el control de ficheros \textit{csv} obtenido en el desarrollo de la aplicación de generación de datos con \textit{OpenCSV}~\cite{opencsv}.
+	\item \textbf{Continua implicación por parte de APACE:} Necesaria para conseguir que la aplicación fuese lo más accesible posible. Esto dio como resultado algunos cambios en la interfaz, desde las primeras versiones que aparecen en la figura~\ref{fig:primver} donde me comentaron que los degradados no era lo mejor para personas con alguna discapacidad visual, a una segunda versión donde a parte de eliminar el degradado se modificó el color al color que ellos me dijeron el azul, teniendo que modificar todas las imágenes para que los textos estuviesen en blanco~\ref{fig:segver}. Y por último, eliminé todos los pixeles blancos de las imágenes a mano, porque al tener las imágenes con un fondo azul los pixeles blancos se ven mucho, esto no lleva a la última versión de la interfaz~\ref{fig:verfi}.
+	\item \textbf{Uso de diálogos para mejorar la accesibilidad:} Con \textit{AlerDialog} en los botones de información para mostrar información sobre el botón que está al lado, estos diálogos están escritos en lectura fácil gracias a la Universidad de Salamanca. Además, al abrir el diálogo se reproduce por audio el texto escrito para dar una mayor accesibilidad~\ref{fig:dia}.
+\end{itemize}
+Como se puede observar, el desarrollo de esta aplicación ha sido orientado casi totalmente en conseguir una mayor accesibilidad. Este punto ha sido tan importante en el equipo de desarrollo porque desde un principio teníamos la idea de que hasta los compañeros de estas personas gravemente afectadas del centro de día de APACE pudiesen utilizarlo, para así poder entender a sus compañeros.
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{primerasversiones}
+	\caption{Primera versión de la interfaz.}
+	\label{fig:primver}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{segundaversion}
+	\caption{Segunda versión de la interfaz.}
+	\label{fig:segver}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{versionfinal}
+	\caption{Versión final de la interfaz.}
+	\label{fig:verfi}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{dialogo}
+	\caption{Ejemplo de diálogo en lectura fácil.}
+	\label{fig:dia}
+\end{figure}
+
+Después de terminar el desarrollo de la aplicación empecé con la fase de test de esta, en ella primero diseñé los test unitarios para probar la lógica y la creación de los distintos elementos de la aplicación y los implementé, y después, usando Espresso~\cite{espresso}, diseñé e implementé los test de integración para comprobar la correcta colaboración entre las distintas partes de la aplicación. Un ejemplo de este diseño de los test se puede ver en la figura~\ref{fig:ditestun}~\cite{vypcn,vypcb,vypti}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{distest}
+	\caption{Diseño de test unitarios de OpcionesActivity.}
+	\label{fig:ditestun}
+\end{figure}
+
+Tras probar los distintos test descubrí unos cuantos \textit{bugs}, que es la función de los test. Hubo un \textit{bug} en particular que me llevó mucho tiempo resolver y trataba de como se generaba la estructura de datos, ya que hay algunos test que prueban esa funcionalidad eliminando partes o toda la estructura de ficheros de la aplicación.
+
+Además, realicé un tipo especial de test llamado \textit{Monkey Test}~\cite{monkeytest}, que consiste en a través de una prueba de estrés pulsando aleatoriamente puntos de la pantalla probar la consistencia de la aplicación. Gracias a este test descubrí un error importante en la pantalla de grabación de audios, ya que le grabación no se paraba cuando se retrocedía a la pantalla anterior pulsando el botón \textit{back} del dispositivo.
+\section{Desarrollo del servidor}
+Tras tener una primera versión de la aplicación tocaba empezar a desarrollar el servidor, para ello primero tenía que aprender a usar Flask~\cite{flask}, ya que era la primera vez que iba a desarrollar un servidor.
+
+El primer paso que tuve que dar es el de elegir el tipo de \textit{request} con el cual quería hacer las peticiones al servidor, elegí el tipo \textit{post} porque tenía más conocimiento acerca de este tipo de \textit{request HTTP} y por recomendación de compañeros~\cite{sdintro,sdhttp}.
+
+El segundo paso fue el diseño de los distintos métodos del servidor. Tras el diseño se quedó en 4 métodos \textit{post} en el servidor:
+\begin{itemize}
+	\item \textbf{Nombre:} API/Nombres, \textbf{caso de uso:} CU1, \textbf{descripción:} Devuelve la lista de usuarios de los que hay un método entrenado preparado para clasificar. Esta lista está en un fichero csv en el servidor, \textbf{parámetros:} Token, \textbf{salida:} JSON con una cadena con la lista de los nombres.
+	\item \textbf{Nombre:} API/ObtOpciones, \textbf{caso de uso:} CU2, \textbf{descripción:} Devuelve los valores de las opciones adicionales del paciente seleccionado, leyendo el fichero csv del servidor indicado, \textbf{parámetros:} Paciente y token, \textbf{salida:} JSON con una cadena con la lista de las opciones almacenadas.
+	\item \textbf{Nombre:} API/GuaOpciones, \textbf{caso de uso:} CU3, \textbf{descripción:} Almacena las opciones que se envían desde la aplicación para el paciente seleccionado, \textbf{parámetros:} Paciente, lista de valores y token, \textbf{salida:} Resultado booleano de la operación.
+	\item \textbf{Nombre:} API/Clasifica, \textbf{caso de uso:} CU5 y CU6, \textbf{descripción:} Ejecuta el modelo entrenado para el paciente pasado con el audio pasado y con las opciones adicionales que están actualmente guardadas en el servidor., \textbf{parámetros:} Paciente, tipo de interpretación, audio y token, \textbf{salida:} JSON con una cadena con los datos sobre la emoción o respuesta y sus porcentajes.
+\end{itemize}
+
+Después, cree la estructura necesaria en el servidor, esta estructura es:
+
+\dirtree{%
+	.1 root.
+	.2 Modelos.
+	.2 Opciones.
+	.2 Temp.
+	.2 pacientes.csv.
+	.2 apiserver.py.
+	.2 clip.py.
+}
+
+En la carpeta \textit{Modelos} es donde se almacenan los distintos modelos ya entrenados. En la carpeta \textit{Opciones} se encuentran todos los csv con las opciones adicionales guardadas para cada paciente. En \textit{Temp} tenemos los ficheros de audio temporales de cada interpretación, estos se eliminarán después de devolver al cliente el resultado. El fichero \textit{pacientes.csv} tiene la lista de pacientes entrenados y los ficheros \textit{apiserver.py} y \textit{clip.py} son los ficheros encargados de la extracción de características y de la clasificación.
+
+Por último, implementé todos los métodos en \textit{Python}, haciendo todas las respuestas con \textit{jsonify}~\cite{jsonify}. Algunos aspectos que se pueden destacar del desarrollo del servidor son:
+\begin{itemize}
+	\item \textbf{Control de concurrencia:} Sobre todo en el método de clasificación donde el servidor recibe varios archivos de audios que tiene que saber identificar correctamente. Esto se ha conseguido gracias a la creación dinámica de nombres para los audios en el servidor.
+	\item \textbf{Resultado aleatorio:} A parte de obviamente tener el clasificador para los datos que generé, quise añadir más usuarios en la aplicación para así poder modificar las opciones y comprobar el correcto funcionamiento, pero para ello también necesitaba un clasificador para estos audios. Es por ello que creé una función que genera resultados válidos aleatorios con los cuales responder a las interpretaciones de pacientes no entrenados.
+\end{itemize}
+
+Tras haber implementado cada uno de los métodos tenía que probarlo, pero como la aplicación final no estaba desarrollada la parte de unir ambas partes, aplicación y servidor, tuve que usar una herramienta para poder hacer \textit{request HTTP} desde el ordenador.
+
+\section{Conexión de aplicación y servidor}
+Tras tener la aplicación y el servidor desarrollados solo quedaba unir ambas partes, para ello primero tuve que aprender a realizar \textit{post} en \textit{Android}. Decidí hacer los \textit{post} con paso de parámetros por \textit{url}, lo que después me llevó un problema con el audio que contaré posteriormente.
+
+Al implementar los métodos \textit{post} me encontré con un problema. Este problema era que la conexión al servidor, que está desplegado en un portátil, tengo que acceder a través de una dirección IP. Eso cuando lo estaba implementando en casa era sencillo, ya que esta IP apenas cambiaba y solo hay un router en red, pero la presentación del proyecto se iba a hacer en sitios como la universidad, o el mismo APACE, donde nos encontramos con redes más complejas donde apuntar a un dispositivo no es tan fácil como poner la IP, es por ello que decidí usar el programa \textit{noWifi} en el portátil en donde está desplegado el servidor, ya que me permite crear un red a la cual apuntar con los dispositivos \textit{Android} siempre con la dirección 192.168.137.1 y al puerto definido en \textit{Flask}, el puerto 5000.
+
+Al implementar el cuarto método \textit{post} en \textit{Android}, el método que me permite enviar la petición de clasificación me encontré con un gran problema. Este problema era cómo conseguir pasar un archivo de audio en \textit{mp4} a un servidor a través de un método en el cual le paso los parámetros por texto en la \textit{url}. La respuesta la encontré en la codificación a Base64, que me permite transformar mi archivo de audio en texto el cual puedo pasar en la \textit{url} y luego descodificarlo en el servidor haciendo la operación inversa. 
+
+Al implementar el paso a Base64 me encontré con otro problema, y es que la codificación que usaba en \textit{Android} no se descodificaba bien en el servidor \textit{Python}. Este problema me llevó mucho tiempo solventarlo, ya que intenté usar muchos métodos para codificar en Base64, pero ninguno daba resultado, todos los métodos que probaba al decodificarlo en el servidor me daba como resultado un fichero corrupto. Además, se junto otro impedimento, y es que la librería de Base64 de \textit{Java} subía el API mínimo varias versiones, por lo que no podríamos cumplir nuestro objetivo técnico~\cite{base64java}. Tras probar muchos métodos pasé directamente a imprimir el resultado de la codificación para ver si podía verse el problema, y en efecto, no se correspondía con la codificación esperada por el servidor, es entonces cuando cambié el fichero de audio para pasar a codificar un fichero de texto, encontré el método, \textit{Base64.encodeToString} que funcionaba correctamente en \textit{Android} y luego lo probé con el fichero de audio y por fin funcionó.
+
+\begin{lstlisting}[language={Java}]
+String baudio=null;
+
+try {
+	byte[] b = new byte[(int) aufile.length()];
+	FileInputStream fis = new FileInputStream(aufile);
+	fis.read(b);
+	baudio = Base64.encodeToString(b, Base64.NO_WRAP);
+} catch (FileNotFoundException e) {
+	e.printStackTrace();
+} catch (IOException e) {
+	e.printStackTrace();
+}	
+\end{lstlisting}
+
+En el código se ve como se hace la codificación a Base64, es importante el uso del \textit{Base64.NO\_WRAP}, ya que lo que hace es codificarlo todo como una única cadena, ya que otras configuraciones lo que hacen es introducir saltos de línea que impiden la correcta descodificación.
+
+Por último, quise dar una mayor seguridad al servidor, para que no se pueda acceder a una de las peticiones desde fuera de la aplicación, esto lo conseguí añadiendo un \textit{token} de seguridad como parámetro a todos los métodos. Es entonces donde pienso que puede haber una serie de errores con el servidor que se podrían agrupar, codificar, describir y dar una solución. Es así como se me ocurrió hacer una estandarización de los errores de la aplicación en la conexión con el servidor, estos tienen un código asociado, y con el una descripción de por qué ocurre y como solucionarlo~\ref{fig:errores}. Un ejemplo de un mensaje de error se puede ver en la figura~\ref{fig:error}.
+	
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{errores}
+	\caption{Errores de la conexión aplicación-servidor.}
+	\label{fig:errores}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{error}
+	\caption{Ejemplo de error.}
+	\label{fig:error}
+\end{figure}
+
+Después de terminar de enlazar la aplicación de interpretación con el servidor modifiqué y eliminé algunos test que tenía implementados, pudiendo así probar desde los test unitario y de integración el servidor. Al final tengo un total de 82 test, como se puede ver en la figura~\ref{fig:test}, entre unitario y de integración, que prueban diferentes partes de la aplicación y el servidor.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{test}
+	\caption{Resultado de los 82 test.}
+	\label{fig:test}
+\end{figure}
+
+Con esto terminé el desarrollo de código del proyecto, pero no el proyecto en general ya que aún quedaba realizar presentaciones y documentarlo.
+
+\section{Presentaciones y Premios}
+Desde un principio nos pusimos como objetivo en el proyecto que este fuese mediático, es decir, intentar apuntarnos al mayor número de presentaciones donde poder mostrar los avances del proyecto. A lo largo del desarrollo del proyecto he realizado, a diferentes tipos de públicos, las siguientes presentaciones:
+\begin{itemize}
+	\item Varias presentaciones en APACE de la aplicación de recogida de datos a los familiares y cuidadores del centro.
+	\item Presentación de la aplicación final en las jornadas ASPACEnet en Madrid, 28 de Mayo de 2019.
+	\item Presentación para la elaboración del vídeo final del proyecto, \url{https://www.youtube.com/watch?v=6lWLMS9o8v0&feature=youtu.be}.
+	\item Presentación de la aplicación final a los cuidadores del centro.
+	\item Presentación ante la prensa del proyecto y de la aplicación~\ref{fig:presprensa}, \url{https://www.diariodeburgos.es/Noticia/Z2D22B97F-0523-981F-1046FF5A06C5B81F/201906/Una-aplicacion-para-entender-a-quienes-no-pueden-hablar}.
+\end{itemize}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{presentacionprensa}
+	\caption{Imagen de la presentación ante la prensa, fuente \textit{Diario de Burgos}.}
+	\label{fig:presprensa}
+\end{figure}
+
+El proyecto ha sido galardonado con los premios de Fundación Vodafone y de Becas Prototipo.

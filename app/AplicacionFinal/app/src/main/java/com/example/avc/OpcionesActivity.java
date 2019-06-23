@@ -25,6 +25,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.post.PostGuaOpciones;
+import com.example.post.PostObtOpciones;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -215,6 +218,10 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
      */
     private boolean cargarServer(){
         //Comprobamos la conexión.
+        if(conexion.getActiveNetworkInfo()==null) {
+            Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
+            return false;
+        }
         if(conexion.getActiveNetworkInfo().isConnected()){
             //Hacemos el post
             PostObtOpciones p = new PostObtOpciones(link + "/ObtOpciones",paciente,this,token);
@@ -264,6 +271,10 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
      * @return
      */
     private boolean guardarServer(){
+        if(conexion.getActiveNetworkInfo()==null) {
+            Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
+            return false;
+        }
         //Comprobamos la conexión.
         if(conexion.getActiveNetworkInfo().isConnected()){
             //Obtenemos las opciones a guardar.

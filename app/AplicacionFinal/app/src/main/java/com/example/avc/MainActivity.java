@@ -5,7 +5,6 @@
  * @version: 1.0
  */
 
-//Package.
 package com.example.avc;
 
 //Imports.
@@ -40,6 +39,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+
+import com.example.post.PostNombres;
 
 
 /**
@@ -210,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
                 infoBuilder.setTitle("Información botón Qué quiero decir");
-                infoBuilder.setMessage("Haz clic en  “qué quiero decir” y podrás saber qué es lo que estoy intentando decirte con los sonidos que hago.");
+                infoBuilder.setMessage("Haz clic en  Qué quiero decir y podrás saber qué es lo que estoy intentando decirte con los sonidos que hago.");
 
                 //Reproducimos el audio correspondiente.
                 rpr = MediaPlayer.create(yo,R.raw.quequierodecir);
@@ -405,43 +406,49 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private List<String> obtPacientes(){
         //Comprobamos el estado de la conexión.
-         if(!conexion.getActiveNetworkInfo().isConnected()){
+        if(conexion.getActiveNetworkInfo()==null){
             Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
             finish();
             return null;
         }else {
-            //Hacemos el post
-            PostNombres p = new PostNombres(link + "/Nombres", token, this);
-            p.execute();
-            List<String> res = null;
-            try {
-                //Obtenemos el resultado.
-                res = p.get();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            //Si está vacío es que hay error en el server, se finaliza la app.
-            if (res != null) {
-                if (res.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "ERROR Er3:\nError en la lista de pacientes, comuníqueselo al Administrador.", Toast.LENGTH_LONG).show();
-                    finish();
-                    return null;
-                    //Sino recogemos los datos y los devolvemos.
-                } else {
-                    res.remove(0);
-                    res.remove(res.size() - 1);
-                    for (int i = 0; i < res.size(); i++) {
-                        res.set(i, res.get(i).replaceAll("\"", ""));
-                        res.set(i, res.get(i).replaceAll(",", ""));
-                        res.set(i, res.get(i).replaceAll(" ", ""));
-                    }
-                    return res;
-                }
-            } else {
+            if (!conexion.getActiveNetworkInfo().isConnected()) {
+                Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
                 finish();
                 return null;
+            } else {
+                //Hacemos el post
+                PostNombres p = new PostNombres(link + "/Nombres", token, this);
+                p.execute();
+                List<String> res = null;
+                try {
+                    //Obtenemos el resultado.
+                    res = p.get();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                //Si está vacío es que hay error en el server, se finaliza la app.
+                if (res != null) {
+                    if (res.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "ERROR Er3:\nError en la lista de pacientes, comuníqueselo al Administrador.", Toast.LENGTH_LONG).show();
+                        finish();
+                        return null;
+                        //Sino recogemos los datos y los devolvemos.
+                    } else {
+                        res.remove(0);
+                        res.remove(res.size() - 1);
+                        for (int i = 0; i < res.size(); i++) {
+                            res.set(i, res.get(i).replaceAll("\"", ""));
+                            res.set(i, res.get(i).replaceAll(",", ""));
+                            res.set(i, res.get(i).replaceAll(" ", ""));
+                        }
+                        return res;
+                    }
+                } else {
+                    finish();
+                    return null;
+                }
             }
         }
     }

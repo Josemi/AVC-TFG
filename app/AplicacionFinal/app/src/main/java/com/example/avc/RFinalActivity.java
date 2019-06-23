@@ -26,17 +26,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.post.PostClasifica;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Clase con la pantalla donde se envía y recibe el audio y su resultado y se muestra este.

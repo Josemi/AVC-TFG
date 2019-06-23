@@ -49,6 +49,17 @@
 	\end{figure}
 }
 
+\usepackage{dirtree}
+
+\usepackage{listings}
+\lstset{basicstyle=\normalfont\ttfamily,
+	showstringspaces=false,
+	commentstyle=\color{gray},
+	keywordstyle=\color{magenta!60!black},
+	breaklines=true,
+	resetmargins=true
+}
+
 \widowpenalty10000
 \clubpenalty10000
 
@@ -346,7 +357,7 @@
     \noindent\LARGE
     Presentado por \@author{}\\ 
     en Universidad de Burgos --- \@date{}\\
-    Tutor: \@tutor{}\\
+    Tutores: \@tutor{}\\
   }%
   \end{center}%
   \null
@@ -357,7 +368,7 @@
 \newcommand{\nombre}{José Miguel Ramírez Sanz} %%% cambio de comando
 
 % Datos de portada
-\title{AVC Asistente Virtual para la Comunicación}
+\title{AVC \\ Asistente Virtual para la Comunicación}
 \author{\nombre}
 \tutor{Dr. José Francisco Díez Pastor y Dr. César Represa Pérez}
 \date{\today}
@@ -424,12 +435,18 @@ Dr. D. César Represa Pérez
 % Abstract en castellano
 \renewcommand*\abstractname{Resumen}
 \begin{abstract}
-En este primer apartado se hace una \textbf{breve} presentación del tema que se aborda en el proyecto.
+La parálisis cerebral es una discapacidad que afecta a la capacidad de movimiento y de la postura. Además, esta discapacidad suele ir acompañada de otras discapacidad en la percepción de los sentidos y en la capacidad cognitiva. Dentro de las personas afectas hay un grupo gravemente afectado con grandes discapacidades motoras, cognitivas y sobre todo comunicativas, ya que los únicos sonidos que emiten son ruidos.
+
+Con la idea de facilitar la comunicación de estos pacientes gravemente afectados surgió la propuesta desde APACE Burgos para desarrollar un comunicador virtual con el que poder interpretar los sonidos que estas personas hacen. Es aquí cuando APACE Burgos se puso en contacto con la Universidad de Burgos para desarrollar AVC, el \textit{Asistente Virtual para la Comunicación}.
+
+Para la realización de este proyecto se han desarrollado varias aplicaciones. Una para la recogida de los sonidos procedentes de los pacientes con los que entrenar un clasificador, y otra aplicación para la interpretación de los sonidos emitidos por los pacientes en base a los datos registrados. También se ha desarrollado un servidor que permite el almacenamiento de las opciones adicionales necesarias para la clasificación, así como para poder interpretar los sonidos.
+
+Las aplicaciones generadas durante este proyecto se han desarrollado en \textit{Android} y se ha usado \textit{Python} para desarrollar el servidor. El asistente pretende recnoocer emociones (hambre, tristeza, enfado y dolor) y respuestas (sí y no) a partir de métodos de clasificación. Para ello se han empleado algoritmos de extracción de características sobre audios, y para el clasificador final se ha usado un tipo de \textit{ensemble} llamado \textit{Bagging}, en concreto \textit{Random Forest}.
 \end{abstract}
 
 \renewcommand*\abstractname{Descriptores}
 \begin{abstract}
-Palabras separadas por comas que identifiquen el contenido del proyecto Ej: servidor web, buscador de vuelos, android \ldots
+Parálisis cerebral, comunicación, extracción de características, clasificación de audios, \textit{Random Forest}, \textit{Android}, servidor \textit{Flask}.
 \end{abstract}
 
 \clearpage
@@ -437,12 +454,18 @@ Palabras separadas por comas que identifiquen el contenido del proyecto Ej: serv
 % Abstract en inglés
 \renewcommand*\abstractname{Abstract}
 \begin{abstract}
-A \textbf{brief} presentation of the topic addressed in the project.
+Cerebral palsy is a disability that affects the ability to move and posture. Besides, this disability is often accompanied by other diabilities in the senses and the cognitive ability. There is a group of people severely affected with large motor, cognitive and, above all, communicative disabilities, because they can only communicate by noises.
+
+Thinking about facilating communication to severely affected patients, APACE Burgos suggested to develop a virtual communicator to interpret the sounds of these people. Here is when APACE Burgos contacted with University of Burgos to develop VCA, the \textit{Virtual Assitant for Communication}.
+
+For the realization of this project they have been developed some applications. One for collectiong data from patients, and other one to interpret the sounds emitted by patients. A server has also been developed, to allow storage of the necesaary additional options for the classification.
+
+The generated applications during this project have been developed in \textit{Android} and we have used \textit{Python} for the development of the server. To design the algorithms of classification of emotions (hungry, sadness, anger and pain) and answers (yes and no) feature extraction algorithms on sounds has been used, and for the final classifier we have applied a type of ensemble called \textit{Bagging}, specifically \textit{Random Forest}.
 \end{abstract}
 
 \renewcommand*\abstractname{Keywords}
 \begin{abstract}
-keywords separated by commas.
+Cerebral palsy, communication, feauture extraction, sound classification, \textit{Random Forest}, \textit{Flask} server.
 \end{abstract}
 
 \clearpage

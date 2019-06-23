@@ -346,7 +346,7 @@ public class ResultadoActivity extends AppCompatActivity {
                 final AlertDialog info = infoBuilder.create();
                 infoBuilder.setTitle("Información botón Grabar");
                 infoBuilder.setMessage("Primero tienes que grabar para poder entender lo que quiero decir. \n" +
-                        "Haz clic en  “Grabar” para grabar el sonido que estoy haciendo. \n" +
+                        "Haz clic en  Grabar para grabar el sonido que estoy haciendo. \n" +
                         "No tiene que haber ruidos a mi alrededor.\n" +
                         "Solo tienes que grabar el sonido que hago.\n" +
                         "Cuando termines de grabar pulsa la casilla parar.\n" +
@@ -391,9 +391,9 @@ public class ResultadoActivity extends AppCompatActivity {
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
                 infoBuilder.setTitle("Información botón Parar");
-                infoBuilder.setMessage("Haz clic en “Parar”cuando termines de grabar.\n" +
-                        "Pulsa la casilla “Parar” cuando creas que hay un error en lo que estás grabado.\n" +
-                        "Después pulsa la casilla “Escuchar”, para asegurarte que está bien grabado.");
+                infoBuilder.setMessage("Haz clic en Parar cuando termines de grabar.\n" +
+                        "Pulsa la casilla Parar cuando creas que hay un error en lo que estás grabado.\n" +
+                        "Después pulsa la casilla Escuchar, para asegurarte que está bien grabado.");
 
                 //Reproducimos el audio indicado.
                 rpr = MediaPlayer.create(yo,R.raw.parar);
@@ -434,9 +434,9 @@ public class ResultadoActivity extends AppCompatActivity {
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
                 infoBuilder.setTitle("Información botón Escuchar");
-                infoBuilder.setMessage("Haz clic en “Escuchar”, para  oír lo que has grabado. \n" +
-                        "Si se ha grabado bien, haz clic en  “Entender” para saber lo que quiero decir. \n" +
-                        "Si no se ha grabado bien, haz clic en “Grabar” para grabarme de nuevo.");
+                infoBuilder.setMessage("Haz clic en Escuchar, para  oír lo que has grabado. \n" +
+                        "Si se ha grabado bien, haz clic en  Entender para saber lo que quiero decir. \n" +
+                        "Si no se ha grabado bien, haz clic en Grabar para grabarme de nuevo.");
 
                 //Reproducimos el audio.
                 rpr = MediaPlayer.create(yo,R.raw.escuchar);
@@ -473,26 +473,31 @@ public class ResultadoActivity extends AppCompatActivity {
                 //Realizamos la animación.
                 v.startAnimation(animScale);
 
-                //Comprobamos la conexión.
-                if(conexion.getActiveNetworkInfo().isConnected()){
-                    //Creamos el nuevo intent y sus parámetros.
-                    Intent miIntent = new Intent(yo, RFinalActivity.class);
-
-                    //Paciente.
-                    miIntent.putExtra("paciente", paciente);
-                    //Tipo de interpretación.
-                    miIntent.putExtra("tipo", tipo);
-                    //String de la ruta al audio.
-                    miIntent.putExtra("audio", aust);
-                    //String con el link del servidor.
-                    miIntent.putExtra("link",link);
-                    //Token de seguridad.
-                    miIntent.putExtra("token",token);
-
-                    //Iniciamos el activity.
-                    startActivityForResult(miIntent,1);
-                }else{
+                if(conexion.getActiveNetworkInfo()==null){
                     Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
+                }else {
+
+                    //Comprobamos la conexión.
+                    if (conexion.getActiveNetworkInfo().isConnected()) {
+                        //Creamos el nuevo intent y sus parámetros.
+                        Intent miIntent = new Intent(yo, RFinalActivity.class);
+
+                        //Paciente.
+                        miIntent.putExtra("paciente", paciente);
+                        //Tipo de interpretación.
+                        miIntent.putExtra("tipo", tipo);
+                        //String de la ruta al audio.
+                        miIntent.putExtra("audio", aust);
+                        //String con el link del servidor.
+                        miIntent.putExtra("link", link);
+                        //Token de seguridad.
+                        miIntent.putExtra("token", token);
+
+                        //Iniciamos el activity.
+                        startActivityForResult(miIntent, 1);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "ERROR Er6:\nNecesita conexión a Internet para usar la aplicación.", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });

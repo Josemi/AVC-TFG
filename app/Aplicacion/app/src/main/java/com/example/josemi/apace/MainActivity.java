@@ -20,6 +20,9 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Clase con la lógica de la aplicación prototipo.
+ */
 public class MainActivity extends AppCompatActivity {
 
         //Variables
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
             });
     }
 
-    /*
+    /**
     * Método para pedir permisos para grabar audios y para escribir en el almacenamiento.
     *
      */
@@ -189,6 +192,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Métood que permite configurar el MediaRecorder.
+     * @param audioRec MediaRecorder a configurar.
+     */
     private void setConfig(MediaRecorder audioRec){
         audioRec.setAudioSource(MediaRecorder.AudioSource.MIC);
         audioRec.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);

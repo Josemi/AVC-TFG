@@ -142,7 +142,7 @@ public class InterpretarActivity extends AppCompatActivity {
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
                 infoBuilder.setTitle("Información botón Qué me pasa");
-                infoBuilder.setMessage("Haz clic en “Qué me ocurre o Cómo estoy” y podrás entender qué es lo que quiero decir.");
+                infoBuilder.setMessage("Haz clic en Qué me ocurre o Cómo estoy y podrás entender qué es lo que quiero decir.");
 
                 //Reproducimos el audio indicado.
                 rpr = MediaPlayer.create(yo,R.raw.quemepasa);
@@ -185,7 +185,7 @@ public class InterpretarActivity extends AppCompatActivity {
                 AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
                 final AlertDialog info = infoBuilder.create();
                 infoBuilder.setTitle("Información botón Responder sí o no");
-                infoBuilder.setMessage("Haz Clic en  “Responder si o no” cuando quieras hacerme una pregunta que la respuesta sea sí o no.");
+                infoBuilder.setMessage("Haz Clic en  Responder si o no cuando quieras hacerme una pregunta que la respuesta sea sí o no.");
 
                 //Reproducimos el audio indicado.
                 rpr = MediaPlayer.create(yo,R.raw.respondersiono);

@@ -1,3 +1,42 @@
 \capitulo{6}{Trabajos relacionados}
 
-Este apartado sería parecido a un estado del arte de una tesis o tesina. En un trabajo final grado no parece obligada su presencia, aunque se puede dejar a juicio del tutor el incluir un pequeño resumen comentado de los trabajos y proyectos ya realizados en el campo del proyecto en curso. 
+Dentro del proyecto podemos diferenciar dos tipos de trabajos relacionados, unos que son orientados a la comunicación de personas con parálisis cerebral, y otro los trabajos relacionados con la clasificación de audios.
+
+Sin embargo, durante el proyecto, no hemos encontrado ningún trabajo similar al nuestro, es decir, que auné los dos tipos de posibles trabajos relacionados, un clasificador de audios para la mejora en la comunicación de personas con parálisis cerebral.
+
+\section{Herramientas para la comunicación}
+Como ya he comentado en esta memoria, existen algunos programas y aplicaciones que facilitan la comunicación a las personas con parálisis cerebral, algún ejemplo de estas aplicaciones es \textit{Jocomunico}~\cite{jocomunico}. En esta aplicación las personas con parálisis cerebral, no gravemente afectadas, pueden seleccionar distintos botones con pictogramas accesibles, que al pulsarlos reproduce el sonido relacionado con la imagen. Este tipo de aplicaciones las he podido ver en uso en el centro de APACE Burgos, son unas herramientas de precio elevado, pero que cumplen su correcta función, ya que permite a una persona con parálisis cerebral con un a tablet poder comunicarse.
+
+Pero existe un problema con este tipo de herramientas, se necesita que la persona con parálisis cerebral pueda pulsar de alguna forma la pantalla del dispositivo, esto como puede ver en la conferencia de ASPACENet en Madrid se puede hacer de diferentes formas, ya que capa paciente puede hacer y moverse de formas distintas, hay algunas personas que dirigen sus dispositivos con la nariz, otros con un \textit{joystick}, otras personas lo hacen con la barbilla... Pero ninguna con ninguna de estas formas puede usar una persona gravemente afecta un dispositivo móvil, es por ello que este tipo de herramientas no sirven para estas personas.
+
+\section{Clasificadores de audios}
+Los trabajos relacionados de clasificadores de audios son más comunes, debido a que se pueden aplicar a muchos tipos de problemas, desde clasificación de llantos de bebés para interpretar que les pasa, hasta clasificación de sonidos de animales. Como el conjunto de trabajos relacionados de clasificación de audios es muy abundante voy a pasar a explicar alguno de ellos, de los que más nos han llamado la atención o de los que hemos usado tanto el investigador colaborador, Sergio Chico, como yo.
+
+\subsection{Detección de sonidos de animales}
+En este proyecto~\cite{yeo2011animal} se trata de identificar el tipo de animal a partir del audio. Como se comenta en el artículo, ellos tuvieron el mismo problema que nosotros, la falta de datos.
+
+En este proyecto se usan técnicas parecida a las que usamos, en concreto en la técnicas de extracción de características del audio con el uso del \textit{Zero Crossing Rate}~\ref{zcr} y \textit{MFCC}~\ref{mel}. Primero lo que hacen es detectar el punto de la grabación donde empieza el sonido, gracias \textit{Zero Crossing Rate}. Después de obtener el punto de inicio de la grabación se pasa a la extracción de característica con \textit{MFCC}, esta se divide en 5 procesos, algo diferentes a los nuestros:
+\begin{itemize}
+	\item División del audio en fragmentos (\textit{frames}).
+	\item Minimizar las discontinuidades de la señal en el comienzo y final de cada fragmento.
+	\item Transformada rápida de \textit{Fourier} para obtener el dominio de frecuencias a partir del temporal.
+	\item Obtenemos el espectro de frecuencias de \textit{Mel}.
+	\item Aplicar el logaritmo a las frecuencias de \textit{Mel} para volver al dominio de tiempo.
+\end{itemize}
+
+Es en el punto de la clasificación donde encontramos la mayor diferencia entre ambos trabajos. Nosotros usamos para la clasificación, después de la extracción de características, un \textit{Random Forest}, mientras que ellos usan DTW (\textit{Dynamic Time Warping}), un algoritmo que nos permite ver las similitudes entre dos señales de audio no necesariamente del mismo tiempo de duración. Este algoritmo funciona colocando en una tabla los datos de ambas señales, siendo la primera colocada en la primera columna y la segunda en la última fila, y en el resto de celdas de la tabla se calculan con la siguiente fórmula:\[(x[t]-y[t])^2\]
+
+Tras obtener todos los valores de la tabla se calcula la mejor ruta, por mínimo coste de ruta, para ir desde la posición superior izquierda de la tabla hasta la inferior derecha, es decir, de esquina a esquina de la tabla.
+
+Es esta ruta a través de la tabla la que representa la similitud entre las dos señales.
+
+Como se puede ver, es un algoritmo bastante diferente de algoritmo, ya que nosotros entrenamos un \textit{ensemble} que forma un bosque de árboles de decisión que al clasificar un nuevo dato lo que hace es pasar este nuevo valor por cada uno de los árboles que conforman el bosque y se vota la salida, siendo la más votada la que devuelve el \textit{ensemble}. Sin embargo, aquí lo que hacemos es comparar la nueva señal de audio con DTW con cada una de las posibles señales.
+
+\subsection{ESC-50}
+Este es otro de los proyectos en los cuales nos hemos inspirado para desarrollar el nuestro. ESC-50 es un \textit{dataset} en el cual encontramos más de 2000 sonidos de diferentes categorías, como animales y sonidos humanos, con cada una de las categorías 10 tipos distintos de sonidos, como por ejemplo dentro de la categoría de animales tenemos perros, gatos, ovejas... El repositorio es \url{https://github.com/karoldvl/ESC-50}.
+
+Este es un \textit{dataset}  muy útil ya que nos permite dentro del mismo repositorio ver qué tipos de clasificadores funcionan mejor con qué categoría de audios. Además, dentro del repositorio podemos acceder a los artículos donde se estudian estos rendimientos de los diversos métodos clasificadores.
+
+Cabe destacar que el método que mejores resultados da es usar una red neuronal convolucionales.
+
+Gracias a este repositorio, mi compañero, Sergio Chico, ha podido observar qué métodos son buenos para otros problemas de clasificación de audios.

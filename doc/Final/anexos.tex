@@ -49,10 +49,14 @@
 	\end{figure}
 }
 
+\usepackage{eurosym}
 
 \widowpenalty10000
 \clubpenalty10000
 
+\usepackage{dirtree}
+
+\newcommand{\hubu}{\hline \rule{0pt}{2.7ex}}
 
 % El comando \figura nos permite insertar figuras comodamente, y utilizando
 % siempre el mismo formato. Los parametros son:
@@ -120,7 +124,7 @@
 %
 % Nuevo comando para tablas pequeñas (menos de una página).
 \newcommand{\tablaSmallSinColores}[5]{%
- \begin{table}[H]
+ \begin{table}[h]
   \begin{center}
    \begin{tabular}{#2}
     \toprule
@@ -338,7 +342,7 @@
     \noindent\LARGE
     Presentado por \@author{}\\ 
     en Universidad de Burgos --- \@date{}\\
-    Tutor: \@tutor{}\\
+    Tutores: \@tutor{}\\
   }%
   \end{center}%
   \null
@@ -348,9 +352,9 @@
 
 
 % Datos de portada
-\title{título del TFG \\Documentación Técnica}
-\author{nombre alumno}
-\tutor{nombre tutor}
+\title{AVC\\ Asistente Virtual para la Comunicación\\Anexos}
+\author{José Miguel Ramírez Sanz}
+\tutor{Dr. José Francisco Díez Pastor y Dr. César Represa Pérez}
 \date{\today}
 
 \begin{document}

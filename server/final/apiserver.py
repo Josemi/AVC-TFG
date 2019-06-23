@@ -12,7 +12,6 @@ from flask import jsonify
 from flask import request
 import os
 import base64
-import cv2
 import datetime
 import numpy as np
 from sklearn.externals import joblib
