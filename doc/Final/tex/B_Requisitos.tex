@@ -1,11 +1,11 @@
 \apendice{Especificación de Requisitos}
 
 \section{Introducción}
-En este anexo se voy a comentar un apartado esencial en el desarrollo de un elemento software, esto es los requisitos funcionales y los casos de uso, ya que representan lo que tiene que ser y/o hacer nuestra aplicación, programa o proyecto en general. Estos conceptos son definidos por el usuario con ayuda de los diseñadores del software, para definir, desde el primer momento, lo que tiene que hacer el software a desarrollar.
+En este anexo voy a comentar un apartado esencial en el desarrollo de un elemento software, el cual se compone de los requisitos funcionales y los casos de uso, ya que representan lo que tiene que ser y/o hacer nuestra aplicación, programa o proyecto en general. Estos conceptos son definidos por el usuario con ayuda de los diseñadores del software, para definir, desde el primer momento, lo que tiene que hacer el software a desarrollar.
 \section{Objetivos generales}
 Los objetivos generales, expuestos y debatidos en las primeras reuniones con APACE, son los siguientes:
 \begin{itemize}
-	\item Poder capturar datos con los que poder realizar la investigación.
+	\item Poder capturar datos con los que realizar la investigación.
 	\item Interpretar las emociones de los pacientes a partir de grabaciones de audio y unas opciones adicionales.
 	\item Interpretar las respuestas de los pacientes a partir de grabaciones de audio.
 	\item Toda aplicación desarrollada ha de ser simple y accesible.
@@ -21,29 +21,29 @@ En esta sección voy a comentar los requisitos funcionales y no funcionales del 
 		\item \textbf{RF-1.3 Permanencia del paciente:} en las aplicaciones una vez que se ha seleccionado un paciente este sigue a lo largo de la ejecución, sin variar por ningún tipo de error.
 		\item \textbf{RF-1.4 Paciente por defecto:} en la aplicación de interpretación tiene que poder cargarse un paciente por defecto que aparezca seleccionado al abrir la aplicación.
 	\end{itemize}
-	\item \textbf{RF-2 Selección de emociones/respuestas:} en la aplicación de recogida de datos, el usuario tiene que poder seleccionar las emociones o respuesta relacionado con el sonido que acaba de grabar.
+	\item \textbf{RF-2 Selección de emociones/respuestas:} en la aplicación de recogida de datos, el usuario tiene que poder seleccionar las emociones o respuesta relacionada con el sonido que acaba de grabar.
 	\begin{itemize}
 		\item \textbf{RF-2.1 Selección de emociones o respuesta}: en la aplicación de generación de datos, el usuario solo puede elegir como resultado de la grabación varias emociones o una respuesta, no puede elegir valores de ambos campos.
-		\item \textbf{RF-2.2 Selección de sí o no:} en la aplicación de generación de datos, si elegimos como resultado una respuesta esta ha de ser sí o no, pero no se puede seleccionar ambas a la vez.
-		\item \textbf{RF-2.3 Selección obligatoria de emociones o respuesta:} en la aplciación de generación de datos, cada grabación tiene que tener asociado al menos una emoción o una respuesta, no se puede enviar una grabación sin resultado.
-		\item \textbf{RF-2.4 Carga de datos:} en la aplicación de generación de datos en una misma ejecución sin enviar ni cancelar la ejecución, si hemos seleccionado ya las emociones o la respuesta relacionada, si volvemos a entrar a la pantalla de selección de estas, han de estar cargadas.
+		\item \textbf{RF-2.2 Selección de sí o no:} en la aplicación de generación de datos, si elegimos como resultado una respuesta, ésta ha de ser sí o no, pero no se puede seleccionar ambas a la vez.
+		\item \textbf{RF-2.3 Selección obligatoria de emociones o respuesta:} en la aplicación de generación de datos, cada grabación tiene que tener asociado al menos una emoción o una respuesta, no se puede enviar una grabación sin resultado.
+		\item \textbf{RF-2.4 Carga de datos:} en la aplicación de generación de datos, en una misma ejecución sin enviar ni cancelar la ejecución, si hemos seleccionado ya las emociones o la respuesta relacionada, si volvemos a entrar a la pantalla de selección de estas, han de estar cargadas.
 	\end{itemize}
 	\item \textbf{RF-3 Selección de las opciones adicionales:} el usuario tiene que poder modificar las opciones adicionales del paciente seleccionado.
 	\begin{itemize}
-		\item \textbf{RF-3.1 Carga de valores:} en la aplicación de generación de datos, el usuario podrá volver a ver las selecciones de las opciones que ha elegido si vuelve a entrar en la pantalla.
+		\item \textbf{RF-3.1 Carga de valores:} en la aplicación de generación de datos, el usuario podrá volver a ver las selecciones de las opciones que ha elegido si vuelve a entrar en la pantalla de las opciones.
 		\item \textbf{RF-3.2 Persistencia de las opciones:} en la aplicación de interpretación las opciones de cada cliente se almacenan y se modifican en el servidor, siendo común a todas las ejecuciones.
 	\end{itemize}
 	\item \textbf{RF-4 Grabación del audio:} el usuario ha de poder grabar los audios.
 	\begin{itemize}
 		\item \textbf{RF-4.1 Carga del audio grabado:} en la aplicación de generación de datos, un usuario que ya haya grabado una audio lo tendrá cargado en la pantalla de grabación del audio.
 		\item \textbf{RF-4.2 Reproducción del audio:} el usuario tiene que poder reproducir el último audio grabado.
-		\item \textbf{RF-4.3 Reescritura del audio:} el usuario ha de poder volver a grabar el audio, eliminando el anterior.ç
+		\item \textbf{RF-4.3 Reescritura del audio:} el usuario ha de poder volver a grabar el audio, eliminando el anterior.
 		\item \textbf{RF-4.4 Reprodución del audio relacionado con el resultado:} el usuario quiere poder escuchar el audio relacionado con el resultado mostrado.
 	\end{itemize}
 	\item \textbf{RF-5 Subida de los datos:} el usuario quiere poder subir los datos que han generado, para su posterior investigación.
 	\item \textbf{RF-6 Interpretación:} el usuario quiere obtener un resultado para el audio que ha grabado.
 	\begin{itemize}
-		\item \textbf{RF-6.1 Interpretación con paciente entrenado:} el resultado de una interpretación de un cliente, del cual se tiene los modelos de clasificación, ha de ser calculado por estos.
+		\item \textbf{RF-6.1 Interpretación con paciente entrenado:} el resultado de una interpretación de un cliente, del cual se tiene los modelos de clasificación, ha de ser calculado por éstos.
 		\item \textbf{RF-6.2 Interpretación con pacientes no entrenados:} el resultado de una interpretación para un cliente sin modelos ha de ser una respuesta aleatoria.
 	\end{itemize}
 	\item \textbf{RF-7 Ayuda en la ejecución:} el usuario quiere tener información o una ayuda durante la ejecución, para saber que hace cada botón.
@@ -56,16 +56,16 @@ En esta sección voy a comentar los requisitos funcionales y no funcionales del 
 
 \subsection{Requisitos no funcionales}
 \begin{itemize}
-	\item \textbf{RNF-1 Accesibilidad:} la aplicación de interpretación ha de ser los más accesible posible para que pueda ser usada por el mayor número de personas.
+	\item \textbf{RNF-1 Accesibilidad:} la aplicación de interpretación ha de ser lo más accesible posible para que pueda ser usada por el mayor número de personas.
 	\item \textbf{RNF-2 Usabilidad:} las aplicaciones han de ser sencillas e intuitivas.
 	\item \textbf{RNF-3 Escalabilidad:} el sistema que engloba las aplicaciones y el servidor ha de poder, de forma sencilla, añadir y eliminar pacientes.
 	\item \textbf{RNF-4 Disponibilidad:} el servidor ha de ser siempre accesible para poder cargar los pacientes, ver y/o modificar las opciones y para poder interpretar los sonidos.
 	\item \textbf{RNF-5 Seguridad:} no ha de poder acceder a los métodos del servidor desde fuera de la aplicación de interpretación de sonidos.
-	\item \textbf{RNF-6 Persistencia:} tanto la lista de posibles pacientes, como las opciones de estos y sus modelos de clasificación deben de permanecer accesibles, aunque ocurran problemas de conexión con el servidor.
+	\item \textbf{RNF-6 Persistencia:} tanto la lista de posibles pacientes como las opciones de estos y sus modelos de clasificación deben de permanecer accesibles, aunque ocurran problemas de conexión con el servidor.
 \end{itemize}
 
 \section{Especificación de requisitos}
-Este apartado se va explicar los casos de uso, a partir de diagramas y de tablas.
+En este apartado se va explicar los casos de uso, a partir de diagramas y de tablas.
 \subsection{Diagramas de Casos de Uso}
 \begin{figure}[H]
 	\centering
@@ -82,27 +82,27 @@ Este apartado se va explicar los casos de uso, a partir de diagramas y de tablas
 \end{figure}
 
 \subsection{Actores}
-Los actores son las personas que interactuan con los elementos desarrollados y son los que definen los casos de uso de un proyecto. En este desarrollo podemos diferenciar los siguiente actores:
+Los actores son las personas que interactúan con los elementos desarrollados y son los que definen los casos de uso de un proyecto. En este desarrollo podemos diferenciar los siguiente actores:
 \begin{itemize}
-	\item \textbf{Usuario que genera datos:} este usuario es el que interacciona con la aplicación para generar datos. Este usuario será los familiares, amigos y cuidadores más cercanos al paciente, que saben interpretar los sonidos que emite.
+	\item \textbf{Usuario que genera paquete de datos:} este usuario es el que interacciona con la aplicación para generar datos. Este usuario será los familiares, amigos y cuidadores más cercanos al paciente, que saben interpretar los sonidos que emite.
 	\item \textbf{Usuario:} este usuario es el que interacciona con la aplicación de interpretación, y puede ser cualquier tipo de persona que quiera interpretar a una persona con parálisis cerebral gravemente afectada.
 \end{itemize}
 \subsection{Casos de uso}
-\tablaSmallSinColores{Caso de uso 1:	Generar un dato.}{p{3cm} p{.75cm} p{9.5cm}}{tablaCU1}{
-	\multicolumn{3}{p{10.25cm}}{\textbf{CU-1: Generar un dato.}} \\
+\tablaSmallSinColores{Caso de uso 1:	Generar un paquete de datos.}{p{3cm} p{.75cm} p{9.5cm}}{tablaCU1}{
+	\multicolumn{3}{p{10.25cm}}{\textbf{CU-1: Generar un paquete de datos.}} \\
 }
 {
-	\textbf{Descripción}                            & \multicolumn{2}{p{10.25cm}}{El usuario sube un dato generado.} \\\hubu
+	\textbf{Descripción}                            & \multicolumn{2}{p{10.25cm}}{El usuario sube un paquete de datos generado.} \\\hubu
 	\textbf{Requisitos}                         	   & \multicolumn{2}{p{10.25cm}}{RF-5} \\\hubu
-	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un dato.} \\\hubu
+	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un paquete de datos.} \\\hubu
 	\multirow{3}{3.5cm}{\textbf{Secuencia normal}}  & \textbf{Paso} & \textbf{Acción} \\\cline{2-3}
 	& 1    & El usuario accede a la aplicación de generación de datos.\\\cline{2-3}
 	& 2	   & El usuario selecciona al paciente. \\\cline{2-3}
 	& 3    & El usuario rellena el audio, las opciones y las emociones o respuesta. \\\cline{2-3}
-	& 4    & El usuario sube el dato generado. \\\hubu
-	\textbf{Postcondiciones}                        & \multicolumn{2}{p{10.25cm}}{El correo con el dato se ha enviado correctamente.} \\\hubu
+	& 4    & El usuario sube el paquete de datos generado. \\\hubu
+	\textbf{Postcondiciones}                        & \multicolumn{2}{p{10.25cm}}{El correo con el paquete de datos se ha enviado correctamente.} \\\hubu
 	\multirow{2}{3.5cm}{\textbf{Excepciones}}       & Paso & Acción \\\cline{2-3}
-	& 4    & Si no se tiene conexión a Internet no se envía el dato, pero tampoco se elimina \\\hubu
+	& 4    & Si no se tiene conexión a Internet no se envía el paquete de datos, pero tampoco se elimina \\\hubu
 	\textbf{Frecuencia}                             & Media \\\hubu
 	\textbf{Importancia}                            & Crítico \\
 }
@@ -114,7 +114,7 @@ Los actores son las personas que interactuan con los elementos desarrollados y s
 	\textbf{Descripción}                            & \multicolumn{2}{p{10.25cm}}{El usuario selecciona y confirma un paciente.} \\\hubu
 	\textbf{Precondiciones}                         & \multicolumn{2}{p{10.25cm}}{El usuario se encuentra en el menú principal de la aplicación de recogida de datos} \\\hubu
 	\textbf{Requisitos}                         	   & \multicolumn{2}{p{10.25cm}}{RF-1, RF-1.1, RF1.2, RF-1.3.} \\\hubu
-	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un dato.} \\\hubu
+	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un paquete de datos.} \\\hubu
 	\multirow{3}{3.5cm}{\textbf{Secuencia normal}}  & \textbf{Paso} & \textbf{Acción} \\\cline{2-3}
 	& 1    & El usuario accede a la aplicación de generación de datos.\\\cline{2-3}
 	& 2	   & El usuario despliega el \textit{spinner} para ver los posibles pacientes. \\\cline{2-3}
@@ -132,7 +132,7 @@ Los actores son las personas que interactuan con los elementos desarrollados y s
 	\textbf{Descripción}                            & \multicolumn{2}{p{10.25cm}}{El usuario graba el sonido emitido por un paciente.} \\\hubu
 	\textbf{Precondiciones}                         & \multicolumn{2}{p{10.25cm}}{Hay un paciente seleccionado.} \\\hubu
 	\textbf{Requisitos}                         	   & \multicolumn{2}{p{10.25cm}}{RF-4, RF-4.1, RF-4.3} \\\hubu
-	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un dato.} \\\hubu
+	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un paquete de datos.} \\\hubu
 	\multirow{3}{3.5cm}{\textbf{Secuencia normal}}  & \textbf{Paso} & \textbf{Acción} \\\cline{2-3}
 	& 1    & El usuario accede a la aplicación de generación de datos.\\\cline{2-3}
 	& 2	   & El usuario selecciona al paciente. \\\cline{2-3}
@@ -151,7 +151,7 @@ Los actores son las personas que interactuan con los elementos desarrollados y s
 	\textbf{Descripción}                            & \multicolumn{2}{p{10.25cm}}{El último audio grabado es reproducido.} \\\hubu
 	\textbf{Precondiciones}                         & \multicolumn{2}{p{10.25cm}}{Existe un audio grabado, y el usuario se encuentra en la pantalla de grabación de audio.} \\\hubu
 	\textbf{Requisitos}                         	   & \multicolumn{2}{p{10.25cm}}{RF-4.2} \\\hubu
-	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un dato.} \\\hubu
+	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un paquete de datos.} \\\hubu
 	\multirow{3}{3.5cm}{\textbf{Secuencia normal}}  & \textbf{Paso} & \textbf{Acción} \\\cline{2-3}
 	& 1    & El usuario pulsa el botón \textit{REPRODUCIR} y se comienza a reproducir el audio.\\\hubu
 	\textbf{Postcondiciones}                        & \multicolumn{2}{p{10.25cm}}{El audio se reproduce, y si se vuelve a pulsar el botón vuelve a comenzar la reproducción.} \\\hubu
@@ -166,7 +166,7 @@ Los actores son las personas que interactuan con los elementos desarrollados y s
 	\textbf{Descripción}                            & \multicolumn{2}{p{10.25cm}}{El usuario quiere seleccionar las opciones relacionadas con el audio grabado.} \\\hubu
 	\textbf{Precondiciones}                         & \multicolumn{2}{p{10.25cm}}{Estamos en la pantalla de selección de opciones y existe un audio grabado.} \\\hubu
 	\textbf{Requisitos}                         	   & \multicolumn{2}{p{10.25cm}}{RF-3, RF-3.1} \\\hubu
-	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un dato.} \\\hubu
+	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un paquete de datos.} \\\hubu
 	\multirow{3}{3.5cm}{\textbf{Secuencia normal}}  & \textbf{Paso} & \textbf{Acción} \\\cline{2-3}
 	& 1    & El usuario selecciona las opciones apropiadas en ese momento.\\\hubu
 	\textbf{Postcondiciones}                        & \multicolumn{2}{p{10.25cm}}{Las opciones se guardan, y si se vuelve acceder a la pantalla se cargan.} \\\hubu
@@ -181,7 +181,7 @@ Los actores son las personas que interactuan con los elementos desarrollados y s
 	\textbf{Descripción}                            & \multicolumn{2}{p{10.25cm}}{El usuario quiere seleccionar las emociones o respuesta relacionadas con el audio.} \\\hubu
 	\textbf{Precondiciones}                         & \multicolumn{2}{p{10.25cm}}{Estamos en la pantalla de selección de emociones o respuesta, con un audio grabado y unas opciones seleccionadas.} \\\hubu
 	\textbf{Requisitos}                         	   & \multicolumn{2}{p{10.25cm}}{RF-2, RF-2.1, RF-2.2, RF-2.3 y RF-2.4.} \\\hubu
-	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un dato.} \\\hubu
+	\textbf{Actor}                         	   & \multicolumn{2}{p{10.25cm}}{Usuario que genera un paquete de datos.} \\\hubu
 	\multirow{3}{3.5cm}{\textbf{Secuencia normal}}  & \textbf{Paso} & \textbf{Acción} \\\cline{2-3}
 	& 1    & El usuario selecciona las emociones o respuesta relacionada.\\\hubu
 	\textbf{Postcondiciones}                        & \multicolumn{2}{p{10.25cm}}{Lo seleccionado se guarda, y si se vuelve a entrar en la pantalla se cargarán estos datos.} \\\hubu
@@ -328,10 +328,9 @@ Los actores son las personas que interactuan con los elementos desarrollados y s
 	& 1    & El usuario pulsa el botón \textit{Entender} para ver el resultado.\\\cline{2-3}
 	& 2	   & El usuario visualiza y escucha el resultado. \\\cline{2-3}
 	& 3    & El usuario puede volver a escuchar el audio relacionado con ese resultado pulsando el botón \textit{Escuchar}. \\\hubu
-	\textbf{Postcondiciones}                        & \multicolumn{2}{p{10.25cm}}{El correo con el dato se ha enviado correctamente.} \\\hubu
 	\multirow{2}{3.5cm}{\textbf{Excepciones}}       & Paso & Acción \\\cline{2-3}
 	& 2    & Si no se tiene conexión con el servidor, error 1. \\\cline{2-3}
-	& 2    & Si no existe el modelo entrenado o está dentro del grupo de resultado aleatorios, error 8. \\\hubu
+	& 2    & Si no existe el modelo entrenado y no está dentro del grupo de resultado aleatorios, error 8. \\\hubu
 	\textbf{Frecuencia}                             & Alta \\\hubu
 	\textbf{Importancia}                            & Crítica \\
 }

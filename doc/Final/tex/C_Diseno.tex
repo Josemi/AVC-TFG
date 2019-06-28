@@ -34,6 +34,7 @@ Un ejemplo de la estructura de datos comentada sería:
 	.2 JMiguel\_10-35-36\_19-06-2019.zip.
 }
 
+Donde podemos ver que de la carpeta generada cuelgan los ficheros del audio, las opciones adicionales y las emociones o respuestas relacionadas. Y que después se ha generado el comprimido a partir de esta carpeta con el mismo nombre, con formato \textit{zip}.
 \subsection{Aplicación para la Interpretación}
 Esta segunda aplicación es bastante más compleja, en cuanto a la lógica que hay detrás, como al conjunto de datos que maneja.
 
@@ -83,47 +84,77 @@ Dentro del servidor, como ya se ha comentado en la memoria, se ha puesto un espe
 }
 
 En la carpeta \textit{Modelos}, es donde nos encontramos con los modelos entrenados de los pacientes, tanto los modelos para interpretar estados como los modelos para interpretar respuesta. En la carpeta \textit{Opciones} se encuentran los distintos archivos con los valores actuales de las opciones adicionales de los pacientes. Por último, en la carpeta \textit{Temp} es donde se almacenan los audios subidos desde la aplicación móvil, que una vez el servidor realiza la respuesta al cliente este audio se elimina.
+\newpage
 \section{Diseño procedimental}
 \subsection{Aplicación para la recogida de datos}
-En esta aplicación solo hay un procedimiento de ejecución, ya que es lo que se quería, una aplicación con una ejecución lineal, que resultase fácil de utilizar para los usuarios, como así nos comentaron en las distintas presentaciones de esta aplicación. El procedimiento de esta ejecución se puede ver en el diagrama de secuencia en la figura~\ref{fig:dsgd}.
+En esta aplicación solo hay un procedimiento de ejecución, ya que es lo que se quería, una aplicación con una ejecución lineal, que resultase fácil de utilizar para los usuarios, como así nos comentaron en las distintas presentaciones de esta aplicación. El procedimiento de esta ejecución se puede ver en el diagrama de secuencia simplificado en la figura~\ref{fig:dsgd} y en el diagrama de secuencia normal en la figura~\ref{fig:dsgd2}.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{dsgd}
-	\caption{Diagrama de Secuencia aplicación generación de datos.}
+	\caption{Diagrama de Secuencia simplificado aplicación generación de datos.}
 	\label{fig:dsgd}
 \end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{dsgd2}
+	\caption{Diagrama de Secuencia aplicación generación de datos.}
+	\label{fig:dsgd2}
+\end{figure}
+
 \subsection{Aplicación para la interpretación}
 Hay distintas procedimientos que podemos probar en la aplicación de interpretación, estos son unos procedimientos bien definidos que nos permiten realizar las distintas funcionalidades que tiene esta aplicación y el servidor al que está conectado.
 
-Estos procedimientos han sido diseñados siguiendo los diagramas de secuencia que se pueden ver en las figuras~\ref{fig:ds1}~\ref{fig:ds2},~\ref{fig:ds3} y ~\ref{fig:ds4}.
+Estos procedimientos han sido diseñados siguiendo los diagramas de secuencia simplificados que se pueden ver en las figuras~\ref{fig:ds1},~\ref{fig:ds2},~\ref{fig:ds3} y ~\ref{fig:ds4}. También se ha seguido los diagramas de secuencias que se pueden ver en las figuras~\ref{fig:ds1n},~\ref{fig:ds2n} y~\ref{fig:ds3n}.
 
-\begin{figure}[H]
+\begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{ds1}
-	\caption{Diagrama de Secuencia de Información.}
+	\caption{Diagrama de Secuencia simplificado de Información.}
 	\label{fig:ds1}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{ds2}
-	\caption{Diagrama de Secuencia del cambio de las opciones.}
+	\caption{Diagrama de Secuencia simplificado del cambio de las opciones.}
 	\label{fig:ds2}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{ds3}
-	\caption{Diagrama de Secuencia de la interpretación de una emoción/estado.}
+	\caption{Diagrama de Secuencia simplificado de la interpretación de una emoción/estado.}
 	\label{fig:ds3}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{ds4}
 	\caption{Diagrama de Secuencia de la interpretación de una respuesta.}
 	\label{fig:ds4}
+\end{figure}
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\textwidth]{ds1n}
+	\caption{Diagrama de Secuencia de Información.}
+	\label{fig:ds1n}
+\end{figure}
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\textwidth]{ds2n}
+	\caption{Diagrama de Secuencia del cambio de las opciones.}
+	\label{fig:ds2n}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{ds3n}
+	\caption{Diagrama de Secuencia de la interpretación.}
+	\label{fig:ds3n}
 \end{figure}
 
 Como se puede ver, cada diagrama muestra el diseño de una parte de la aplicación, en el primer diagrama, figura~\ref{fig:ds1} podemos ver la secuencia para llegar a la pantalla de información del proyecto. En el segundo diagrama, figura~\ref{fig:ds2}, se puede ver la secuencia de procesos que hay que realizar para poder modificar las opciones de un paciente. Por último, podemos ver en los diagramas de la secuencia de pasos a seguir para poder interpretar una emoción, figura~\ref{fig:ds3}, y una respuesta, figura~\ref{fig:ds4}. 
@@ -158,12 +189,13 @@ El diseño de la interfaz que hice de esta aplicación se puede ver en la figura
 	\caption{Interfaz final de la aplicación recogida de datos.}
 	\label{fig:digdfinal}
 \end{figure}
+
 \subsection{Aplicación para interpretar}
 En esta aplicación se puso mucho empeño en realizar un buen diseño, y junto con el equipo de APACE Burgos diseñamos al rededor de 8 interfaces, de las cuales se eligió la interfaz que se puede ver en la figura~\ref{fig:diinter}.
 
 A la aplicación final llegaron muchos cambios, algunos pedidos por APACE Burgos y otros por meras necesidades que veía al ver la interfaz. Entre los cambios más significativos están el cambio de color de los botones, o la disposición de alguna pantalla. La interfaz final de la aplicación se puede ver en la figura~\ref{fig:intfin}.
 
-\begin{figure}[H]
+\begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{disintavc}
 	\caption{Diseño interfaz aplicación interpretación.}
@@ -178,12 +210,25 @@ A la aplicación final llegaron muchos cambios, algunos pedidos por APACE Burgos
 \end{figure}
 
 \section{Diseño de código de errores}
-Mientras estaba desarrollando el servidor, e implementando su conexión con la aplicación, me dí cuenta de que los errores de los diferentes métodos se repetían continuamente. Es por ello que decidí diseñar un estándar de códigos de errores para así poder responder mejor ante un posible fallo en la conexión entre la aplicación y el servidor, documentando la causa del fallo y como poder arreglarlo. El diseño del código de errores se puede ver en la figura~\ref{fig:errores}.
+Mientras estaba desarrollando el servidor, e implementando su conexión con la aplicación, me dí cuenta de que los errores de los diferentes métodos se repetían continuamente. Es por ello que decidí diseñar un estándar de códigos de errores para así poder responder mejor ante un posible fallo en la conexión entre la aplicación y el servidor, documentando la causa del fallo y como poder arreglarlo. El diseño del código de errores se puede ver en la figura~\ref{tabla:errores}.
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{errores}
+\begin{table}[H]
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{@{}llll@{}}
+		\toprule
+		Error & \textbf{Descripción}                                                                & \textbf{Causa}                                                                                                                                                                               & \textbf{Solución}                                                                                                                                    \\ \midrule
+		Er1   & \begin{tabular}[c]{@{}l@{}}No se puede \\ acceder al servidor.\end{tabular}         & \begin{tabular}[c]{@{}l@{}}Este error se da cuando el servidor\\  está caído.\end{tabular}                                                                                                   & \begin{tabular}[c]{@{}l@{}}Avisar al Administrador para que \\ reinicie el servidor.\end{tabular}                                                    \\
+		Er2   & \begin{tabular}[c]{@{}l@{}}Token de \\ seguridad\\  incorrecto.\end{tabular}        & \begin{tabular}[c]{@{}l@{}}O se ha corrompido la aplicación\\  cambiando el token de seguridad \\ o el token de seguridad ha cambiado\\  sin ser actualizado en su dispositivo.\end{tabular} & \begin{tabular}[c]{@{}l@{}}Avisar al Administrador para que \\ le pase de nuevo la aplicación.\end{tabular}                                          \\
+		Er3   & \begin{tabular}[c]{@{}l@{}}Lista de nombres \\ vacía en el servidor.\end{tabular}   & \begin{tabular}[c]{@{}l@{}}La lista con los nombres en el\\  servidor está vacía.\end{tabular}                                                                                               & \begin{tabular}[c]{@{}l@{}}Avisar al Administrador para \\ que recupere el archivo.\end{tabular}                                                     \\
+		Er4   & \begin{tabular}[c]{@{}l@{}}Lista de nombres \\ no encontrada.\end{tabular}          & \begin{tabular}[c]{@{}l@{}}El fichero con la lista de los \\ pacientes en el servidor no está.\end{tabular}                                                                                  & \begin{tabular}[c]{@{}l@{}}Avisar al Administrador para \\ que recupere el archivo.\end{tabular}                                                     \\
+		Er5   & \begin{tabular}[c]{@{}l@{}}Opciones del \\ paciente no\\  encontradas.\end{tabular} & \begin{tabular}[c]{@{}l@{}}El fichero con las opciones \\ adicionales del paciente no \\ está en el servidor.\end{tabular}                                                                   & \begin{tabular}[c]{@{}l@{}}Avisar al Administrador para \\ que recupere el archivo.\end{tabular}                                                     \\
+		Er6   & \begin{tabular}[c]{@{}l@{}}No hay \\ conexión \\ a Internet.\end{tabular}           & \begin{tabular}[c]{@{}l@{}}No tener conexión ni Wifi \\ ni Datos Móviles.\end{tabular}                                                                                                       & \begin{tabular}[c]{@{}l@{}}Conectarse a una red con acceso\\  a Internet.\end{tabular}                                                               \\
+		Er7   & \begin{tabular}[c]{@{}l@{}}Fichero del \\ paciente vacío.\end{tabular}              & \begin{tabular}[c]{@{}l@{}}El fichero del paciente con las\\  opciones está vacío en el servidor.\end{tabular}                                                                               & \begin{tabular}[c]{@{}l@{}}Avisar al Administrador para \\ que recupere el archivo.\end{tabular}                                                     \\
+		Er8   & \begin{tabular}[c]{@{}l@{}}Fichero de \\ clasificación \\ no existe.\end{tabular}   & \begin{tabular}[c]{@{}l@{}}No existe el fichero con el que se\\  clasifica en el servidor a ese paciente.\end{tabular}                                                                       & \begin{tabular}[c]{@{}l@{}}Avisar al Administrador para \\ que recupere el archivo.\end{tabular}                                                     \\
+		Er9   & Resultado vacío.                                                                    & \begin{tabular}[c]{@{}l@{}}El servidor ha devuelto una \\ solución vacía.\end{tabular}                                                                                                       & \begin{tabular}[c]{@{}l@{}}Avisar al Administrador para \\ que compruebe el funcionamiento \\ de la clasificación para ese\\  paciente.\end{tabular} \\ \bottomrule
+	\end{tabular}
+	}
 	\caption{Código de errores.}
-	\label{fig:errores}
-\end{figure}
+	\label{tabla:errores}
+\end{table}
 

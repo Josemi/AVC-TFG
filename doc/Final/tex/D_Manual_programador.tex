@@ -3,7 +3,7 @@
 \section{Introducción}
 En este apartado de los anexos voy a comentar:
 \begin{itemize}
-	\item \textbf{Estructura de directorios:} estructura de direcotorios con la que se ha trabajado en \textit{GitHub}.
+	\item \textbf{Estructura de directorios:} estructura de directorios con la que se ha trabajado en \textit{GitHub}.
 	\item \textbf{Manual del programador:} manual en el que se explican los pasos que se ha de realizar para seguir desarrollando el proyecto.
 	\item \textbf{Compilación, instalación y ejecución del proyecto:} explicación de los pasos a realizar para la instalación y ejecución del proyecto.
 	\item \textbf{Pruebas del sistema:} apartado donde comentaré las distintas pruebas que se han realizado.
@@ -54,7 +54,7 @@ En la carpeta \textit{doc} nos encontramos con la estructura de documentación d
 	.2 Símbolos.
 }
 
-Como se puede observar, de la carpeta \textit{doc} cuelgan muchos elementos, entre ellos están los orientados al diseño de la aplicación en la carpeta \textit{Diseño}, a los manuales de usuario en la carpeta \textit{Manuales de usuario} o por ejemplo a la estructura para generar la documentación final en \LaTeX en la carpeta \textit{Final}.
+Como se puede observar, de la carpeta \textit{doc} cuelgan muchos elementos, entre ellos están los orientados al diseño de la aplicación en la carpeta \textit{Diseño}, a los manuales de usuario en la carpeta \textit{Manuales de usuario} o por ejemplo a la estructura para generar la documentación final en \LaTeX{} en la carpeta \textit{Final}.
 
 Dentro de la carpeta \textit{javadoc}, nos podemos encontrar la documentación de las 3 aplicaciones realizadas. En la carpeta \textit{Vídeos} es donde nos podemos encontrar los distintos vídeos explicativos que he creado para enseñar las aplicaciones.
 
@@ -71,7 +71,7 @@ En la carpeta \textit{prueba}, nos encontramos con la primera prueba que realic�
 \section{Manual del programador}
 En este apartado se va a comentar que se tendría que hacer para, a partir del software actual realizar mejoras. Para este apartado se ha decidido no explicar la aplicación prototipo, ya que el resto de aplicaciones son mejoras a partir de esta. Además, se tiene en cuenta que se dispone de la estructura del proyecto tras haber hecho un \textit{clone} del repositorio en \textit{GitHub}.
 \subsection{Aplicación para la recogida de datos}
-El código de esta aplicación se encuentra en el directorio \textit{/app/AplicaciónGSAudios}. Para poder modificar el código de esta aplicación tenemos que abrir \textit{AndroidStudio}, pulsar \textit{File} y después \textit{Open...}, aquí se nos abrirá un diálogo en el cual podremos elegir la aplicación, \textit{AndroidStudio} se encarga de buscar las aplicaciones y de mostrarlas para poder elegir la aplicación, como se puede ver en la figura~\ref{fig:andstu}.
+El código de esta aplicación se encuentra en el directorio \textit{/app/AplicaciónGSAudios}. Para poder modificar el código de esta aplicación tenemos que abrir \textit{AndroidStudio}, pulsar \textit{File} y después \textit{Open\ldots}, aquí se nos abrirá un diálogo en el cual podremos elegir la aplicación, \textit{AndroidStudio} se encarga de buscar las aplicaciones y de mostrarlas para poder elegir la aplicación, como se puede ver en la figura~\ref{fig:andstu}.
 
 \begin{figure}
 	\centering
@@ -80,7 +80,7 @@ El código de esta aplicación se encuentra en el directorio \textit{/app/Aplica
 	\label{fig:andstu}
 \end{figure}
 
-Una vez hayamos seleccionado y abierto el proyecto tendremos en \textit{AndroidStudio} una vista de la estructura del proyecto. Tras procesar y cargar el proyecto, que según el tamaño de este puede durar un rato, \textit{AndroidStudio} nos organiza las carpetas en dos, \textit{app} y \textit{Gradle Scripts}, como se puede ver en la ~\ref{fig:est}.
+Una vez hayamos seleccionado y abierto el proyecto tendremos en \textit{AndroidStudio} una vista de la estructura del proyecto. Tras procesar y cargar el proyecto, que según el tamaño de este puede durar un rato, \textit{AndroidStudio} nos organiza las carpetas en dos, \textit{app} y \textit{Gradle Scripts}, como se puede ver en la ~\ref{fig:estappgd}.
 
 \begin{figure}
 	\centering
@@ -100,7 +100,7 @@ Dentro de la carpeta de \textit{app} nos encontramos con la siguiente estructura
 	.2 res.
 }
 
-En la carpeta \textit{manifest} nos encontramos con uno de los ficheros más importantes del desarrollo en \textit{Android}, es en el en donde se encuentran los permisos que tiene la aplicación, para el acceso a Internet, para la grabación de audios... En la carpeta \textit{java} nos encontramos con la lógica de la aplicación y con los test para probar esta lógica. Y en la carpeta \textit{res} nos encontramos con la estructura que nos permite administrar y utilizar los archivos como imágenes, sonidos y sobre todo los \textit{layouts} que son las interfaces de las pantallas.
+En la carpeta \textit{manifest} nos encontramos con uno de los ficheros más importantes del desarrollo en \textit{Android}, es en el en donde se encuentran los permisos que tiene la aplicación, para el acceso a Internet, para la grabación de audios\ldots En la carpeta \textit{java} nos encontramos con la lógica de la aplicación y con los test para probar esta lógica. Y en la carpeta \textit{res} nos encontramos con la estructura que nos permite administrar y utilizar los archivos como imágenes, sonidos y sobre todo los \textit{layouts} que son las interfaces de las pantallas.
 
 Una de las posibles modificaciones que se podrían querer hacer a esta aplicación sería añadir algún paciente al cual poder grabar, para ello tenemos que acceder a la carpeta \textit{/res/values} y en concreto al archivo \textit{strings.xml}, donde podemos encontrar el \textit{array} con los pacientes, el cual se carga al principio de la aplicación en el \textit{spinner} de selección de paciente.
 

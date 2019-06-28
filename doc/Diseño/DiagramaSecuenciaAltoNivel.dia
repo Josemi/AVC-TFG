@@ -312,7 +312,7 @@ datos#</dia:string>
         <dia:point val="43.1995,11.8712"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="43.1346,11.8063;47.0597,13.4728"/>
+        <dia:rectangle val="43.1346,11.7993;47.0206,13.4246"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="43.1995,11.8712"/>
@@ -321,13 +321,13 @@ datos#</dia:string>
       <dia:attribute name="numcp">
         <dia:int val="1"/>
       </dia:attribute>
-      <dia:attribute name="end_arrow">
+      <dia:attribute name="start_arrow">
         <dia:enum val="1"/>
       </dia:attribute>
-      <dia:attribute name="end_arrow_length">
+      <dia:attribute name="start_arrow_length">
         <dia:real val="0.5"/>
       </dia:attribute>
-      <dia:attribute name="end_arrow_width">
+      <dia:attribute name="start_arrow_width">
         <dia:real val="0.5"/>
       </dia:attribute>
       <dia:connections>
@@ -413,7 +413,7 @@ datos#</dia:string>
         <dia:point val="45.8,19.5"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="45.8,18.8864;48.4686,19.6873"/>
+        <dia:rectangle val="45.8,18.905;48.45,19.65"/>
       </dia:attribute>
       <dia:attribute name="text">
         <dia:composite type="text">

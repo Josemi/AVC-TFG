@@ -60,6 +60,8 @@
 	resetmargins=true
 }
 
+\usepackage{pdfpages}
+
 \widowpenalty10000
 \clubpenalty10000
 
@@ -435,13 +437,13 @@ Dr. D. César Represa Pérez
 % Abstract en castellano
 \renewcommand*\abstractname{Resumen}
 \begin{abstract}
-La parálisis cerebral es una discapacidad que afecta a la capacidad de movimiento y de la postura. Además, esta discapacidad suele ir acompañada de otras discapacidad en la percepción de los sentidos y en la capacidad cognitiva. Dentro de las personas afectas hay un grupo gravemente afectado con grandes discapacidades motoras, cognitivas y sobre todo comunicativas, ya que los únicos sonidos que emiten son ruidos.
+La parálisis cerebral es una discapacidad que afecta a la capacidad de movimiento y de la postura. Además, esta discapacidad suele ir acompañada de otras discapacidades en la percepción de los sentidos y en la capacidad cognitiva. Dentro de las personas afectas hay un grupo gravemente afectado con grandes discapacidades motoras, cognitivas y sobre todo comunicativas, ya que los únicos sonidos que emiten son ruidos.
 
 Con la idea de facilitar la comunicación de estos pacientes gravemente afectados surgió la propuesta desde APACE Burgos para desarrollar un comunicador virtual con el que poder interpretar los sonidos que estas personas hacen. Es aquí cuando APACE Burgos se puso en contacto con la Universidad de Burgos para desarrollar AVC, el \textit{Asistente Virtual para la Comunicación}.
 
 Para la realización de este proyecto se han desarrollado varias aplicaciones. Una para la recogida de los sonidos procedentes de los pacientes con los que entrenar un clasificador, y otra aplicación para la interpretación de los sonidos emitidos por los pacientes en base a los datos registrados. También se ha desarrollado un servidor que permite el almacenamiento de las opciones adicionales necesarias para la clasificación, así como para poder interpretar los sonidos.
 
-Las aplicaciones generadas durante este proyecto se han desarrollado en \textit{Android} y se ha usado \textit{Python} para desarrollar el servidor. El asistente pretende recnoocer emociones (hambre, tristeza, enfado y dolor) y respuestas (sí y no) a partir de métodos de clasificación. Para ello se han empleado algoritmos de extracción de características sobre audios, y para el clasificador final se ha usado un tipo de \textit{ensemble} llamado \textit{Bagging}, en concreto \textit{Random Forest}.
+Las aplicaciones generadas durante este proyecto se han desarrollado en \textit{Android} y se ha usado \textit{Python} para desarrollar el servidor. El asistente pretende reconocer emociones (hambre, tristeza, enfado y dolor) y respuestas (sí y no) a partir de métodos de clasificación. Para ello se han empleado algoritmos de extracción de características sobre audios, y para el clasificador final se ha usado un tipo de \textit{ensemble} llamado \textit{Bagging}, en concreto \textit{Random Forest}.
 \end{abstract}
 
 \renewcommand*\abstractname{Descriptores}
