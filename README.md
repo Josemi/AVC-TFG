@@ -54,7 +54,7 @@ Thinking about facilating communication to severely affected
 patients, APACE Burgos suggested to develop a virtual communicator
 to interpret the sounds of these people. Here is when APACE Burgos
 contacted with University of Burgos to develop VCA, the Virtual
-Assitant for Communication.
+Assistant for Communication.
 
 For the realization of this project they have been developed some
 applications. One for collectiong data from patients, and other one
