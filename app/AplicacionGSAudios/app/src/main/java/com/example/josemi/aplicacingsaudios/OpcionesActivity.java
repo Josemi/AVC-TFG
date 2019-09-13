@@ -14,10 +14,14 @@ import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +44,7 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
     //Variables
     private String paciente,ruta,nf,csv; //Strings con el nombre del paciente, la ruta, el nombre del fichero y el nombre del csv
     private TextView texto; //TextView que se muestra en la parte superior de la pantalla
-    private Button selec; //Botón selec
+    private ImageButton selec, canc; //Botón selec
     private CheckBox opc1,opc2,opc3,opc5,opc6,opc7,opc8; //CheckBox con las distintas opciones
     private Spinner opc4,opc9; //Spinner con una de las opciones
     private List<CheckBox> checks; //Lista de todos los CheckBox
@@ -66,10 +70,6 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         ruta = getIntent().getExtras().getString("ruta");
         nf = getIntent().getExtras().getString("nombre");
 
-        //Inicializamos el TextView
-        texto = findViewById(R.id.texto);
-        texto.setText("Seleccione los apartados y opciones para el paciente: " + paciente);
-
         //Inicializamos el botón selec, los checkbox y los spinners y los metemos en sus listas
         selec = findViewById(R.id.seleccionar);
         opc1 = findViewById(R.id.opc1);
@@ -90,6 +90,10 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         checks.add(opc8);
         opc9 = findViewById(R.id.opc9);
         spinners.add(opc9);
+        canc = findViewById(R.id.can);
+
+        //Creamos la animación para los ImageButtons.
+        final Animation animScale = AnimationUtils.loadAnimation(this, R.anim.anim_scale);
 
         //Inicialización de los spinners
         opc4.setSelection(-1);
@@ -112,7 +116,6 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         if(acsv.exists()){
             cargarCsv();
             selec.setEnabled(true);
-            acsv.delete();
         }else{ //Sino existe ponemos el botón selec a no disponible
             selec.setEnabled(false);
         }
@@ -121,9 +124,15 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
         selec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
                 //Mensaje de que hemos pulsado el botón
                 Toast.makeText(getApplicationContext(),"Opciones guardadas",Toast.LENGTH_LONG).show();
                 String csv = ruta + "/" + nf + "_Opciones" + ".csv";
+
+                acsv.delete();
 
                 //Recogemos los valores de los checkbox y spinners
                 List<String> salida = comprobar();
@@ -142,6 +151,21 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
                 setResult(Activity.RESULT_OK, resultIntent);
 
                 //Finalizamos la actividad
+                finish();
+            }
+        });
+
+        //Listener del botón cancelar
+        canc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
+                //Result intent con resultado cancelado.
+                Intent resultIntent = new Intent();
+                setResult(Activity.RESULT_CANCELED, resultIntent);
                 finish();
             }
         });
@@ -213,5 +237,16 @@ public class OpcionesActivity extends AppCompatActivity implements AdapterView.O
             s.setSelection(ad.getPosition(valores[i].replace("\"","")));
             i++;
         }
+    }
+
+    /**
+     * Método que se ejecuta cuando se pulsa el botón "atras" del dispositivo.
+     */
+    @Override
+    public void onBackPressed() {
+        //Result intent con resultado cancelado.
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, resultIntent);
+        finish();
     }
 }

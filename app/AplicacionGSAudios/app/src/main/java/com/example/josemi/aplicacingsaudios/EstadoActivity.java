@@ -13,8 +13,11 @@ import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,9 +37,8 @@ import java.util.Scanner;
 public class EstadoActivity extends AppCompatActivity {
     //Variables
     private String paciente,ruta,nf,csv; //Strings con el nombre del paciente, la ruta, el nombre del fichero y el nombre del csv
-    private TextView texto; //TextView que se muestra en la parte superior de la pantalla
     private CheckBox es1,es2,es3,es4,es5,si,no; //Checkbox con las opciones de los estamos
-    private Button selec; //Botón selec
+    private ImageButton selec, canc; //Botón selec
     private List<CheckBox> checksEs,checksSN; //Lista de los distintos checkbox
     private File acsv; //Archivo
 
@@ -55,9 +57,6 @@ public class EstadoActivity extends AppCompatActivity {
         ruta = getIntent().getExtras().getString("ruta");
         nf = getIntent().getExtras().getString("nombre");
 
-        //Inicializamos el TextView
-        texto = findViewById(R.id.texto);
-        texto.setText("Seleccione el/los estados para el paciente: " + paciente);
 
         //Inicializamos las listas
         checksEs = new LinkedList();
@@ -79,8 +78,12 @@ public class EstadoActivity extends AppCompatActivity {
         no = findViewById(R.id.no);
         checksSN.add(no);
 
+        //Creamos la animación para los ImageButtons.
+        final Animation animScale = AnimationUtils.loadAnimation(this, R.anim.anim_scale);
+
         //Inicializamos el botón selec
         selec = findViewById(R.id.seleccionar);
+        canc = findViewById(R.id.cancel);
 
         //Ruta del fichero
         csv = ruta + "/" + nf + "_Estado" + ".csv";
@@ -88,18 +91,23 @@ public class EstadoActivity extends AppCompatActivity {
         //Si existe lo cargamos y lo eliminamos
         if(acsv.exists()) {
             cargarCsv();
-            acsv.delete();
         }
 
         //Listener del botón selec
         selec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
                 //Mensaje
                 Toast.makeText(getApplicationContext(),"Estado/s guardado",Toast.LENGTH_LONG).show();
 
                 //Si es valido las opciones puestas
                 if(validar()) {
+
+                    acsv.delete();
                     //Recogemos los valores
                     List<String> salida = comprobar();
                     try {
@@ -120,6 +128,23 @@ public class EstadoActivity extends AppCompatActivity {
                     //Mostramosn un mensaje
                     Toast.makeText(getApplicationContext(),"No se puede dejar vacio, ni rellenar valores de ambas columnas, ni marcar \"si\" y \"no\" a la vez",Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        //Listener del botón selec
+        canc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
+                //Enviamos el resultado
+                Intent resultIntent = new Intent();
+                setResult(Activity.RESULT_CANCELED, resultIntent);
+
+                //Finalizamos la actividad
+                finish();
             }
         });
     }

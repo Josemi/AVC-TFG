@@ -10,6 +10,7 @@ package com.example.josemi.aplicacingsaudios;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -18,13 +19,17 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -44,7 +49,7 @@ import java.util.zip.ZipOutputStream;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     //Botones para movernos a las pantallas y enviar el comprimido
-    private Button grabar,opciones,estado,enviar,sel,cancelar;
+    private ImageButton grabar,opciones,estado,enviar,sel,cancelar, infgrabar, infopciones, infestado;
 
     //Spinner para seleccionar el paciente
     private Spinner sp;
@@ -56,7 +61,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private File dir,dirc,audio,opc,est,afile;
 
     //Conexión
-    ConnectivityManager conexion;
+    private ConnectivityManager conexion;
+
+    //Activity para pasarle a los diálogos.
+    private Activity yo;
 
     /**
      * Método que se ejecutará al crearse el Activity.
@@ -74,24 +82,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Llamada al método que pide los permisos de almacenamiento y de acceso al microfono
         askForPermissions();
 
+        yo = this;
+
         //Conexión
-        conexion = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        conexion = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //Inicialización del spinner del paciente
         sp = findViewById(R.id.paciente);
         sp.setSelection(-1);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.pac,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.pac, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(adapter);
         sp.setOnItemSelectedListener(this);
         //Guardamos el valor en el String paciente
         paciente = sp.getSelectedItem().toString();
 
+        //Creamos la animación para los ImageButtons.
+        final Animation animScale = AnimationUtils.loadAnimation(this, R.anim.anim_scale);
+
         //Ruta a la carpeta Apace desde donde trabajamos
         ruta = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Apace";
         dir = new File(ruta);
         //Si la carpeta de la ruta no existe la creamos
-        if(!dir.exists()){
+        if (!dir.exists()) {
             dir.mkdir();
         }
 
@@ -108,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         sel.setEnabled(true);
         cancelar = findViewById(R.id.cancelar);
         cancelar.setEnabled(false);
+        infgrabar = findViewById(R.id.infgrabar);
+        infopciones = findViewById(R.id.infopciones);
+        infestado = findViewById(R.id.infestados);
 
         //Formato del audio, se hace en esta pantalla para poder confirmar la existencia del fichero
         formato = ".mp4";
@@ -116,19 +132,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         grabar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
                 //Creamos un intent para movernos de pantalla
-                Intent intent = new Intent(MainActivity.this,GrabarActivity.class);
+                Intent intent = new Intent(MainActivity.this, GrabarActivity.class);
 
                 //Parámetros que pasamos
-                intent.putExtra("ruta",rutac); //Ruta de la carpeta
-                intent.putExtra("nombre",nf); //Nombre del fichero
-                intent.putExtra("formato",formato); //Formato del fichero
+                intent.putExtra("ruta", rutac); //Ruta de la carpeta
+                intent.putExtra("nombre", nf); //Nombre del fichero
+                intent.putExtra("formato", formato); //Formato del fichero
 
                 //Inicializamos el File del audio
-                audio = new File(rutac+"/"+nf+formato);
+                audio = new File(rutac + "/" + nf + formato);
 
                 //Comenzamos la nueva actividad con un code de 1, para poder saber si ha finalizado correctamente
-                startActivityForResult(intent,1);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -137,19 +157,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
 
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
                 //Creamos el intent
-                Intent intent = new Intent(MainActivity.this,OpcionesActivity.class);
+                Intent intent = new Intent(MainActivity.this, OpcionesActivity.class);
 
                 //Parámetros que pasamos
                 intent.putExtra("paciente", paciente); //Nombre del paciente
-                intent.putExtra("ruta",rutac); //Ruta de la carpeta
-                intent.putExtra("nombre",nf); //Nombre del fichero
+                intent.putExtra("ruta", rutac); //Ruta de la carpeta
+                intent.putExtra("nombre", nf); //Nombre del fichero
 
                 //Inicializamos el File con el csv de las opciones
-                opc=new File(rutac + "/" + nf + "_Opciones" + ".csv");
+                opc = new File(rutac + "/" + nf + "_Opciones" + ".csv");
 
                 //Comenzamos la nueva actividad con un code de 2
-                startActivityForResult(intent,2);
+                startActivityForResult(intent, 2);
             }
         });
 
@@ -157,19 +180,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         estado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
                 //Creamos el intent
-                Intent intent = new Intent(MainActivity.this,EstadoActivity.class);
+                Intent intent = new Intent(MainActivity.this, EstadoActivity.class);
 
                 //Parámetros que pasamos a la nueva actividad
                 intent.putExtra("paciente", paciente); //Nombre del paciente
-                intent.putExtra("ruta",rutac); //Ruta de la carpeta
-                intent.putExtra("nombre",nf); //Nombre del fichero
+                intent.putExtra("ruta", rutac); //Ruta de la carpeta
+                intent.putExtra("nombre", nf); //Nombre del fichero
 
                 //Inicializamos el File del estado
-                est=new File(rutac + "/" + nf + "_Estado" + ".csv");
+                est = new File(rutac + "/" + nf + "_Estado" + ".csv");
 
                 //Comenzamos la nueva actividad con code de 3
-                startActivityForResult(intent,3);
+                startActivityForResult(intent, 3);
             }
         });
 
@@ -179,8 +206,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
 
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
                 //Si tenemos conexion comprimimos y enviamos
-                if(conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()== NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                if (conexion.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || conexion.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
                     //Llamada al método para comprimir
                     comprimir();
 
@@ -204,10 +234,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }.execute();
 
                     //Mensaje
-                    Toast.makeText(getApplicationContext(),"Se ha enviado correctamente",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Se ha enviado correctamente", Toast.LENGTH_LONG).show();
 
-                }else{
-                    Toast.makeText(getApplicationContext(),"No hay conexión a Internet",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "No hay conexión a Internet", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -216,19 +246,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         sel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
                 //Hacemos que no se pueda cambiar de paciente
                 sp.setEnabled(false);
                 sel.setEnabled(false);
+                sel.setBackgroundResource(R.drawable.boton2);
 
                 //Podemos grabar y cancelar
                 grabar.setEnabled(true);
+                grabar.setBackgroundResource(R.drawable.boton);
                 cancelar.setEnabled(true);
+                cancelar.setBackgroundResource(R.drawable.boton);
 
                 //Creamos la carpeta
                 crearCarpeta();
 
                 //Imprimimos el paciente
-                Toast.makeText(getApplicationContext(),"El cliente con el que se va a grabar es: " + paciente + ", si desea cambiarlo pulse el botón Cancelar",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "El cliente con el que se va a grabar es: " + paciente + ", si desea cambiarlo pulse el botón Cancelar", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -236,19 +273,109 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         cancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
                 //Hacemos que se pueda cambiar de paciente
                 sp.setEnabled(true);
                 sel.setEnabled(true);
+                sel.setBackgroundResource(R.drawable.boton);
 
                 //Ponemos a inhabilitado el resto
                 grabar.setEnabled(false);
+                grabar.setBackgroundResource(R.drawable.boton2);
                 opciones.setEnabled(false);
+                opciones.setBackgroundResource(R.drawable.boton2);
                 estado.setEnabled(false);
+                estado.setBackgroundResource(R.drawable.boton2);
                 enviar.setEnabled(false);
+                enviar.setBackgroundResource(R.drawable.boton2);
                 cancelar.setEnabled(false);
+                cancelar.setBackgroundResource(R.drawable.boton2);
 
                 //Imprimimos el paciente
-                Toast.makeText(getApplicationContext(),"Cancelada la grabación",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Cancelada la grabación", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //Listener de información de grabar
+        infgrabar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
+                //Creamos el diálogo.
+                AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
+                final AlertDialog info = infoBuilder.create();
+                infoBuilder.setTitle("Información botón Grabar");
+                infoBuilder.setMessage("Haz clic en Grabar, para  ir a la pantalla donde podrá grabar al paciente seleccionado.");
+
+                //Listener del botón aceptar del diálogo.
+                infoBuilder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        info.cancel();
+                    }
+                });
+                //Mostramos el diálogo.
+                infoBuilder.show();
+            }
+        });
+
+        //Listener de información de grabar
+        infopciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
+                //Creamos el diálogo.
+                AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
+                final AlertDialog info = infoBuilder.create();
+                infoBuilder.setTitle("Información botón Registro Información");
+                infoBuilder.setMessage("Haz clic en Registro Información, para  ir a la pantalla donde podrá rellenar la información adicional relacionada" +
+                        "con el paciente seleccionado.");
+
+
+                //Listener del botón aceptar del diálogo.
+                infoBuilder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        info.cancel();
+                    }
+                });
+                //Mostramos el diálogo.
+                infoBuilder.show();
+            }
+        });
+
+        //Listener de información de grabar
+        infestado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Realizamos la animación.
+                v.startAnimation(animScale);
+
+                //Creamos el diálogo.
+                AlertDialog.Builder infoBuilder = new AlertDialog.Builder(yo);
+                final AlertDialog info = infoBuilder.create();
+                infoBuilder.setTitle("Información botón Qué Me Pasa");
+                infoBuilder.setMessage("Haz clic en Qué Me Pasa, para  ir a la pantalla donde podrá seleccionar la emoción o respuesta que ha grabado del paciente.");
+
+                //Listener del botón aceptar del diálogo.
+                infoBuilder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        info.cancel();
+                    }
+                });
+                //Mostramos el diálogo.
+                infoBuilder.show();
             }
         });
     }
@@ -333,6 +460,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (resultCode == Activity.RESULT_OK) {
                     //Opciones pasa a estar disponible
                     opciones.setEnabled(true);
+                    opciones.setBackgroundResource(R.drawable.boton);
                 }
                 break;
             }
@@ -340,6 +468,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (resultCode == Activity.RESULT_OK) {
                     //Estado pasa a estar disponible
                     estado.setEnabled(true);
+                    estado.setBackgroundResource(R.drawable.boton);
                 }
                 break;
             }
@@ -347,6 +476,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (resultCode == Activity.RESULT_OK) {
                     //Enviar pasa a estar disponible
                     enviar.setEnabled(true);
+                    enviar.setBackgroundResource(R.drawable.boton);
                 }
                 break;
             }
